@@ -11,14 +11,12 @@
 <script>
 import Nav from "@/components/Nav.vue";
 import MemberStatus from "@/components/MemberStatus.vue";
-import ClaimName from "@/components/ClaimName.vue";
 import _shared from "@/shared.js";
 
 export default {
   name: "Election",
   components: {
     MemberStatus,
-    ClaimName,
     Nav
   },
   computed: {

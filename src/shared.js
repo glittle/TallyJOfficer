@@ -2,8 +2,10 @@ import Vue from 'vue';
 
 export default new Vue({
     data: {
-        members: [],
         myName: '',
+        isAdmin: true,
+        members: [],
+        positions: [],
         viewers: [{
             code: 'A'
         }]
@@ -20,8 +22,19 @@ export default new Vue({
         this.members.push(this.makeMember("Marjorei"));
         this.members.push(this.makeMember("Natalie"));
         this.members.sort((a, b) => a.name < b.name ? -1 : 1);
+
+        this.positions.push(this.makePosition('Chair'));
+        this.positions.push(this.makePosition('Secretary'));
+        this.positions.push(this.makePosition('Vice-Chair'));
+        this.positions.push(this.makePosition('Treasurer'));
     },
     methods: {
+        makePosition: function(name) {
+            return {
+                name: name,
+                elected: ''
+            }
+        },
         makeMember: function(name, connected, voted, voting) {
             return {
                 name: name,

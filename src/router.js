@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Election from './views/Election.vue'
 import Public from './views/Public.vue'
 import ClaimName from './components/ClaimName.vue'
+import SetupNames from './components/SetupNames.vue'
+import SetupPositions from './components/SetupPositions.vue'
 
 Vue.use(Router)
 
@@ -18,8 +20,16 @@ export default new Router({
             path: '/e',
             name: 'election',
             component: Election,
-            children: [
-                { path: 'claim', component: ClaimName },
+            children: [{
+                    path: 'claim',
+                    component: ClaimName
+                }, {
+                    path: 'setupNames',
+                    component: SetupNames
+                }, {
+                    path: 'setupPositions',
+                    component: SetupPositions
+                },
                 // { path: 'names', component: x },
                 // { path: 'positions', component: x },
                 // { path: '', component: x },
