@@ -3,7 +3,7 @@
     <p>Welcome to your Officer Election!</p>
     <p>Add the names of the members here.</p>
     <table>
-      <tr
+      <tr 
         class="memberHolder"
         v-for="m in shared.members"
         :key="m.name"
