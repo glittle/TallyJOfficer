@@ -1,5 +1,9 @@
 <template>
   <div class="home">
+    <div id="nav">
+      <router-link to="/">Public</router-link>|
+      <router-link to="/e">Home</router-link>
+    </div>
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
@@ -7,10 +11,10 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
-  name: 'home',
+  name: "Home",
   components: {
     HelloWorld
   }
