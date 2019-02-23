@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Election from './views/Election.vue'
 import Public from './views/Public.vue'
 
 Vue.use(Router)
@@ -15,8 +15,8 @@ export default new Router({
         },
         {
             path: '/e',
-            name: 'home',
-            component: Home
+            name: 'election',
+            component: Election
         },
         {
             path: '/about',

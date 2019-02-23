@@ -7,7 +7,8 @@
       electing their own officers. The rules followed are as specified for Bahá'í assemblies.
     </p>
     <p>To create your own election now, press here:</p>
-    <button>Create an Election</button>
+    <!-- <button>Create an Election</button> -->
+    <router-link to="/e">Election Home</router-link>
     <hr>
     <h2>Learn More</h2>
     <p>
