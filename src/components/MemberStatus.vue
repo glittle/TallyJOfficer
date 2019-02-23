@@ -6,7 +6,7 @@
       :class="{connected: m.connected, voting: m.voting, voted: m.voted}"
       v-for="m in shared.members"
       :key="m.name"
-    >{{m.name}}</div>
+    >{{ m.name }}</div>
   </div>
 </template>
 
@@ -21,7 +21,17 @@ export default {
   data: function() {
     return {};
   },
-  computed: {}
+  computed: {},
+  mounted: function() {
+    var vue = this;
+    setTimeout(function() {
+      vue.shared.members[3].voting = true;
+    }, 1500);
+    setTimeout(function() {
+      vue.shared.members[7].voting = false;
+      vue.shared.members[7].voted = true;
+    }, 5000);
+  }
 };
 </script>
 
