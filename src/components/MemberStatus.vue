@@ -7,21 +7,23 @@
       v-for="m in shared.members"
       :key="m.name"
     >{{ m.name }}</div>
+    <div class="viewer" v-for="m in shared.viewers" :key="m.code">{{ m.code }}</div>
   </div>
 </template>
 
 <script>
-// import _shared from '@/components/shared.js';
+import _shared from "@/shared.js";
 
 export default {
   name: "MemberStatus",
-  props: {
-    shared: Object
-  },
   data: function() {
     return {};
   },
-  computed: {},
+  computed: {
+    shared: function() {
+      return _shared;
+    }
+  },
   mounted: function() {
     var vue = this;
     setTimeout(function() {
@@ -37,20 +39,31 @@ export default {
 
 <style lang="less">
 .MemberStatus {
-  flex-grow: 0;
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  padding: 3px 0;
   background: #e4e4fd;
   border-top: 1px solid #3f3fff;
 
+  .viewer,
   .member {
-    border: 1px solid transparent;
-    padding: 1px 3px;
     display: block;
     margin: 3px 10px;
-    background-color: #d0d0d0;
+    padding: 1px 3px;
     cursor: help;
+  }
+
+  .viewer {
+    background-color: #3f52ff;
+    border: 1px solid #3f52ff;
+    color: white;
+  }
+
+  .member {
+    border: 1px solid transparent;
+    background-color: #d0d0d0;
 
     &.connected {
       border-color: #3f3fff;

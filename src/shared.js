@@ -2,7 +2,11 @@ import Vue from 'vue';
 
 export default new Vue({
     data: {
-        members: []
+        members: [],
+        myName: '',
+        viewers: [{
+            code: 'A'
+        }]
     },
     created: function() {
         // temp
@@ -21,6 +25,7 @@ export default new Vue({
         makeMember: function(name, connected, voted, voting) {
             return {
                 name: name,
+                isMe: false,
                 connected: connected || false,
                 voted: voted || false,
                 voting: voting || false

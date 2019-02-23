@@ -1,28 +1,36 @@
 <template>
   <div class="election">
     <Nav/>
-    <router-view/>
-    <MemberStatus :shared="shared"/>
+    <div class="electionBody">
+      <router-view/>
+    </div>
+    <MemberStatus/>
   </div>
 </template>
 
 <script>
 import Nav from "@/components/Nav.vue";
 import MemberStatus from "@/components/MemberStatus.vue";
-import shared from "@/shared.js";
+import ClaimName from "@/components/ClaimName.vue";
+import _shared from "@/shared.js";
 
 export default {
   name: "Election",
   components: {
     MemberStatus,
+    ClaimName,
     Nav
   },
   computed: {
     shared: function() {
-      return shared;
+      return _shared;
     }
   },
-  mounted: function() {}
+  mounted: function() {
+    if (!this.shared.myName) {
+      this.$router.replace("/e/claim");
+    }
+  }
 };
 </script>
 
@@ -36,5 +44,10 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  .electionBody {
+    flex-grow: 1;
+    overflow: auto;
+  }
 }
 </style>

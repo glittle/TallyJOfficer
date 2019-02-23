@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Election from './views/Election.vue'
 import Public from './views/Public.vue'
+import ClaimName from './components/ClaimName.vue'
 
 Vue.use(Router)
 
@@ -16,7 +17,13 @@ export default new Router({
         {
             path: '/e',
             name: 'election',
-            component: Election
+            component: Election,
+            children: [
+                { path: 'claim', component: ClaimName },
+                // { path: 'names', component: x },
+                // { path: 'positions', component: x },
+                // { path: '', component: x },
+            ]
         },
         {
             path: '/about',
