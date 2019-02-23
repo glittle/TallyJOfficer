@@ -15,6 +15,7 @@ module.exports = {
         'no-console': 'off',
         'no-debugger': 'off',
         'eol-last': 'off',
+        'comma-dangle': 'off',
         'vue/require-default-prop': 'off',
         semi: 'off',
         indent: 'off',
