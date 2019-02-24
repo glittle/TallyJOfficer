@@ -9,11 +9,6 @@ module.exports = {
         parser: 'babel-eslint'
     },
 
-    extends: [
-        'plugin:vue/recommended',
-        '@vue/standard'
-    ],
-
     rules: {
         'no-console': 'off',
         'no-debugger': 'off',

@@ -36,10 +36,12 @@ export default {
   },
   methods: {
     goCurrentHome: function() {
-      if (!this.shared.myName) {
-        this.$router.replace("/e/claim");
-      } else {
-        this.$router.replace("/e/home");
+      if (this.$route.name === "electionRoot") {
+        if (!this.shared.myName) {
+          this.$router.replace("/e/claim");
+        } else {
+          this.$router.replace("/e/home");
+        }
       }
     }
   }

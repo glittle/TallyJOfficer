@@ -5,9 +5,10 @@
       class="member"
       :class="{connected: m.connected, voting: m.voting, voted: m.voted}"
       v-for="m in shared.members"
-      :key="m.name"
+      :key="m.id"
     >{{ m.name }}</div>
-    <div class="viewer" v-for="m in shared.viewers" :key="m.code">{{ m.code }}</div>
+    
+    <div class="viewer" v-for="(m,i) in shared.viewers" :key="'v' + i">{{ m.code }}</div>
   </div>
 </template>
 

@@ -2,19 +2,31 @@
   <div class="SetupNames">
     <p>Welcome to your Officer Election!</p>
     <p>Add the names of the members here.</p>
-    <table>
-      <tr
+    <transition-group name="list" tag="div" class="namesList">
+      <div
         class="memberHolder"
         v-for="(m,i) in shared.members"
-        :key="i"
+        :key="m.id"
         :class="{claimed: m.connected}"
       >
-        <td>
-          <input type="text" v-model="m.name">
-        </td>
-        <td></td>
-      </tr>
-    </table>
+        <span class="isDup">
+          <span v-if="duplicatedNames[m.name]">Duplicate!</span>
+        </span>
+        
+        <span class="num">{{i+1}}</span>
+        
+        <input type="text" v-on:change="updated" v-model="m.name">
+        
+        <button class="remove" v-on:click="remove(i)">Remove</button>
+        
+        <label>
+          <input type="checkbox" v-model="m.isAdmin">
+          Vote Admin?
+        </label>
+      </div>
+    </transition-group>
+
+    <button v-on:click="add">Add Another</button>
   </div>
 </template>
 
@@ -24,7 +36,9 @@ import _shared from "@/shared.js";
 export default {
   name: "SetupNames",
   data: function() {
-    return {};
+    return {
+      duplicatedNames: {}
+    };
   },
   computed: {
     shared: function() {
@@ -33,9 +47,41 @@ export default {
   },
   mounted: function() {
     // var vue = this;
+    this.updated();
   },
   methods: {
-    claim: function(member) {}
+    remove: function(i) {
+      this.shared.members.splice(i, 1);
+      this.testForDuplicates();
+    },
+    add: function(i) {
+      this.shared.members.push(this.shared.makeMember(""));
+    },
+    updated: function() {
+      this.shared.members.sort((a, b) =>
+        (a.name || "Z") < (b.name || "Z") ? -1 : 1
+      );
+      this.testForDuplicates();
+    },
+    testForDuplicates: function() {
+      var nameCount = {};
+      this.shared.members.forEach(m => {
+        var name = m.name;
+        if (!nameCount[name]) {
+          nameCount[name] = 1;
+        } else {
+          nameCount[name]++;
+        }
+      });
+
+      var vue = this;
+      vue.duplicatedNames = {};
+      Object.keys(nameCount).forEach(name => {
+        if (name && nameCount[name] > 1) {
+          vue.duplicatedNames[name] = true;
+        }
+      });
+    }
   }
 };
 </script>
@@ -45,23 +91,29 @@ export default {
   table {
     margin: 1em auto;
   }
-  tr.memberHolder {
-    margin: 10px 0;
-    cursor: pointer;
-
-    button {
-      margin: 1em 0;
+  .namesList {
+    margin-right: 100px; // offset for isDup
+    .memberHolder {
+      margin: 10px 0;
     }
-
-    td {
-      font-weight: bold;
+    .isDup {
+      display: inline-block;
+      width: 100px;
     }
-
-    &.claimed {
-      td {
-        font-weight: normal;
-      }
+    .num {
+      display: inline-block;
+      width: 20px;
+      text-align: right;
+      margin: 0 5px 0 5px;
+      font-size: 75%;
+      color: grey;
     }
+    .remove {
+      margin: 0 5px;
+    }
+  }
+  .list-move {
+    transition: transform 1s;
   }
 }
 </style>

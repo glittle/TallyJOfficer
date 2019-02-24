@@ -101,10 +101,23 @@ export default new Vue({
                 isActive: false
             }
         },
+        getRandomMemberId: function() {
+            var uniqueIdFound = false;
+            var id;
+            while (!uniqueIdFound) {
+                id = 'm' + Math.random().toString().substring(3, 6);
+                uniqueIdFound = !this.members.find(m => m.id === id);
+                console.log('test id', id);
+            }
+            return id;
+        },
         makeMember: function(name, connected, voted, voting) {
+            var id = this.getRandomMemberId();
             return {
                 name: name,
+                id: id,
                 isMe: false,
+                isAdmin: false,
                 preferNot: false,
                 symbol: '',
                 connected: connected || false,
