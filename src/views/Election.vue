@@ -24,9 +24,23 @@ export default {
       return _shared;
     }
   },
+  watch: {
+    $route: function(a, b) {
+      if (a.name === "electionRoot") {
+        this.goCurrentHome();
+      }
+    }
+  },
   mounted: function() {
-    if (!this.shared.myName) {
-      this.$router.replace("/e/claim");
+    this.goCurrentHome();
+  },
+  methods: {
+    goCurrentHome: function() {
+      if (!this.shared.myName) {
+        this.$router.replace("/e/claim");
+      } else {
+        this.$router.replace("/e/home");
+      }
     }
   }
 };

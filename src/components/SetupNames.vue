@@ -5,12 +5,12 @@
     <table>
       <tr
         class="memberHolder"
-        v-for="m in shared.members"
-        :key="m.name"
+        v-for="(m,i) in shared.members"
+        :key="i"
         :class="{claimed: m.connected}"
       >
         <td>
-          <input type="text" :value="m.name">
+          <input type="text" v-model="m.name">
         </td>
         <td></td>
       </tr>

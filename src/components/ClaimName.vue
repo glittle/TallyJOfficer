@@ -16,6 +16,8 @@
         </td>
       </tr>
     </table>
+    <hr>
+    <p>Or, if this computer will be used to display results, click <button v-on:click="claimViewer">Viewer</button></p>
   </div>
 </template>
 
@@ -47,6 +49,11 @@ export default {
       member.connected = true; // temp
       this.claimMade = true;
       this.shared.myName = member.name;
+      this.$router.replace("/e/home");
+    },
+    claimViewer: function() {
+      this.shared.startMeAsViewer();
+      this.$router.replace("/e/home");
     }
   }
 };

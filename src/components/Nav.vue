@@ -1,14 +1,23 @@
 <template>
   <div id="nav">
-    <div v-if="shared.isAdmin">
-      <router-link to="/">Public</router-link>|
-      <router-link to="/e">Election</router-link>|
-      <router-link to="/e/setupNames">Names</router-link>|
-      <router-link to="/e/setupPositions">Positions</router-link>
+    <div class="image">
+      <img alt="TallyJ logo" src="../assets/logo.png">
     </div>
-    <div v-else>
-      <router-link to="/">Public</router-link>|
-      <router-link to="/e">Election</router-link>
+    <div class="middle">
+      <div>
+        <router-link to="/">Public</router-link>
+        <span></span>
+        <router-link to="/e">Election</router-link>
+      </div>
+      <div v-if="shared.isAdmin">
+        <router-link to="/e/setupNames">Names</router-link>
+        <span></span>
+        <router-link to="/e/setupPositions">Positions</router-link>
+      </div>
+    </div>
+    <div class="myName" :class="{isViewer: shared.isViewer}">
+      <span>{{ shared.myName }}</span>
+      <button v-if="shared.myName" v-on:click="forgetMe">X</button>
     </div>
   </div>
 </template>
@@ -22,6 +31,29 @@ export default {
     shared: function() {
       return _shared;
     }
+  },
+  methods: {
+    forgetMe: function() {
+      // testing only??
+      var member = this.shared.members.find(m => m.name === this.shared.myName);
+      if (member) {
+        member.connected = false;
+        member.isMe = false;
+        this.shared.myName = "";
+        this.shared.isAdmin = false;
+        this.$router.replace("/e");
+      } else {
+        var i = this.shared.viewers.findIndex(
+          v => v.code === this.shared.myName
+        );
+        if (i !== -1) {
+          this.shared.viewers.splice(i, 1);
+        }
+        this.shared.isViewer = false;
+        this.shared.myName = "";
+        this.$router.replace("/e");
+      }
+    }
   }
 };
 </script>
@@ -30,6 +62,28 @@ export default {
 #nav {
   background: #000;
   color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 2em;
+
+  > div {
+    flex-grow: 1;
+    min-width: 150px;
+  }
+
+  .image {
+    text-align: left;
+    padding: 4px 0 0 5px;
+    img {
+      height: 1.5em;
+    }
+  }
+
+  div.middle {
+    flex-grow: 10;
+  }
+
   a {
     font-weight: bold;
     &.router-link-exact-active {
@@ -37,6 +91,20 @@ export default {
     }
     &:visited {
       color: #fff;
+    }
+  }
+
+  span {
+    display: inline-block;
+    margin: 3px 0.5em;
+  }
+
+  .myName {
+    text-align: right;
+    padding-right: 3px;
+    &.isViewer {
+      color: rgb(115, 255, 0);
+      font-weight: bold;
     }
   }
 }
