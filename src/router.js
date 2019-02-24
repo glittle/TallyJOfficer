@@ -7,6 +7,8 @@ import SetupNames from './components/SetupNames.vue'
 import SetupPositions from './components/SetupPositions.vue'
 import ElectionHome from './components/ElectionHome.vue'
 import VotingPanel from './components/VotingPanel.vue'
+import ResultPanel from './components/ResultPanel.vue'
+import ViewGuidance from './components/ViewGuidance.vue'
 
 Vue.use(Router)
 
@@ -42,6 +44,14 @@ export default new Router({
                     path: 'votingPanel',
                     name: 'votingPanel',
                     component: VotingPanel
+                }, {
+                    path: 'resultPanel',
+                    name: 'resultPanel',
+                    component: ResultPanel
+                }, {
+                    path: 'guidance',
+                    name: 'viewGuidance',
+                    component: ViewGuidance
                 },
                 // { path: 'names', component: x },
                 // { path: 'positions', component: x },

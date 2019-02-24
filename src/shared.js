@@ -96,7 +96,8 @@ export default new Vue({
         makePosition: function(name) {
             return {
                 name: name,
-                elected: '',
+                elected: null,
+                rounds: [],
                 isActive: false
             }
         },

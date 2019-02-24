@@ -2,7 +2,7 @@
   <div class="ElectionHome">
     <p>Welcome to our Officer Election!</p>
     <p>These positions need to be filled.</p>
-    <table>
+    <table class="positionsToFill">
       <tr
         class="positionHolder"
         v-for="p in shared.positions"
@@ -10,24 +10,36 @@
         :class="{isActive: p.isActive}"
       >
         <td>{{ p.name }}</td>
-        <td>-</td>
         <td>
-          <button v-on:click="voteFor(p)">Vote Now</button>
+          <span v-text="p.elected ? p.elected.name : ''"></span>
+        </td>
+        <td>
+          <button v-on:click="select(p)">Select</button>
+          <button v-on:click="viewGuidance">View Guidance</button>
         </td>
       </tr>
     </table>
-    
+    <button :disabled="!selectedPosition" v-on:click="voteNow">Vote Now</button>
+
+    <result-panel/>
+
     <button class="reset" v-on:click="clearStorage">Reset All</button>
   </div>
 </template>
 
 <script>
 import _shared from "@/shared.js";
+import ResultPanel from "./ResultPanel.vue";
 
 export default {
   name: "ElectionHome",
+  components: {
+    ResultPanel
+  },
   data: function() {
-    return {};
+    return {
+      selectedPosition: null
+    };
   },
   computed: {
     shared: function() {
@@ -38,16 +50,22 @@ export default {
     // var vue = this;
   },
   methods: {
-    claim: function(member) {},
-    voteFor: function(position) {
+    select: function(position) {
       this.shared.positions.forEach(p => (p.isActive = false));
       position.isActive = true;
-
-      this.$router.replace("/e/votingPanel");
+      this.selectedPosition = position;
+    },
+    voteNow: function() {
+      if (!this.shared.isViewer) {
+        this.$router.replace("/e/votingPanel");
+      }
     },
     clearStorage: function() {
       this.shared.clearStorage();
       this.$router.replace("/e");
+    },
+    viewGuidance: function() {
+      this.$router.push("/e/guidance");
     }
   }
 };
@@ -55,17 +73,17 @@ export default {
 
 <style lang="less">
 .ElectionHome {
-  table {
+  table.positionsToFill {
     margin: 1em auto;
-  }
-  td {
-    width: 200px;
-  }
-  tr.positionHolder {
-    margin: 10px 0;
+    td {
+      width: 200px;
+    }
+    tr.positionHolder {
+      margin: 10px 0;
 
-    &.isActive {
-      background: lightgreen;
+      &.isActive {
+        background: lightgreen;
+      }
     }
   }
   .reset {

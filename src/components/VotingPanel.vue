@@ -50,6 +50,7 @@ import _shared from "@/shared.js";
 
 export default {
   name: "VotingPanel",
+  components: {},
   data: function() {
     return {
       selectedMember: "",
@@ -97,6 +98,15 @@ export default {
       this.me.voting = false;
       this.confirmed = true;
       this.me.symbol = String.fromCharCode(65 + 15 * Math.random());
+
+      //temp
+      var round = {
+        votes: [
+          { name: this.selectedMember.name, symbol: this.me.symbol }
+        ]
+      };
+      this.position.rounds.push(round);
+
       setTimeout(function() {
         vue.reveal = false;
       }, 2500);
@@ -169,12 +179,9 @@ export default {
     opacity: 0;
     &.revealVote {
       opacity: 0.8;
-      .symbol {
-        margin: 10px;
-      }
     }
     .symbol {
-      margin: 10px;
+      margin: 10px 0 50px;
     }
   }
 }

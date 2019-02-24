@@ -43,6 +43,7 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
+  min-height: 2em;
   padding: 3px 0;
   background: #e4e4fd;
   border-top: 1px solid #3f3fff;
@@ -52,7 +53,6 @@ export default {
     display: block;
     margin: 3px 10px;
     padding: 1px 3px;
-    cursor: help;
   }
 
   .viewer {
