@@ -7,7 +7,7 @@
         class="positionHolder"
         v-for="p in shared.positions"
         :key="p.name"
-        :class="{isActive: p.isActive}"
+        :class="{isActive: p.id === shared.election.activePositionId }"
       >
         <td>{{ p.name }}</td>
         <td>
@@ -19,11 +19,15 @@
         </td>
       </tr>
     </table>
-    <button :disabled="!selectedPosition" v-on:click="voteNow">Vote Now</button>
+    <button :disabled="!shared.election.activePositionId" v-on:click="voteNow">Vote Now</button>
 
     <result-panel/>
 
-    <button class="reset" v-on:click="clearStorage">Reset All</button>
+    <div class="electionLink" v-if="link">
+      Shareable link to this election
+      <a :href="link">{{link}}</a>
+    </div>
+    <!-- <button class="reset" v-on:click="clearStorage">Reset All</button> -->
   </div>
 </template>
 
@@ -37,13 +41,17 @@ export default {
     ResultPanel
   },
   data: function() {
-    return {
-      selectedPosition: null
-    };
+    return {};
   },
   computed: {
     shared: function() {
       return _shared;
+    },
+    link: function() {
+      if (this.shared.dbUser) {
+        return `${location.href}?${this.shared.dbUser.photoURL}`;
+      }
+      return null;
     }
   },
   mounted: function() {
@@ -51,19 +59,27 @@ export default {
   },
   methods: {
     select: function(position) {
-      this.shared.positions.forEach(p => (p.isActive = false));
-      position.isActive = true;
-      this.selectedPosition = position;
+      var vue = this;
+      // this.shared.positions.forEach(p => {
+      //   var toBeActive = p.id === position.id;
+      //   if (p.isActive !== toBeActive) {
+      //     vue.shared.update("positions", p.id, { isActive: toBeActive });
+      //   }
+      // });
+
+      vue.shared.dbElectionRef.update({ activePositionId: position.id });
+
+      // this.selectedPosition = position;
     },
     voteNow: function() {
       if (!this.shared.isViewer) {
         this.$router.replace("/e/votingPanel");
       }
     },
-    clearStorage: function() {
-      this.shared.clearStorage();
-      this.$router.replace("/e");
-    },
+    // clearStorage: function() {
+    //  this.shared.clearStorage();
+    //  this.$router.replace("/e");
+    // },
     viewGuidance: function() {
       this.$router.push("/e/guidance");
     }

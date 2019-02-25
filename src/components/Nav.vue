@@ -86,11 +86,12 @@ export default {
 
   a {
     font-weight: bold;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+    color: #fff;
     &:visited {
       color: #fff;
+    }
+    &.router-link-exact-active {
+      color: #42b983;
     }
   }
 

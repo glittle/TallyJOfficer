@@ -1,9 +1,10 @@
 import Vue from 'vue';
+import firebase from 'firebase'
 import db from './firebaseInit'
 
 export default new Vue({
     data: {
-        electionId: localStorage['electionId'] || null,
+        election: {},
         electionLoadAttempted: false,
         myName: localStorage['name'] || '',
         isViewer: localStorage['isViewer'] === 'true',
@@ -11,10 +12,16 @@ export default new Vue({
         members: [],
         positions: [],
         viewers: [],
+        rounds: [],
+        dbUser: null,
         dbElectionRef: null,
-        firebaseId: null
+        initialQuery: ''
     },
-    computed: {},
+    computed: {
+        electionId: function() {
+            return this.dbUser ? this.dbUser.photoURL : null;
+        }
+    },
     watch: {
         myName: function() {
             localStorage['name'] = this.myName;
@@ -25,79 +32,201 @@ export default new Vue({
         isAdmin: function() {
             localStorage['isAdmin'] = this.isAdmin;
         },
-        members: {
-            handler: function(a, b) {
-                var dbList = this.dbElectionRef.collection('members');
-                this.members.forEach(m => dbList.doc(m.id).set(m, {
-                    merge: true
-                }));
-            },
-            deep: true
-        },
-        viewers: {
-            handler: function(a, b) {
-                var dbList = this.dbElectionRef.collection('viewers');
-                this.viewers.forEach(v => dbList.doc(v.id).set(v, {
-                    merge: true
-                }));
-            },
-            deep: true
-        },
-        positions: {
-            handler: function(a, b) {
-                var dbList = this.dbElectionRef.collection('positions');
-                this.positions.forEach(p => dbList.doc(p.id).set(p, {
-                    merge: true
-                }));
-            },
-            deep: true
-        }
+        // members: {
+        //    handler: function(a, b) {
+        //        if (!this.dbElectionRef) return;
+        //        var dbList = this.dbElectionRef.collection('members');
+        //        this.members.forEach(m => dbList.doc(m.id).set(m, {
+        //            merge: true
+        //        }));
+        //    },
+        //    deep: true
+        // },
+        // viewers: {
+        //    handler: function(a, b) {
+        //        if (!this.dbElectionRef) return;
+        //        var dbList = this.dbElectionRef.collection('viewers');
+        //        this.viewers.forEach(v => dbList.doc(v.id).set(v, {
+        //            merge: true
+        //        }));
+        //    },
+        //    deep: true
+        // },
+        // positions: {
+        //    handler: function(a, b) {
+        //        if (!this.dbElectionRef) return;
+        //        var dbList = this.dbElectionRef.collection('positions');
+        //        this.positions.forEach(p => dbList.doc(p.id).set(p, {
+        //            merge: true
+        //        }));
+        //    },
+        //    deep: true
+        // }
     },
     created: function() {
         var vue = this;
-        if (this.electionId) {
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                vue.dbUser = user;
 
-            var ref = db.collection('elections').doc(this.electionId);
-            ref.get()
-                .then(function(doc) {
-                    if (doc.exists) {
-                        vue.dbElectionRef = ref;
-
-                        var election = doc.data();
-
-                        vue.members = election.members;
-                        vue.viewers = election.viewers;
-                        vue.positions = election.positions;
-
-                        vue.$emit('election-loaded');
-
-                        ref.update({
-                            lastLogin: new Date()
-                        });
-                    } else {
-                        vue.electionId = null;
-                        vue.dbElectionRef = null;
+                if (user.photoURL) {
+                    vue.loadElection(user.photoURL);
+                } else {
+                    // not linked to an election
+                    if (vue.initialQuery) {
+                        vue.loadElection(vue.initialQuery.substring(1));
                     }
-                    vue.electionLoadAttempted = true;
-                }).catch(function(err) {
-                    console.log(err);
-                });
-        } else {
-            vue.electionLoadAttempted = true;
-        }
+                }
+            } else {
+                // User is signed out.
+                // ...
+                vue.dbUser = null;
+                vue.dbElectionRef = null;
+            }
+            // ...
+        });
+        firebase.auth().signInAnonymously().catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log('login error', errorCode, errorMessage)
+        });
 
-        this.fillData();
+        vue.initialQuery = window.location.search;
     },
     methods: {
+        loadElection(electionId) {
+            var vue = this;
+            if (electionId) {
+                var ref = db.collection('elections').doc(electionId);
+                ref.get()
+                    .then(function(doc) {
+                        if (doc.exists) {
+                            vue.dbElectionRef = ref;
+
+                            // var election = doc.data();
+
+                            ref.onSnapshot(function(d) {
+                                vue.election = d.data();
+                                if (vue.dbUser.photoURL !== d.id) {
+                                    vue.dbUser.updateProfile({
+                                        photoURL: d.id
+                                    });
+                                }
+
+                                vue.$emit('election-loaded');
+                                vue.electionLoadAttempted = true;
+                            });
+
+
+                            ref.collection('members').orderBy('name')
+                                .onSnapshot(function(snapshot) {
+
+                                    // if (vue.dbUser) {
+                                    //     vue.dbUser.updateProfile({
+                                    //         photoURL: vue.electionId
+                                    //     });
+                                    // }
+
+                                    snapshot.forEach(function(doc) {
+                                        vue.updateList(vue.members, doc);
+                                    });
+                                });
+                            ref.collection('positions')
+                                .onSnapshot(function(snapshot) {
+                                    snapshot.forEach(function(doc) {
+                                        vue.updateList(vue.positions, doc);
+                                    });
+                                });
+                            ref.collection('viewers').orderBy('id')
+                                .onSnapshot(function(snapshot) {
+                                    snapshot.forEach(function(doc) {
+                                        vue.updateList(vue.viewers, doc);
+                                    });
+                                });
+
+                            ref.collection('rounds').orderBy('id')
+                                .onSnapshot(function(snapshot) {
+                                    snapshot.docChanges.forEach(function(change) {
+                                        vue.changeList(vue.rounds, change);
+                                    });
+                                });
+
+
+                            ref.update({
+                                lastLogin: new Date()
+                            });
+                        } else {
+                            // invalid, so forget about it
+                            vue.dbUser.updateProfile({
+                                photoURL: ''
+                            });
+
+                            vue.dbElectionRef = null;
+                        }
+                    }).catch(function(err) {
+                        vue.electionLoadAttempted = true;
+                        console.log(err);
+                    });
+            } else {
+                // vue.electionLoadAttempted = true;
+            }
+        },
+        changeList: function(list, change) {
+            var item = change.doc.data();
+            var i;
+            switch (change.type) {
+                case 'added':
+                    list.push(item);
+                    break;
+                case 'modified':
+                    i = list.findIndex(x => x.id === item.id);
+                    if (i !== -1) {
+                        list.splice(i, 1, item);
+                    } else {
+                        // missing??
+                        list.push(item);
+                    }
+                    break;
+                case 'removed':
+                    i = list.findIndex(x => x.id === item.id);
+                    if (i !== -1) {
+                        list.splice(i, 1);
+                    } else {
+                        // missing??
+                        console.log('cannot delete', item);
+                    }
+                    break;
+            }
+        },
+        updateList: function(list, doc) {
+            var item = doc.data();
+            var i = list.findIndex(x => x.id === item.id);
+            if (i !== -1) {
+                list.splice(i, 1, item);
+            } else {
+                list.push(item);
+            }
+        },
         createElection: function(nameOfAdmin) {
             var vue = this;
+            if (!vue.dbUser) {
+                return;
+            }
             var ref = db.collection('elections').doc(); // generate new election doc
             ref.set({
                     created: new Date(),
-                    by: nameOfAdmin
+                    by: nameOfAdmin,
+                    focusPosition: ''
                 }).then(function() {
                     vue.dbElectionRef = ref;
-                    vue.electionId = ref.id;
+                    // vue.electionId = ref.id;
+
+                    vue.dbUser.updateProfile({
+                        photoURL: vue.electionId
+                    });
+
                     localStorage.electionId = vue.electionId;
 
                     vue.createMembers(nameOfAdmin);
@@ -148,18 +277,18 @@ export default new Vue({
                 // dbPositions.doc(position.id).set(position);
             });
         },
-        clearStorage: function() {
-            localStorage.removeItem('members');
-            localStorage.removeItem('positions');
-            localStorage.removeItem('viewers');
-            localStorage.removeItem('name');
-            localStorage.removeItem('isViewer');
-            localStorage.removeItem('isAdmin');
-            this.myName = '';
-            this.isViewer = false;
-            this.isAdmin = false;
-            this.fillData();
-        },
+        // clearStorage: function() {
+        //     localStorage.removeItem('members');
+        //     localStorage.removeItem('positions');
+        //     localStorage.removeItem('viewers');
+        //     localStorage.removeItem('name');
+        //     localStorage.removeItem('isViewer');
+        //     localStorage.removeItem('isAdmin');
+        //     this.myName = '';
+        //     this.isViewer = false;
+        //     this.isAdmin = false;
+        //     this.fillData();
+        // },
         fillData: function() {
             // var stored = localStorage['members'];
             // if (stored) {

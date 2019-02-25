@@ -11,23 +11,19 @@
       <tbody>
         <tr v-for="(round,i) in oldRounds" :key="i">
           <td class="roundNum">{{i+1}}</td>
-          <td :class="['vote' + votesFor(round, name)]" v-for="m in shared.members" :key="m.id">
-            <div class="voteCount">{{votesFor(round, m.name)}}</div>
+          <td :class="['vote' + votesFor(round, m.id)]" v-for="m in shared.members" :key="m.id">
+            <div class="voteCount">{{votesFor(round, m.id)}}</div>
           </td>
         </tr>
       </tbody>
       <tfoot>
-        <tr v-if="position.rounds.length">
-          <td class="roundNum">{{position.rounds.length}}</td>
-          <td
-            :class="['vote' + votesFor(lastRound, name)]"
-            v-for="m in shared.members"
-            :key="m.id"
-          >
-            <div class="voteListTitle">{{votesFor(lastRound, m.name)}}</div>
+        <tr v-if="positionRounds.length">
+          <td class="roundNum">{{positionRounds.length}}</td>
+          <td :class="['vote' + votesFor(lastRound, m.id)]" v-for="m in shared.members" :key="m.id">
+            <div class="voteListTitle">{{votesFor(lastRound, m.id)}}</div>
             <div
               class="voteDetail"
-              v-for="(v,i) in voteListFor(lastRound, m.name)"
+              v-for="(v,i) in voteListFor(lastRound, m.id)"
               :key="i"
             >{{v.symbol}}</div>
           </td>
@@ -59,64 +55,72 @@ export default {
       return _shared;
     },
     position: function() {
-      return this.shared.positions.find(p => p.isActive) || { rounds: [] };
+      return (
+        this.shared.positions.find(
+          p => p.id === this.shared.election.activePositionId
+        ) || {}
+      );
+    },
+    positionRounds: function() {
+      return this.shared.rounds.filter(
+        r => r.id.substr(0, 4) === this.position.id
+      );
     },
     oldRounds: function() {
-      var lastIndex = this.position.rounds.length - 1;
-      return this.position.rounds.filter((r, i) => i < lastIndex);
+      var lastIndex = this.positionRounds.length - 1;
+      return this.positionRounds.filter((r, i) => i < lastIndex);
     },
     lastRound: function() {
-      var list = this.position.rounds;
+      var list = this.positionRounds;
       return list.length ? list[list.length - 1] : null;
     }
   },
   watch: {
-    position: function() {
-      this.showResults();
-    }
+    // position: function() {
+    //  this.showResults();
+    // }
   },
   mounted: function() {
-    this.showResults();
+    // this.showResults();
   },
   methods: {
-    showResults: function() {
-      // var hasVotes = {};
-      // this.position.rounds.forEach(r => {
-      //   if (r.votes) {
-      //     r.votes.forEach(v => (hasVotes[v.name] = true));
-      //   }
-      // });
-      // var hasVotesList = Object.keys(hasVotes);
-      // hasVotesList.sort();
-      // this.namesWithVotes = hasVotesList;
-      // this.namesWithVotes = this.shared.members.map(m => m.name);
-    },
-    votesFor: function(round, name) {
+    //   showResults: function() {
+    //     // var hasVotes = {};
+    //     // this.position.rounds.forEach(r => {
+    //     //   if (r.votes) {
+    //     //     r.votes.forEach(v => (hasVotes[v.name] = true));
+    //     //   }
+    //     // });
+    //     // var hasVotesList = Object.keys(hasVotes);
+    //     // hasVotesList.sort();
+    //     // this.namesWithVotes = hasVotesList;
+    //     // this.namesWithVotes = this.shared.members.map(m => m.name);
+    //   },
+    votesFor: function(round, id) {
       if (!round) return null;
-      var votes = round.votes.filter(v => v.name === name);
+      var votes = round.votes.filter(v => v.id === id);
       return votes.length || "-";
     },
-    voteListFor: function(round, name) {
+    voteListFor: function(round, id) {
       if (!round) return null;
-      var list = round.votes.filter(v => v.name === name);
+      var list = round.votes.filter(v => v.id === id);
       list.sort((a, b) => (a.symbol < b.symbol ? -1 : 1));
       return list;
     },
-    checkIfCompleted: function() {
-      var vue = this;
-      var votes = this.lastRound.votes;
+    checkIfCompleted: function(round) {
+      var votes = round.votes;
       var members = this.shared.members;
       var numNeeded = 1 + Math.floor(members.length / 2);
       var membersWithEnoughVotes = members.filter(
-        m => votes.filter(v => v.name === m.name).length >= numNeeded
+        m => votes.filter(v => v.id === m.id).length >= numNeeded
       );
       if (membersWithEnoughVotes.length) {
         // check if multiple? - can't happen
         this.position.elected = membersWithEnoughVotes[0];
+        round.completed = true;
       } else {
-        vue.fakeAddTimer = setTimeout(() => {
-          vue.tempMakeResult();
-        }, 1000);
+        this.position.elected = null;
+        round.completed = false;
       }
     },
     tempMakeResult: function() {
@@ -124,15 +128,32 @@ export default {
       var members = this.shared.members;
       for (var i = 0; i < members.length; i++) {
         var v = {
-          name: members[Math.floor(members.length * Math.random())].name,
+          id: members[Math.floor(members.length * Math.random())].id,
           symbol: String.fromCharCode(65 + i)
         };
         votes.push(v);
       }
-      var round = { votes: votes };
-      this.position.rounds.push(round);
-      this.showResults();
-      this.checkIfCompleted();
+      var round = {
+        id:
+          this.position.id +
+          "_" +
+          ("00" + this.positionRounds.length).slice(-3),
+        votes: votes
+      };
+      this.checkIfCompleted(round);
+
+      this.shared.dbElectionRef
+        .collection("rounds")
+        .doc(round.id)
+        .set(round);
+
+      var vue = this;
+      if (!round.completed) {
+        vue.fakeAddTimer = setTimeout(() => {
+          vue.tempMakeResult();
+        }, 1000);
+      }
+      // this.showResults();
     },
     stopAdding: function() {
       clearTimeout(this.fakeAddTimer);

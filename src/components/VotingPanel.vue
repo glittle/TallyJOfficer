@@ -1,46 +1,52 @@
 <template>
   <div class="VotingPanel">
-    <p>Voting for {{position.name}}!</p>
-    <table v-if="!confirmed">
-      <tr class="memberHolder" v-for="(m,i) in shared.members" :key="i" :class="{x: m.x}">
-        <td>
-          <button
-            :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
-            v-on:click="voteFor(m)"
-          >{{m.name}}</button>
-        </td>
-        <td>
-          <div class="preferNot" v-if="m.preferNot">Prefers not to be elected as {{position.name}}.</div>
-        </td>
-      </tr>
-    </table>
-    <div v-if="!confirmed">
-      <button
-        class="confirm"
-        v-on:click="confirm()"
-        :class="{ready:selectedMember}"
-        :disabled="!selectedMember"
-      >
-        Confirm my vote
-        <span
-          v-if="selectedMember"
-        >for {{selectedMember.name}} to be {{position.name}}</span>
-      </button>
-      <label class="choosePreferNot">
-        <input type="checkbox" v-model="me.preferNot">
-        I prefer to not be elected as {{position.name}}.
-      </label>
-    </div>
-    <div v-if="confirmed" class="confirmation">
-      <div class="voteInfo" :class="{revealVote: reveal}">
-        <p>You voted for {{selectedMember.name}} to be {{position.name}}.</p>
+    <div v-if="position">
+      <p>Voting for {{position.name}}!</p>
+      <table v-if="!confirmed">
+        <tr class="memberHolder" v-for="(m,i) in shared.members" :key="i" :class="{x: m.x}">
+          <td>
+            <button
+              :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
+              v-on:click="voteFor(m)"
+            >{{m.name}}</button>
+          </td>
+          <td>
+            <div
+              class="preferNot"
+              v-if="m.preferNot"
+            >Prefers not to be elected as {{position.name}}.</div>
+          </td>
+        </tr>
+      </table>
+      <div v-if="!confirmed">
+        <button
+          class="confirm"
+          v-on:click="confirm()"
+          :class="{ready:selectedMember}"
+          :disabled="!selectedMember"
+        >
+          Confirm my vote
+          <span
+            v-if="selectedMember"
+          >for {{selectedMember.name}} to be {{position.name}}</span>
+        </button>
+        <label class="choosePreferNot">
+          <input type="checkbox" v-model="me.preferNot">
+          I prefer to not be elected as {{position.name}}.
+        </label>
       </div>
-      <div class="symbolInfo" :class="{revealVote: reveal}">Your symbol for this vote:
-        <div class="symbol">{{me.symbol}}</div>
+      <div v-if="confirmed" class="confirmation">
+        <div class="voteInfo" :class="{revealVote: reveal}">
+          <p>You voted for {{selectedMember.name}} to be {{position.name}}.</p>
+        </div>
+        <div class="symbolInfo" :class="{revealVote: reveal}">Your symbol for this vote:
+          <div class="symbol">{{me.symbol}}</div>
+        </div>
+        <button v-on:click="reveal = !reveal" class="reveal">
+          <span v-text="reveal ? 'Hide' : 'Reveal'"></span> my Vote on my screen
+        </button>
       </div>
-      <button v-on:click="reveal = !reveal" class="reveal">
-        <span v-text="reveal ? 'Hide' : 'Reveal'"></span> my Vote on my screen
-      </button>
+      <div v-else>No position is being voted for.</div>
     </div>
   </div>
 </template>
@@ -101,9 +107,7 @@ export default {
 
       //temp
       var round = {
-        votes: [
-          { name: this.selectedMember.name, symbol: this.me.symbol }
-        ]
+        votes: [{ name: this.selectedMember.name, symbol: this.me.symbol }]
       };
       this.position.rounds.push(round);
 
