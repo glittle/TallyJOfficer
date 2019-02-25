@@ -3,7 +3,7 @@
     <div class="image">
       <img alt="TallyJ logo" src="../assets/logo.png">
     </div>
-    <div class="middle">
+    <div class="middle" v-if="$route.name !== 'createElection'">
       <div>
         <router-link to="/">Public</router-link>
         <span></span>

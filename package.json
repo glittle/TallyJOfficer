@@ -21,6 +21,8 @@
         "babel-eslint": "^10.0.1",
         "eslint": "^5.8.0",
         "eslint-plugin-vue": "^5.0.0",
+        "firebase": "4.8.0",
+        "@firebase/firestore": "^0.3.7",
         "less": "^3.0.4",
         "less-loader": "^4.1.0",
         "vue-template-compiler": "^2.5.21"

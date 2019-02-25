@@ -26,14 +26,14 @@ export default {
     }
   },
   mounted: function() {
-    var vue = this;
-    setTimeout(function() {
-      vue.shared.members[3].voting = true;
-    }, 1500);
-    setTimeout(function() {
-      vue.shared.members[7].voting = false;
-      vue.shared.members[7].voted = true;
-    }, 5000);
+    // var vue = this;
+    // setTimeout(function() {
+    //   vue.shared.members[3].voting = true;
+    // }, 1500);
+    // setTimeout(function() {
+    //   vue.shared.members[7].voting = false;
+    //   vue.shared.members[7].voted = true;
+    // }, 5000);
   }
 };
 </script>

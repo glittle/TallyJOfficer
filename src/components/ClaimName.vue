@@ -6,7 +6,7 @@
       <tr
         class="memberHolder"
         v-for="m in shared.members"
-        :key="m.name"
+        :key="m.id"
         :class="{claimed: m.connected}"
       >
         <td>{{ m.name }}</td>

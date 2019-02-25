@@ -4,7 +4,7 @@
     <div class="electionBody">
       <router-view/>
     </div>
-    <MemberStatus/>
+    <MemberStatus v-if="$route.name !== 'createElection'"/>
   </div>
 </template>
 
@@ -36,6 +36,11 @@ export default {
   },
   methods: {
     goCurrentHome: function() {
+      if (!this.shared.electionLoadAttempted || !this.shared.electionId) {
+        this.$router.replace("/e/create");
+        return;
+      }
+
       if (this.$route.name === "electionRoot") {
         if (!this.shared.myName) {
           this.$router.replace("/e/claim");

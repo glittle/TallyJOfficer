@@ -9,6 +9,7 @@ import ElectionHome from './components/ElectionHome.vue'
 import VotingPanel from './components/VotingPanel.vue'
 import ResultPanel from './components/ResultPanel.vue'
 import ViewGuidance from './components/ViewGuidance.vue'
+import CreateElection from './components/CreateElection.vue'
 
 Vue.use(Router)
 
@@ -52,7 +53,11 @@ export default new Router({
                     path: 'guidance',
                     name: 'viewGuidance',
                     component: ViewGuidance
-                },
+                }, {
+                    path: 'create',
+                    name: 'createElection',
+                    component: CreateElection
+                }
                 // { path: 'names', component: x },
                 // { path: 'positions', component: x },
                 // { path: '', component: x },

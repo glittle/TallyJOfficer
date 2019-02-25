@@ -5,7 +5,7 @@ module.exports = {
     },
 
     pwa: {
-        name: 'Tally Officer'
+        name: 'TallyJ Officer'
     },
 
     lintOnSave: undefined

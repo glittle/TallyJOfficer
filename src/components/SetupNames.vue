@@ -21,7 +21,7 @@
         
         <label>
           <input type="checkbox" v-model="m.isAdmin">
-          Vote Admin?
+          Admin
         </label>
       </div>
     </transition-group>

@@ -1,19 +1,18 @@
 <template>
   <div class="ResultPanel" v-if="position.name">
     <p>Votes for {{position.name}}!</p>
-    <div v-if="!namesWithVotes.length">Waiting for results</div>
     <table class="results">
       <thead>
         <tr>
           <td class="roundNum">#</td>
-          <td v-for="name in namesWithVotes" :key="name">{{name}}</td>
+          <td v-for="m in shared.members" :key="m.id">{{m.name}}</td>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(round,i) in oldRounds" :key="i">
           <td class="roundNum">{{i+1}}</td>
-          <td :class="['vote' + votesFor(round, name)]" v-for="name in namesWithVotes" :key="name">
-            <div class="voteCount">{{votesFor(round, name)}}</div>
+          <td :class="['vote' + votesFor(round, name)]" v-for="m in shared.members" :key="m.id">
+            <div class="voteCount">{{votesFor(round, m.name)}}</div>
           </td>
         </tr>
       </tbody>
@@ -22,13 +21,13 @@
           <td class="roundNum">{{position.rounds.length}}</td>
           <td
             :class="['vote' + votesFor(lastRound, name)]"
-            v-for="name in namesWithVotes"
-            :key="name"
+            v-for="m in shared.members"
+            :key="m.id"
           >
-            <div class="voteListTitle">{{votesFor(lastRound, name)}}</div>
+            <div class="voteListTitle">{{votesFor(lastRound, m.name)}}</div>
             <div
               class="voteDetail"
-              v-for="(v,i) in voteListFor(lastRound, name)"
+              v-for="(v,i) in voteListFor(lastRound, m.name)"
               :key="i"
             >{{v.symbol}}</div>
           </td>
@@ -51,7 +50,7 @@ export default {
   name: "ResultPanel",
   data: function() {
     return {
-      namesWithVotes: [],
+      // namesWithVotes: [],
       fakeAddTimer: null
     };
   },
@@ -90,7 +89,7 @@ export default {
       // var hasVotesList = Object.keys(hasVotes);
       // hasVotesList.sort();
       // this.namesWithVotes = hasVotesList;
-      this.namesWithVotes = this.shared.members.map(m => m.name);
+      // this.namesWithVotes = this.shared.members.map(m => m.name);
     },
     votesFor: function(round, name) {
       if (!round) return null;

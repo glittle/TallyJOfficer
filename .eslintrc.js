@@ -6,7 +6,8 @@ module.exports = {
     },
 
     parserOptions: {
-        parser: 'babel-eslint'
+        parser: 'babel-eslint',
+        esversion: 6
     },
 
     rules: {
