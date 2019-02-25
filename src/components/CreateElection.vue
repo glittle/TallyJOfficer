@@ -2,9 +2,11 @@
   <div class="CreateElection">
     <div v-if="shared.electionLoadAttempted && !shared.electionId">
       <h1>Officer Election</h1>
-      <p>Welcome to your new officer election.</p>
-      <p>You are creating the election that will be used by your team to elect its officers.</p>
-      <p>When it is created, you will be given a unique URL that you can share with the rest of the members.</p>
+      <p>Welcome to your new officer election!</p>
+      <p>You are creating a new election that will be used by your team to elect its officers.</p>
+      <p>
+        <strong>Please note</strong>: if you are trying to join an existing election, you must use the link given to you by the person who created it.
+      </p>
       <h2>Create Election</h2>
       <p>To get started, we need your name.</p>
       <p>
@@ -12,6 +14,7 @@
         members to use when talking with you, usually just your first name. (You can change it later, if you want.)
       </p>
       <p>You will be the "administrator" of this election and able to manage it in this system.</p>
+      <p>When the election is created, you will be given a unique URL that you can share with the rest of the members.</p>
       <div class="nameInput">
         Your name
         <input v-model="name" v-on:keyup.enter="create">
@@ -44,9 +47,13 @@ export default {
     // var vue = this;
     var vue = this;
 
+     if (this.shared.election.created) {
+        this.$router.replace("/e");
+        return;
+      }
+
     this.shared.$on("election-created", function() {
-      vue.shared.isAdmin = true;
-      if (vue.shared.members.length < 2) {
+      if (vue.shared.members.filter(m => m.name).length < 2) {
         vue.$router.replace("/e/setupNames");
         return;
       }

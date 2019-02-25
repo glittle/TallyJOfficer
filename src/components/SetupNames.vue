@@ -1,7 +1,10 @@
 <template>
   <div class="SetupNames">
     <p>Welcome to your Officer Election!</p>
-    <p>Add the names of the members here.</p>
+    <p>Set the names of the members here.</p>
+    <textarea v-model="quickList">
+    </textarea>
+    <button v-on:click="processQuickList">Add</button>
     <transition-group name="list" tag="div" class="namesList">
       <div
         class="memberHolder"
@@ -37,7 +40,8 @@ export default {
   name: "SetupNames",
   data: function() {
     return {
-      duplicatedNames: {}
+      duplicatedNames: {},
+      quickList: ''
     };
   },
   computed: {
@@ -50,12 +54,15 @@ export default {
     this.updated();
   },
   methods: {
+    processQuickList: function(){
+
+    },
     remove: function(i) {
       this.shared.members.splice(i, 1);
       this.testForDuplicates();
     },
     add: function(i) {
-      this.shared.members.push(this.shared.makeMember(""));
+      this.shared.members.push(this.shared.makeMember('', this.shared.members));
     },
     updated: function() {
       this.shared.members.sort((a, b) =>

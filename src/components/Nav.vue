@@ -9,7 +9,7 @@
         <span></span>
         <router-link to="/e">Election</router-link>
       </div>
-      <div v-if="shared.isAdmin">
+      <div v-if="shared.me.isAdmin">
         <router-link to="/e/setupNames">Names</router-link>
         <span></span>
         <router-link to="/e/setupPositions">Positions</router-link>
@@ -38,9 +38,7 @@ export default {
       var member = this.shared.members.find(m => m.name === this.shared.myName);
       if (member) {
         member.connected = false;
-        member.isMe = false;
         this.shared.myName = "";
-        this.shared.isAdmin = false;
         this.$router.replace("/e");
       } else {
         var i = this.shared.viewers.findIndex(

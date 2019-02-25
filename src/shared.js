@@ -6,9 +6,10 @@ export default new Vue({
     data: {
         election: {},
         electionLoadAttempted: false,
-        myName: localStorage['name'] || '',
+        me: {},
+        myId: '',
         isViewer: localStorage['isViewer'] === 'true',
-        isAdmin: localStorage['isAdmin'] === 'true',
+        // isAdmin: localStorage['isAdmin'] === 'true',
         members: [],
         positions: [],
         viewers: [],
@@ -19,19 +20,20 @@ export default new Vue({
     },
     computed: {
         electionId: function() {
+            // storing electionId in the photoURL profile field
             return this.dbUser ? this.dbUser.photoURL : null;
         }
     },
     watch: {
-        myName: function() {
-            localStorage['name'] = this.myName;
-        },
+        // myId: function() {
+        //     localStorage['myId'] = this.myId;
+        // },
         isViewer: function() {
             localStorage['isViewer'] = this.isViewer;
         },
-        isAdmin: function() {
-            localStorage['isAdmin'] = this.isAdmin;
-        },
+        // isAdmin: function() {
+        //     localStorage['isAdmin'] = this.isAdmin;
+        // },
         // members: {
         //    handler: function(a, b) {
         //        if (!this.dbElectionRef) return;
@@ -73,9 +75,13 @@ export default new Vue({
                 if (user.photoURL) {
                     vue.loadElection(user.photoURL);
                 } else {
-                    // not linked to an election
+                    // not linked to an election already
+
+                    // see if there is a query string that works
                     if (vue.initialQuery) {
                         vue.loadElection(vue.initialQuery.substring(1));
+                    } else {
+                        vue.electionLoadAttempted = true;
                     }
                 }
             } else {
@@ -86,6 +92,7 @@ export default new Vue({
             }
             // ...
         });
+
         firebase.auth().signInAnonymously().catch(function(error) {
             // Handle Errors here.
             var errorCode = error.code;
@@ -96,7 +103,7 @@ export default new Vue({
         vue.initialQuery = window.location.search;
     },
     methods: {
-        loadElection(electionId) {
+        loadElection: function(electionId) {
             var vue = this;
             if (electionId) {
                 var ref = db.collection('elections').doc(electionId);
@@ -104,64 +111,15 @@ export default new Vue({
                     .then(function(doc) {
                         if (doc.exists) {
                             vue.dbElectionRef = ref;
-
-                            // var election = doc.data();
-
-                            ref.onSnapshot(function(d) {
-                                vue.election = d.data();
-                                if (vue.dbUser.photoURL !== d.id) {
-                                    vue.dbUser.updateProfile({
-                                        photoURL: d.id
-                                    });
-                                }
-
-                                vue.$emit('election-loaded');
-                                vue.electionLoadAttempted = true;
-                            });
-
-
-                            ref.collection('members').orderBy('name')
-                                .onSnapshot(function(snapshot) {
-
-                                    // if (vue.dbUser) {
-                                    //     vue.dbUser.updateProfile({
-                                    //         photoURL: vue.electionId
-                                    //     });
-                                    // }
-
-                                    snapshot.forEach(function(doc) {
-                                        vue.updateList(vue.members, doc);
-                                    });
-                                });
-                            ref.collection('positions')
-                                .onSnapshot(function(snapshot) {
-                                    snapshot.forEach(function(doc) {
-                                        vue.updateList(vue.positions, doc);
-                                    });
-                                });
-                            ref.collection('viewers').orderBy('id')
-                                .onSnapshot(function(snapshot) {
-                                    snapshot.forEach(function(doc) {
-                                        vue.updateList(vue.viewers, doc);
-                                    });
-                                });
-
-                            ref.collection('rounds').orderBy('id')
-                                .onSnapshot(function(snapshot) {
-                                    snapshot.docChanges.forEach(function(change) {
-                                        vue.changeList(vue.rounds, change);
-                                    });
-                                });
-
-
-                            ref.update({
-                                lastLogin: new Date()
-                            });
+                            vue.connectToElection();
                         } else {
                             // invalid, so forget about it
                             vue.dbUser.updateProfile({
-                                photoURL: ''
+                                photoURL: '',
+                                displayName: ''
                             });
+
+                            vue.electionLoadAttempted = true;
 
                             vue.dbElectionRef = null;
                         }
@@ -169,9 +127,67 @@ export default new Vue({
                         vue.electionLoadAttempted = true;
                         console.log(err);
                     });
-            } else {
-                // vue.electionLoadAttempted = true;
             }
+        },
+        connectToElection: function() {
+            var vue = this;
+            var ref = vue.dbElectionRef;
+            ref.onSnapshot(function(d) {
+                vue.election = d.data();
+
+                if (vue.dbUser.photoURL !== d.id) {
+                    // remember this election
+                    vue.dbUser.updateProfile({
+                        photoURL: d.id
+                    });
+                }
+
+                // get my id
+                vue.myId = vue.dbUser.displayName;
+
+                vue.$emit('election-loaded');
+                vue.electionLoadAttempted = true;
+            });
+
+            ref.collection('members').orderBy('name')
+                .onSnapshot(function(snapshot) {
+                    snapshot.docChanges.forEach(function(change) {
+                        vue.changeList(vue.members, change);
+
+                        // pick myself out of the list!
+                        if (change.type === 'added' && !vue.me && vue.myId) {
+                            var item = change.doc.data();
+                            if (item.id === vue.myId) {
+                                vue.me = item;
+                            }
+                        }
+                    });
+                });
+
+            ref.collection('positions') // order by ??
+                .onSnapshot(function(snapshot) {
+                    snapshot.docChanges.forEach(function(change) {
+                        vue.changeList(vue.positions, change);
+                    });
+                });
+
+            ref.collection('viewers').orderBy('id')
+                .onSnapshot(function(snapshot) {
+                    snapshot.docChanges.forEach(function(change) {
+                        vue.changeList(vue.viewers, change);
+                    });
+                });
+
+            ref.collection('rounds').orderBy('id')
+                .onSnapshot(function(snapshot) {
+                    snapshot.docChanges.forEach(function(change) {
+                        vue.changeList(vue.rounds, change);
+                    });
+                });
+
+            ref.update({
+                lastLogin: new Date()
+            });
         },
         changeList: function(list, change) {
             var item = change.doc.data();
@@ -200,15 +216,15 @@ export default new Vue({
                     break;
             }
         },
-        updateList: function(list, doc) {
-            var item = doc.data();
-            var i = list.findIndex(x => x.id === item.id);
-            if (i !== -1) {
-                list.splice(i, 1, item);
-            } else {
-                list.push(item);
-            }
-        },
+        // updateList: function(list, doc) {
+        //     var item = doc.data();
+        //     var i = list.findIndex(x => x.id === item.id);
+        //     if (i !== -1) {
+        //         list.splice(i, 1, item);
+        //     } else {
+        //         list.push(item);
+        //     }
+        // },
         createElection: function(nameOfAdmin) {
             var vue = this;
             if (!vue.dbUser) {
@@ -221,13 +237,13 @@ export default new Vue({
                     focusPosition: ''
                 }).then(function() {
                     vue.dbElectionRef = ref;
-                    // vue.electionId = ref.id;
+
+                    vue.connectToElection();
 
                     vue.dbUser.updateProfile({
-                        photoURL: vue.electionId
+                        // remember this election id
+                        photoURL: ref.id
                     });
-
-                    localStorage.electionId = vue.electionId;
 
                     vue.createMembers(nameOfAdmin);
                     vue.createPositions();
@@ -241,22 +257,31 @@ export default new Vue({
         },
         createMembers: function(nameOfAdmin) {
             var vue = this;
-            vue.members.splice(0, vue.members.length);
+            // vue.members.splice(0, vue.members.length);
 
-            var me = vue.makeMember(nameOfAdmin);
-            me.isMe = true;
+            var members = [];
+            debugger;
+
+            var me = vue.makeMember(nameOfAdmin, members);
             me.isAdmin = true;
             me.connected = true;
-            vue.members.push(me);
+            members.push(me);
+
+            vue.me = me;
+            vue.meId = me.id;
 
             // const dbMembers = vue.dbElectionRef.collection('members');
             // dbMembers.doc(me.id).set(me);
 
             for (var i = 0; i < 8; i++) {
-                var member = vue.makeMember();
-                vue.members.push(member);
+                var member = vue.makeMember('', members);
+                members.push(member);
                 // dbMembers.doc(member.id).set(member);
             }
+
+            const dbMembers = vue.dbElectionRef.collection('members');
+
+            members.forEach(m => dbMembers.doc(m.id).set(m));
         },
         createPositions: function() {
             var vue = this;
@@ -267,14 +292,13 @@ export default new Vue({
                 'Vice-Chair',
                 'Treasurer'
             ];
-            debugger;
 
-            vue.positions.splice(0, vue.positions.length);
-            // const dbPositions = vue.dbElectionRef.collection('positions');
+            // vue.positions.splice(0, vue.positions.length);
+            const dbPositions = vue.dbElectionRef.collection('positions');
             list.forEach(n => {
                 var position = this.makePosition(n);
-                vue.positions.push(position);
-                // dbPositions.doc(position.id).set(position);
+                // vue.positions.push(position);
+                dbPositions.doc(position.id).set(position);
             });
         },
         // clearStorage: function() {
@@ -346,18 +370,20 @@ export default new Vue({
             }
             return id;
         },
-        makeMember: function(name, connected, voted, voting) {
-            var id = this.getRandomId('m', this.members);
+        makeMember: function(name, list) {
+            var id = this.getRandomId('m', list);
             return {
                 name: name || '',
                 id: id,
                 isMe: false,
                 isAdmin: false,
+                connected: false,
+
+                // temp per position vote
                 preferNot: false,
+                voted: false,
+                voting: false,
                 symbol: '',
-                connected: connected || false,
-                voted: voted || false,
-                voting: voting || false,
             };
         },
         startMeAsViewer: function() {
