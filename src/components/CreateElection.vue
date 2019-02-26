@@ -1,6 +1,6 @@
 <template>
   <div class="CreateElection">
-    <div v-if="shared.electionLoadAttempted && !shared.electionId">
+    <div v-if="shared.electionLoadAttempted && !shared.election.id">
       <h1>Officer Election</h1>
       <p>Welcome to your new officer election!</p>
       <p>You are creating a new election that will be used by your team to elect its officers.</p>
@@ -60,6 +60,7 @@ export default {
       vue.$router.replace("/e");
     });
     this.shared.$on("election-loaded", function() {
+      debugger;
       vue.$router.replace("/e");
     });
   },

@@ -4,20 +4,18 @@
       <img alt="TallyJ logo" src="../assets/logo.png">
     </div>
     <div class="middle" v-if="$route.name !== 'createElection'">
-      <div>
-        <router-link to="/">Public</router-link>
-        <span></span>
-        <router-link to="/e">Election</router-link>
-      </div>
-      <div v-if="shared.me.isAdmin">
+      <span>
+        <router-link to="/e/home">Home</router-link>
+      </span>
+      <span v-if="shared.me.isAdmin">
         <router-link to="/e/setupNames">Names</router-link>
         <span></span>
         <router-link to="/e/setupPositions">Positions</router-link>
-      </div>
+      </span>
     </div>
     <div class="myName" :class="{isViewer: shared.isViewer}">
-      <span>{{ shared.myName }}</span>
-      <button v-if="shared.myName" v-on:click="forgetMe">X</button>
+      <span>{{ shared.me.name }}</span>
+      <button v-if="shared.me.id" v-on:click="forgetMe">X</button>
     </div>
   </div>
 </template>
@@ -34,22 +32,29 @@ export default {
   },
   methods: {
     forgetMe: function() {
-      // testing only??
-      var member = this.shared.members.find(m => m.name === this.shared.myName);
-      if (member) {
-        member.connected = false;
-        this.shared.myName = "";
+      if (this.shared.me) {
+        // disconnect from the member
+        this.shared.dbUser.updateProfile({
+          displayName: ""
+        });
+
+        const dbMembers = this.shared.dbElectionRef.collection("members");
+        dbMembers.doc(this.shared.me.id).update({ connected: false });
+
+        this.shared.me = {};
+
         this.$router.replace("/e");
       } else {
-        var i = this.shared.viewers.findIndex(
-          v => v.code === this.shared.myName
-        );
-        if (i !== -1) {
-          this.shared.viewers.splice(i, 1);
-        }
-        this.shared.isViewer = false;
-        this.shared.myName = "";
-        this.$router.replace("/e");
+        // log out of the election
+        // var i = this.shared.viewers.findIndex(
+        //   v => v.code === this.shared.myName
+        // );
+        // if (i !== -1) {
+        //   this.shared.viewers.splice(i, 1);
+        // }
+        // this.shared.isViewer = false;
+        // this.shared.myName = "";
+        // this.$router.replace("/e");
       }
     }
   }

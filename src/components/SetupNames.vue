@@ -2,9 +2,15 @@
   <div class="SetupNames">
     <p>Welcome to your Officer Election!</p>
     <p>Set the names of the members here.</p>
-    <textarea v-model="quickList">
-    </textarea>
-    <button v-on:click="processQuickList">Add</button>
+    <button
+      v-on:click="useQuickList = !useQuickList"
+      v-text="useQuickList ? 'Hide Quick Add' : 'Use Quick Add'"
+    />
+    <div v-if="useQuickList">
+      <p>Quickly add member's names, one per line, then click "Add".</p>
+      <textarea v-model="quickList"></textarea>
+      <button v-on:click="processQuickList">Add</button>
+    </div>
     <transition-group name="list" tag="div" class="namesList">
       <div
         class="memberHolder"
@@ -20,12 +26,12 @@
         
         <input type="text" v-on:change="updated" v-model="m.name">
         
-        <button class="remove" v-on:click="remove(i)">Remove</button>
-        
         <label>
-          <input type="checkbox" v-model="m.isAdmin">
+          <input type="checkbox" v-model="m.isAdmin" v-on:change="updated">
           Admin
         </label>
+        
+        <button class="remove" v-on:click="remove(i)">Remove</button>
       </div>
     </transition-group>
 
@@ -41,7 +47,9 @@ export default {
   data: function() {
     return {
       duplicatedNames: {},
-      quickList: ''
+      quickList: "",
+      useQuickList: false
+      // editsMade: false
     };
   },
   computed: {
@@ -49,26 +57,73 @@ export default {
       return _shared;
     }
   },
+  watch: {
+    // 'shared.members': {
+    //   handler: function(a, b) {
+    //     this.editsMade = true;
+    //   },
+    //   deep: true
+    // }
+  },
   mounted: function() {
     // var vue = this;
     this.updated();
+
+    if (this.shared.numBlankNames) {
+      this.useQuickList = true;
+    }
   },
   methods: {
-    processQuickList: function(){
+    processQuickList: function() {
+      var names = this.quickList.split(/\n/);
+      names.forEach(n => {
+        n = n.trim();
+        if (!n) return;
 
+        var nextEmpty = this.shared.members.find(m => !m.name);
+        if (nextEmpty) {
+          nextEmpty.name = n;
+        } else {
+          this.shared.members.push(
+            this.shared.makeMember(n, this.shared.members)
+          );
+        }
+      });
+      this.useQuickList = false;
+      this.updated(true);
     },
     remove: function(i) {
-      this.shared.members.splice(i, 1);
-      this.testForDuplicates();
+      var vue = this;
+      var removed = this.shared.members.splice(i, 1)[0];
+      var ref = this.shared.dbElectionRef;
+      const dbMembers = ref.collection("members");
+      dbMembers
+        .doc(removed.id)
+        .delete()
+        .then(function() {
+          vue.updated(true);
+        });
     },
     add: function(i) {
-      this.shared.members.push(this.shared.makeMember('', this.shared.members));
+      this.shared.members.push(this.shared.makeMember("", this.shared.members));
     },
-    updated: function() {
+    updated: function(wasUpdated) {
       this.shared.members.sort((a, b) =>
         (a.name || "Z") < (b.name || "Z") ? -1 : 1
       );
-      this.testForDuplicates();
+
+      var dupFound = this.testForDuplicates();
+
+      if (!dupFound && wasUpdated) {
+        var ref = this.shared.dbElectionRef;
+        if (ref) {
+          const dbMembers = ref.collection("members");
+          this.shared.members.forEach(m => {
+            dbMembers.doc(m.id).set(m);
+          });
+          // this.editsMade = false;
+        }
+      }
     },
     testForDuplicates: function() {
       var nameCount = {};
@@ -88,6 +143,8 @@ export default {
           vue.duplicatedNames[name] = true;
         }
       });
+
+      return Object.keys(vue.duplicatedNames).length !== 0;
     }
   }
 };
@@ -97,6 +154,14 @@ export default {
 .SetupNames {
   table {
     margin: 1em auto;
+  }
+  textarea {
+    width: 60px;
+    height: 11em;
+    display: block;
+    font-family: inherit;
+    margin: 0 auto;
+    padding-left: 3px;
   }
   .namesList {
     margin-right: 100px; // offset for isDup
@@ -114,6 +179,10 @@ export default {
       margin: 0 5px 0 5px;
       font-size: 75%;
       color: grey;
+    }
+    label {
+      display: inline-block;
+      margin: 0 5px;
     }
     .remove {
       margin: 0 5px;

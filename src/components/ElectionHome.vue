@@ -105,5 +105,9 @@ export default {
   .reset {
     margin: 100px 0 10px 0;
   }
+  .electionLink{
+    margin: 30px 0;
+    font-size: 80%;
+  }
 }
 </style>

@@ -17,8 +17,16 @@
       </tr>
     </table>
     <hr>
-    <p>Or, if this computer will be used to display results, click
-      <button v-on:click="claimViewer">Viewer</button>
+    <p>
+      Or, if this computer will be used to display results, click
+      <button
+        v-on:click="claimViewer"
+      >Viewer</button>
+    </p>
+    <hr>
+    <p v-if="!shared.me.id">
+      To leave this election entirely, click
+      <button v-on:click="logout">Logout</button>
     </p>
   </div>
 </template>
@@ -38,8 +46,11 @@ export default {
       return _shared;
     }
   },
-  mounted: function() {
-    // var vue = this;
+  updated: function() {
+    if (this.shared.me.id) {
+      // can't look here if already claimed?
+      this.$router.replace("/e");
+    }
   },
   methods: {
     claim: function(member) {
@@ -52,11 +63,23 @@ export default {
         displayName: member.id
       });
 
-      // member.isMe = true;
+      this.shared.me = member;
+
+      const dbMembers = this.shared.dbElectionRef.collection("members");
+      dbMembers.doc(member.id).update({ connected: true });
+
       // member.connected = true; // temp
       // this.claimMade = true;
       // this.shared.myName = member.name;
       this.$router.replace("/e/home");
+    },
+    logout: function() {
+      this.shared.dbUser.updateProfile({
+        photoURL: "",
+        displayName: ""
+      });
+      this.shared.dbElectionRef = null;
+      this.$router.replace("/");
     },
     claimViewer: function() {
       this.shared.startMeAsViewer();
@@ -76,7 +99,7 @@ export default {
     cursor: pointer;
 
     button {
-      margin: 1em 0;
+      margin: 0.6em 10px;
     }
 
     td {

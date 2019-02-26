@@ -3,11 +3,11 @@
   <div class="MemberStatus">
     <div
       class="member"
-      :class="{connected: m.connected, voting: m.voting, voted: m.voted}"
+      :class="{connected: m.connected, voting: m.voting, voted: m.voted, isAdmin: m.isAdmin}"
       v-for="m in shared.members"
       :key="m.id"
     >{{ m.name }}</div>
-    
+
     <div class="viewer" v-for="(m,i) in shared.viewers" :key="'v' + i">{{ m.code }}</div>
   </div>
 </template>
@@ -65,6 +65,7 @@ export default {
   .member {
     border: 1px solid transparent;
     background-color: #d0d0d0;
+    position: relative;
 
     &.connected {
       border-color: #3f3fff;
@@ -73,6 +74,14 @@ export default {
 
     &.voted {
       background-color: #6bff5d;
+    }
+
+    &.isAdmin:after {
+      content: "A"; // for Admin
+      position: absolute;
+      bottom: -5px;;
+      right: -8px;
+      font-size: 60%;
     }
 
     &.voting {

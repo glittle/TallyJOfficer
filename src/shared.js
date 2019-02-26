@@ -7,7 +7,6 @@ export default new Vue({
         election: {},
         electionLoadAttempted: false,
         me: {},
-        myId: '',
         isViewer: localStorage['isViewer'] === 'true',
         // isAdmin: localStorage['isAdmin'] === 'true',
         members: [],
@@ -22,6 +21,15 @@ export default new Vue({
         electionId: function() {
             // storing electionId in the photoURL profile field
             return this.dbUser ? this.dbUser.photoURL : null;
+        },
+        myIdFromProfile: function() {
+            return this.dbUser ? this.dbUser.displayName : null;
+        },
+        numBlankNames: function() {
+            return this.members.filter(m => !m.name).length;
+        },
+        numMembers: function() {
+            return this.members.length;
         }
     },
     watch: {
@@ -67,42 +75,46 @@ export default new Vue({
     },
     created: function() {
         var vue = this;
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                // User is signed in.
-                vue.dbUser = user;
-
-                if (user.photoURL) {
-                    vue.loadElection(user.photoURL);
-                } else {
-                    // not linked to an election already
-
-                    // see if there is a query string that works
-                    if (vue.initialQuery) {
-                        vue.loadElection(vue.initialQuery.substring(1));
-                    } else {
-                        vue.electionLoadAttempted = true;
-                    }
-                }
-            } else {
-                // User is signed out.
-                // ...
-                vue.dbUser = null;
-                vue.dbElectionRef = null;
-            }
-            // ...
-        });
-
-        firebase.auth().signInAnonymously().catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log('login error', errorCode, errorMessage)
-        });
+        vue.handleAuthChanges();
 
         vue.initialQuery = window.location.search;
     },
     methods: {
+        handleAuthChanges: function() {
+            var vue = this;
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // User is signed in.
+                    vue.dbUser = user;
+
+                    if (user.photoURL) {
+                        vue.loadElection(user.photoURL);
+                    } else {
+                        // not linked to an election already
+
+                        // see if there is a query string that works
+                        if (vue.initialQuery) {
+                            vue.loadElection(vue.initialQuery.substring(1));
+                        } else {
+                            vue.electionLoadAttempted = true;
+                        }
+                    }
+                } else {
+                    // User is signed out.
+                    // ...
+                    vue.dbUser = null;
+                    vue.dbElectionRef = null;
+                }
+                // ...
+            });
+
+            firebase.auth().signInAnonymously().catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log('login error', errorCode, errorMessage)
+            });
+        },
         loadElection: function(electionId) {
             var vue = this;
             if (electionId) {
@@ -124,6 +136,10 @@ export default new Vue({
                             vue.dbElectionRef = null;
                         }
                     }).catch(function(err) {
+                        vue.dbUser.updateProfile({
+                            photoURL: '',
+                            displayName: ''
+                        });
                         vue.electionLoadAttempted = true;
                         console.log(err);
                     });
@@ -133,7 +149,7 @@ export default new Vue({
             var vue = this;
             var ref = vue.dbElectionRef;
             ref.onSnapshot(function(d) {
-                vue.election = d.data();
+                vue.election = d.data() || {};
 
                 if (vue.dbUser.photoURL !== d.id) {
                     // remember this election
@@ -143,10 +159,8 @@ export default new Vue({
                 }
 
                 // get my id
-                vue.myId = vue.dbUser.displayName;
-
-                vue.$emit('election-loaded');
                 vue.electionLoadAttempted = true;
+                vue.$emit('election-loaded');
             });
 
             ref.collection('members').orderBy('name')
@@ -155,16 +169,16 @@ export default new Vue({
                         vue.changeList(vue.members, change);
 
                         // pick myself out of the list!
-                        if (change.type === 'added' && !vue.me && vue.myId) {
+                        if (change.type === 'added' && !vue.me.id && vue.myIdFromProfile) {
                             var item = change.doc.data();
-                            if (item.id === vue.myId) {
+                            if (item.id === vue.myIdFromProfile) {
                                 vue.me = item;
                             }
                         }
                     });
                 });
 
-            ref.collection('positions') // order by ??
+            ref.collection('positions').orderBy('sortOrder')
                 .onSnapshot(function(snapshot) {
                     snapshot.docChanges.forEach(function(change) {
                         vue.changeList(vue.positions, change);
@@ -267,8 +281,11 @@ export default new Vue({
             me.connected = true;
             members.push(me);
 
+            vue.dbUser.updateProfile({
+                displayName: me.id
+            });
+
             vue.me = me;
-            vue.meId = me.id;
 
             // const dbMembers = vue.dbElectionRef.collection('members');
             // dbMembers.doc(me.id).set(me);
@@ -286,7 +303,7 @@ export default new Vue({
         createPositions: function() {
             var vue = this;
             var list = [
-                'Practice Vote',
+                'Test Position',
                 'Chair',
                 'Secretary',
                 'Vice-Chair',
@@ -295,8 +312,9 @@ export default new Vue({
 
             // vue.positions.splice(0, vue.positions.length);
             const dbPositions = vue.dbElectionRef.collection('positions');
-            list.forEach(n => {
+            list.forEach((n, i) => {
                 var position = this.makePosition(n);
+                position.sortOrder = i * 10;
                 // vue.positions.push(position);
                 dbPositions.doc(position.id).set(position);
             });
@@ -375,7 +393,6 @@ export default new Vue({
             return {
                 name: name || '',
                 id: id,
-                isMe: false,
                 isAdmin: false,
                 connected: false,
 

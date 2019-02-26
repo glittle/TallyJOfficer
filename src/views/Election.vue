@@ -42,8 +42,10 @@ export default {
       }
 
       if (this.$route.name === "electionRoot") {
-        if (!this.shared.myName) {
+        if (!this.shared.me.id) {
           this.$router.replace("/e/claim");
+        } else if (this.shared.numBlankNames) {
+          this.$router.replace("/e/setupNames");
         } else {
           this.$router.replace("/e/home");
         }
