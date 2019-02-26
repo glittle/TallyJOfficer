@@ -1,29 +1,8 @@
-# TallyOfficer
+# TallyJ for Officers
 
-## Project setup
-```
-npm install
-```
+## Purpose
+Facilitate the process of electing members of an Assembly, committee or team.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Overview
+An "election" can be created quickly and easily, then shared with other members.  Each member votes on 
+their own phone / computer and the combined results are visible to everyone.
