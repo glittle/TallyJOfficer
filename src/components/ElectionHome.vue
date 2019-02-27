@@ -23,9 +23,9 @@
 
     <result-panel/>
 
-    <div class="electionLink" v-if="link">
+    <div class="electionLink" v-if="shared.link">
       Shareable link to this election
-      <a :href="link">{{link}}</a>
+      <a :href="shared.link">{{shared.link}}</a>
     </div>
     <!-- <button class="reset" v-on:click="clearStorage">Reset All</button> -->
   </div>
@@ -47,12 +47,6 @@ export default {
     shared: function() {
       return _shared;
     },
-    link: function() {
-      if (this.shared.dbUser) {
-        return `${location.href}?${this.shared.dbUser.photoURL}`;
-      }
-      return null;
-    }
   },
   mounted: function() {
     // var vue = this;

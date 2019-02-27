@@ -2,15 +2,15 @@
   <div class="SetupNames">
     <p>Welcome to your Officer Election!</p>
     <p>Set the names of the members here.</p>
+    <div v-if="useQuickList">
+      <p>To quickly add member, enter their first names in this box, one per line, then click "Add".</p>
+      <textarea v-model="quickList"></textarea>
+      <button v-on:click="processQuickList">Add</button>
+    </div>
     <button
       v-on:click="useQuickList = !useQuickList"
       v-text="useQuickList ? 'Hide Quick Add' : 'Use Quick Add'"
     />
-    <div v-if="useQuickList">
-      <p>Quickly add member's names, one per line, then click "Add".</p>
-      <textarea v-model="quickList"></textarea>
-      <button v-on:click="processQuickList">Add</button>
-    </div>
     <transition-group name="list" tag="div" class="namesList">
       <div
         class="memberHolder"
@@ -66,12 +66,13 @@ export default {
     // }
   },
   mounted: function() {
-    // var vue = this;
+    var vue = this;
     this.updated();
-
-    if (this.shared.numBlankNames) {
-      this.useQuickList = true;
-    }
+    this.shared.$on("election-loaded", function() {
+      if (vue.shared.numBlankNames) {
+        vue.useQuickList = true;
+      }
+    });
   },
   methods: {
     processQuickList: function() {
@@ -90,6 +91,7 @@ export default {
         }
       });
       this.useQuickList = false;
+      this.quickList = "";
       this.updated(true);
     },
     remove: function(i) {

@@ -34,6 +34,10 @@ export default {
   mounted: function() {
     this.goCurrentHome();
   },
+  beforeUpdate: function() {
+    console.log('before update');
+    this.goCurrentHome();
+  },
   methods: {
     goCurrentHome: function() {
       if (!this.shared.electionLoadAttempted || !this.shared.electionId) {
@@ -69,6 +73,8 @@ body {
   .electionBody {
     flex-grow: 1;
     overflow: auto;
+    max-width: 700px;
+    margin: 0 auto;
   }
 }
 </style>

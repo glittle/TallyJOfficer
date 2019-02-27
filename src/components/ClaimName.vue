@@ -28,6 +28,17 @@
       To leave this election entirely, click
       <button v-on:click="logout">Logout</button>
     </p>
+    <hr>
+    <p v-if="!shared.me.id">
+      To delete this election entirely, click
+      <button v-on:click="deleteElection">Delete and Logout</button>
+      <span class="deleteStatus">{{deleteStatus}}</span>
+    </p>
+    <hr>
+    <p class="electionLink" v-if="shared.link">
+      Shareable link to this election
+      <a :href="shared.link">{{shared.link}}</a>
+    </p>
   </div>
 </template>
 
@@ -38,7 +49,8 @@ export default {
   name: "ClaimName",
   data: function() {
     return {
-      claimMade: false
+      claimMade: false,
+      deleteStatus: null
     };
   },
   computed: {
@@ -74,12 +86,39 @@ export default {
       this.$router.replace("/e/home");
     },
     logout: function() {
+      var vue = this;
+      vue.shared.electionId = "";
+      vue.shared.me = {};
+      vue.election = {};
       this.shared.dbUser.updateProfile({
         photoURL: "",
         displayName: ""
       });
       this.shared.dbElectionRef = null;
       this.$router.replace("/");
+    },
+    deleteElection: function() {
+      this.deleteStatus = "Deleting...";
+      var vue = this;
+      this.shared.dbElectionRef
+        .delete()
+        .then(function() {
+          vue.deleteStatus = "Done. Good-bye!";
+          vue.shared.electionId = "";
+          vue.shared.me = {};
+          vue.election = {};
+
+          vue.dbUser.updateProfile({
+            photoURL: "",
+            displayName: ""
+          });
+
+          vue.dbElectionRef = null;
+          vue.$router.replace("/");
+        })
+        .catch(function(err) {
+          vue.deleteStatus = "Error: " + err;
+        });
     },
     claimViewer: function() {
       this.shared.startMeAsViewer();
@@ -111,6 +150,14 @@ export default {
         font-weight: normal;
       }
     }
+  }
+  .deleteStatus {
+    display: block;
+    margin: 5px 0 20px 0;
+  }
+  .electionLink {
+    margin: 30px 0;
+    font-size: 80%;
   }
 }
 </style>

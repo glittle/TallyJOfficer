@@ -46,8 +46,8 @@
           <span v-text="reveal ? 'Hide' : 'Reveal'"></span> my Vote on my screen
         </button>
       </div>
-      <div v-else>No position is being voted for.</div>
     </div>
+    <div v-else>No position is being voted for.</div>
   </div>
 </template>
 
@@ -68,11 +68,12 @@ export default {
     shared: function() {
       return _shared;
     },
-    position: function() {
-      return this.shared.positions.find(p => p.isActive);
-    },
     me: function() {
-      return this.shared.members.find(m => m.name === this.shared.myName);
+      return this.shared.me;
+    },
+    position: function() {
+      var positionId = this.shared.election.activePositionId;
+      return this.shared.positions.find(p => p.id === positionId);
     }
   },
   watch: {
@@ -99,13 +100,14 @@ export default {
         return;
       }
       var vue = this;
+      var me = this.me;
       this.reveal = true;
-      this.me.voted = true;
-      this.me.voting = false;
       this.confirmed = true;
-      this.me.symbol = String.fromCharCode(65 + 15 * Math.random());
+      me.voted = true;
+      me.voting = false;
+      me.symbol = String.fromCharCode(65 + 15 * Math.random());
 
-      //temp
+      // temp
       var round = {
         votes: [{ name: this.selectedMember.name, symbol: this.me.symbol }]
       };

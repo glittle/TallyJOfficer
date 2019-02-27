@@ -15,13 +15,10 @@ export default new Vue({
         rounds: [],
         dbUser: null,
         dbElectionRef: null,
-        initialQuery: ''
+        initialQuery: '',
+        electionId: ''
     },
     computed: {
-        electionId: function() {
-            // storing electionId in the photoURL profile field
-            return this.dbUser ? this.dbUser.photoURL : null;
-        },
         myIdFromProfile: function() {
             return this.dbUser ? this.dbUser.displayName : null;
         },
@@ -30,6 +27,12 @@ export default new Vue({
         },
         numMembers: function() {
             return this.members.length;
+        },
+        link: function() {
+            if (this.dbUser) {
+                return `${location.origin}/e/claim?${this.dbUser.photoURL}`;
+            }
+            return null;
         }
     },
     watch: {
@@ -75,6 +78,7 @@ export default new Vue({
     },
     created: function() {
         var vue = this;
+        debugger
         vue.handleAuthChanges();
 
         vue.initialQuery = window.location.search;
@@ -122,8 +126,7 @@ export default new Vue({
                 ref.get()
                     .then(function(doc) {
                         if (doc.exists) {
-                            vue.dbElectionRef = ref;
-                            vue.connectToElection();
+                            vue.connectToElection(ref);
                         } else {
                             // invalid, so forget about it
                             vue.dbUser.updateProfile({
@@ -145,18 +148,24 @@ export default new Vue({
                     });
             }
         },
-        connectToElection: function() {
+        connectToElection: function(ref) {
             var vue = this;
-            var ref = vue.dbElectionRef;
+
+            vue.dbElectionRef = ref;
+            vue.electionId = ref.id;
+            vue.dbUser.updateProfile({
+                photoURL: ref.id
+            });
+
             ref.onSnapshot(function(d) {
                 vue.election = d.data() || {};
 
-                if (vue.dbUser.photoURL !== d.id) {
-                    // remember this election
-                    vue.dbUser.updateProfile({
-                        photoURL: d.id
-                    });
-                }
+                // if (vue.dbUser.photoURL !== d.id) {
+                //     // remember this election
+                //     vue.dbUser.updateProfile({
+                //         photoURL: d.id
+                //     });
+                // }
 
                 // get my id
                 vue.electionLoadAttempted = true;
@@ -250,14 +259,7 @@ export default new Vue({
                     by: nameOfAdmin,
                     focusPosition: ''
                 }).then(function() {
-                    vue.dbElectionRef = ref;
-
-                    vue.connectToElection();
-
-                    vue.dbUser.updateProfile({
-                        // remember this election id
-                        photoURL: ref.id
-                    });
+                    vue.connectToElection(ref);
 
                     vue.createMembers(nameOfAdmin);
                     vue.createPositions();
@@ -303,7 +305,7 @@ export default new Vue({
         createPositions: function() {
             var vue = this;
             var list = [
-                'Test Position',
+                'Sample for Practice',
                 'Chair',
                 'Secretary',
                 'Vice-Chair',
