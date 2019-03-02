@@ -232,7 +232,8 @@ export default {
   .elected {
     font-size: 1.5em;
     margin: 0 auto 40px auto;
-    padding: 20px 0;
+    padding: 10px 20px;
+    border-radius: 15px;
     background-color: #6bff5d;
   }
 }

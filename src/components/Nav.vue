@@ -16,6 +16,7 @@
     <div class="myName" :class="{isViewer: shared.isViewer}">
       <span>{{ shared.me.name }}</span>
       <button v-if="shared.me.id" v-on:click="forgetMe">X</button>
+      <button v-if="shared.isViewer" v-on:click="forgetViewer">X</button>
     </div>
   </div>
 </template>
@@ -56,6 +57,9 @@ export default {
         // this.shared.myName = "";
         // this.$router.replace("/e");
       }
+    },
+    forgetViewer: function() {
+      this.shared.isViewer = false;
     }
   }
 };

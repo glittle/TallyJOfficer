@@ -78,7 +78,7 @@ export default new Vue({
     },
     created: function() {
         var vue = this;
-        debugger
+        // debugger
         vue.handleAuthChanges();
 
         vue.initialQuery = window.location.search;
@@ -276,7 +276,7 @@ export default new Vue({
             // vue.members.splice(0, vue.members.length);
 
             var members = [];
-            debugger;
+            // debugger;
 
             var me = vue.makeMember(nameOfAdmin, members);
             me.isAdmin = true;
@@ -410,7 +410,6 @@ export default new Vue({
             var nextNum = last ? last.charCodeAt(0) + 1 : 65;
             var id = String.fromCharCode(nextNum);
             this.isViewer = true;
-            this.myName = id;
             this.viewers.push({
                 id: id
             });
