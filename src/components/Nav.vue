@@ -23,6 +23,7 @@
 
 <script>
 import _shared from "@/shared.js";
+import firebaseDb from "../firebaseInit";
 
 export default {
   name: "Nav",
@@ -39,8 +40,14 @@ export default {
           displayName: ""
         });
 
-        const dbMembers = this.shared.dbElectionRef.collection("members");
-        dbMembers.doc(this.shared.me.id).update({ connected: false });
+        firebaseDb
+          .ref(`members/${this.shared.electionKey}/${this.shared.me.id}`)
+          .update({
+            connected: false
+          });
+
+        // const dbMembers = this.shared.dbElectionRef.collection("members");
+        // dbMembers.doc(this.shared.me.id).update({ connected: false });
 
         this.shared.me = {};
 

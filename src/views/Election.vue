@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     goCurrentHome: function() {
-      if (!this.shared.electionLoadAttempted || !this.shared.electionId) {
+      if (!this.shared.electionLoadAttempted || !this.shared.electionKey) {
         this.$router.replace("/e/create");
         return;
       }

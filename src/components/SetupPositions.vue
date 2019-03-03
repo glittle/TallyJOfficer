@@ -27,6 +27,7 @@
 <script>
 import _shared from "@/shared.js";
 import { SlickList, SlickItem } from "vue-slicksort";
+import firebaseDb from "../firebaseInit";
 
 export default {
   name: "SetupPositions",
@@ -56,16 +57,22 @@ export default {
     //   this.shared.positions.push(this.shared.makePosition(""));
     // },
     remove: function(i) {
-      var vue = this;
-      var removed = this.list.splice(i, 1)[0];
-      var ref = this.shared.dbElectionRef;
-      const dbList = ref.collection("positions");
-      dbList
-        .doc(removed.id)
-        .delete()
-        .then(function() {
-          vue.updated();
-        });
+      // var vue = this;
+      var toRemove = this.list[i];
+      firebaseDb
+        .ref(`positions/${this.shared.electionKey}/${toRemove.id}`)
+        .remove();
+
+      // var removed = this.list.splice(i, 1)[0];
+
+      // var ref = this.shared.dbElectionRef;
+      // const dbList = ref.collection("positions");
+      // dbList
+      //   .doc(removed.id)
+      //   .delete()
+      //   .then(function() {
+      //     vue.updated();
+      //   });
     },
     add: function() {
       this.list.push(this.shared.makePosition("", this.list));
@@ -76,13 +83,17 @@ export default {
       this.updated();
     },
     updated: function() {
-      var ref = this.shared.dbElectionRef;
-      if (ref) {
-        const dbList = ref.collection("positions");
-        this.list.forEach(item => {
-          dbList.doc(item.id).set(item);
-        });
-      }
+      this.list.forEach(m =>
+        firebaseDb.ref(`positions/${this.shared.electionKey}/${m.id}`).set(m)
+      );
+
+      // var ref = this.shared.dbElectionRef;
+      // if (ref) {
+      //   const dbList = ref.collection("positions");
+      //   this.list.forEach(item => {
+      //     dbList.doc(item.id).set(item);
+      //   });
+      // }
     }
   }
 };

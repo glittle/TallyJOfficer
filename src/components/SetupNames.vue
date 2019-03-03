@@ -41,6 +41,7 @@
 
 <script>
 import _shared from "@/shared.js";
+import firebaseDb from "../firebaseInit";
 
 export default {
   name: "SetupNames",
@@ -95,16 +96,21 @@ export default {
       this.updated(true);
     },
     remove: function(i) {
-      var vue = this;
-      var removed = this.shared.members.splice(i, 1)[0];
-      var ref = this.shared.dbElectionRef;
-      const dbList = ref.collection("members");
-      dbList
-        .doc(removed.id)
-        .delete()
-        .then(function() {
-          vue.updated(true);
-        });
+      // var vue = this;
+      var toRemove = this.shared.members[i];
+      firebaseDb
+        .ref(`members/${this.shared.electionKey}/${toRemove.id}`)
+        .remove();
+
+      // var removed = this.shared.members.splice(i, 1)[0];
+      // var ref = this.shared.dbElectionRef;
+      // const dbList = ref.collection("members");
+      // dbList
+      //   .doc(removed.id)
+      //   .delete()
+      //   .then(function() {
+      //     vue.updated(true);
+      //   });
     },
     add: function(i) {
       this.shared.members.push(this.shared.makeMember("", this.shared.members));
@@ -119,10 +125,13 @@ export default {
       if (!dupFound && wasUpdated) {
         var ref = this.shared.dbElectionRef;
         if (ref) {
-          const dbList = ref.collection("members");
-          this.shared.members.forEach(item => {
-            dbList.doc(item.id).set(item);
-          });
+          // const dbList = ref.collection("members");
+          this.shared.members.forEach(m =>
+            firebaseDb.ref(`members/${this.shared.electionKey}/${m.id}`).set(m)
+          );
+          // this.shared.members.forEach(item => {
+          //   dbList.doc(item.id).set(item);
+          // });
           // this.editsMade = false;
         }
       }

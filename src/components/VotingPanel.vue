@@ -56,6 +56,7 @@
 <script>
 import _shared from "@/shared.js";
 import ResultPanel from "./ResultPanel.vue";
+import firebaseDb from "../firebaseInit";
 
 export default {
   name: "VotingPanel",
@@ -83,7 +84,7 @@ export default {
       return this.shared.positions.find(p => p.id === positionId);
     },
     dbMe: function() {
-      return this.shared.dbElectionRef.collection("members").doc(this.me.id);
+      return firebaseDb.ref(`members/${this.shared.electionKey}/${this.me.id}`);
     }
   },
   watch: {
@@ -146,12 +147,16 @@ export default {
       //   }
       // });
 
-      var update = {};
-      update[`currentVotes.${this.shared.symbol}`] = this.selectedMember.id;
+      // var update = {};
+      // update[`currentVotes.${this.shared.symbol}`] = this.selectedMember.id;
 
-      this.shared.dbElectionRef.update(update).then(function() {
-        console.log("voted");
-      });
+      firebaseDb
+        .ref(`elections/${this.shared.electionKey}/currentVotes/${this.shared.symbol}`)
+        .set(this.selectedMember.id)
+
+      // this.shared.dbElectionRef.update(update).then(function() {
+      //   console.log("voted");
+      // });
 
       this.dbMe.update({
         voting: false,

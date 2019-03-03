@@ -86,7 +86,7 @@ export default {
     },
     logout: function() {
       var vue = this;
-      vue.shared.electionId = "";
+      vue.shared.electionKey = "";
       vue.shared.me = {};
       vue.election = {};
       this.shared.dbUser.updateProfile({
@@ -103,7 +103,7 @@ export default {
         .delete()
         .then(function() {
           vue.deleteStatus = "Done. Good-bye!";
-          vue.shared.electionId = "";
+          vue.shared.electionKey = "";
           vue.shared.me = {};
           vue.election = {};
 
