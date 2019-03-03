@@ -1,7 +1,7 @@
 <template>
-  <div class="ViewGuidance">
-    <button class="goBack" v-on:click="goBack">Go Back</button>
-    <a name="General"></a>
+  <div class="guidance">
+    <p>Guidance regarding the election of officers to Baha'i Assemblies.</p>
+    <a name="General"/>
     <h1>General</h1>
 
     <blockquote>
@@ -33,12 +33,12 @@
       <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, February 9, 1987)</cite>
     </blockquote>
 
-    <a name="Chair"></a>
+    <a name="Chair"/>
     <h1>Chair</h1>
 
     <blockquote>sfdsf</blockquote>
     <blockquote>sfdsf</blockquote>
-    <a name="ViceChair"></a>
+    <a name="ViceChair"/>
     <h1>Vice-Chair</h1>
     <blockquote>sfdsf</blockquote>
     <blockquote>sfdsf</blockquote>
@@ -48,73 +48,19 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+// @ is an alias to /src
 
 export default {
-  name: "ViewGuidance",
-  data: function() {
-    return {};
-  },
-  watch: {
-    $route: "moveToPosition"
-  },
-  computed: {
-    shared: function() {
-      return _shared;
-    },
-    position: function() {
-      return this.shared.positions.find(p => p.isActive);
-    }
-  },
-  mounted: function() {
-    // var vue = this;
-    this.moveToPosition();
-  },
-  methods: {
-    moveToPosition: function() {
-      if (this.position) {
-        location.hash = this.position.name;
-      }
-    },
-    goBack: function() {
-      this.$router.go(-2); // not sure why -1 doesn't work
-    }
-  }
+  name: "Guidance"
 };
 </script>
 
 <style lang="less">
-.ViewGuidance {
-  text-align: left;
-  padding: 0 0 0 15px;
-  .goBack {
-    position: fixed;
-    top: 3em;
-    right: 3px;
-  }
-  a[name] {
-    display: block;
-    height: 1em;
-  }
-  h1 {
-    margin-bottom: 0;
-  }
-  blockquote {
-    padding-bottom: 15px;
-    padding-top: 25px;
-    margin-top: 0;
-    margin-bottom: 0;
-
-    h2 {
-      font-size: 1.1em;
-      margin-top: 0;
-    }
-    cite {
-      font-size: 85%;
-    }
-  }
-  blockquote + blockquote {
-    border-top: 1px solid lightgray;
+.guidance {
+  margin: 2em auto;
+  max-width: 700px; // easier reading
+  hr {
+    margin: 2em 0 1em;
   }
 }
 </style>

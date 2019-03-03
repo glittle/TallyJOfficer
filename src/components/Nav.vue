@@ -94,6 +94,7 @@ export default {
   a {
     font-weight: bold;
     color: #fff;
+    text-decoration: none;
     &:visited {
       color: #fff;
     }

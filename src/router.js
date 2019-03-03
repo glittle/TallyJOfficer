@@ -8,7 +8,6 @@ import SetupPositions from './components/SetupPositions.vue'
 import ElectionHome from './components/ElectionHome.vue'
 import VotingPanel from './components/VotingPanel.vue'
 import ResultPanel from './components/ResultPanel.vue'
-import ViewGuidance from './components/ViewGuidance.vue'
 import CreateElection from './components/CreateElection.vue'
 
 Vue.use(Router)
@@ -20,6 +19,11 @@ export default new Router({
             path: '/',
             name: 'public',
             component: Public
+        }, {
+            path: '/guidance',
+            name: 'guidance',
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/Guidance.vue')
         },
         {
             path: '/e',
@@ -50,10 +54,6 @@ export default new Router({
                     name: 'resultPanel',
                     component: ResultPanel
                 }, {
-                    path: 'guidance',
-                    name: 'viewGuidance',
-                    component: ViewGuidance
-                }, {
                     path: 'create',
                     name: 'createElection',
                     component: CreateElection
@@ -63,14 +63,14 @@ export default new Router({
                 // { path: '', component: x },
             ]
         },
-        {
-            path: '/about',
-            name: 'about',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () =>
-                import ( /* webpackChunkName: "about" */ './views/About.vue')
-        }
+        // {
+        //     path: '/about',
+        //     name: 'about',
+        //     // route level code-splitting
+        //     // this generates a separate chunk (about.[hash].js) for this route
+        //     // which is lazy-loaded when the route is visited.
+        //     component: () =>
+        //         import ( /* webpackChunkName: "about" */ './views/About.vue')
+        // }
     ]
 })

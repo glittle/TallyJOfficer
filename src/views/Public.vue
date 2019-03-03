@@ -3,7 +3,7 @@
     <img alt="TallyJ logo" src="../assets/logo.png">
     <h1>Welcome to TallyJ for Officers elections.</h1>
     <p>
-      This is exclusively designed to assist any small team when electing their own officers. 
+      This is exclusively designed to assist any small team when electing their own officers.
       The rules followed are as specified for Bahá'í assemblies.
     </p>
     <p>To create your own election now, press here:</p>
@@ -17,6 +17,10 @@
       one of their own to serve in that capacity.
     </p>
     <p>The officer positions vary by team but typically include "Chair", "Secretary", "Vice-Chair" and "Treasurer".</p>
+    <p>Here is some
+      <a href="guidance" target="guidance">guidance</a>
+       regarding Bahá'í officer positions.
+    </p>
   </div>
 </template>
 
@@ -31,7 +35,7 @@ export default {
 <style lang="less">
 .public {
   max-width: 700px;
-  margin: 0 auto;
+  margin: 20px auto;
   hr {
     margin: 2em 0 1em;
   }

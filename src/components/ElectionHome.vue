@@ -15,17 +15,21 @@
         </td>
         <td>
           <button v-on:click="select(p)">Select</button>
-          <button v-on:click="viewGuidance">View Guidance</button>
         </td>
       </tr>
     </table>
     <button :disabled="!shared.election.activePositionId" v-on:click="voteNow">Vote Now</button>
+
+    <p>
+      <a href="../guidance" target="guidance">Read Guidance</a>
+    </p>
 
     <result-panel/>
 
     <div class="electionLink" v-if="shared.link">
       Shareable link to this election
       <a :href="shared.link">{{shared.link}}</a>
+      <p>Be sure to keep a copy of this link - it is your team's secret key to this election!</p>
     </div>
     <!-- <button class="reset" v-on:click="clearStorage">Reset All</button> -->
   </div>
@@ -46,7 +50,7 @@ export default {
   computed: {
     shared: function() {
       return _shared;
-    },
+    }
   },
   mounted: function() {
     // var vue = this;
@@ -99,7 +103,7 @@ export default {
   .reset {
     margin: 100px 0 10px 0;
   }
-  .electionLink{
+  .electionLink {
     margin: 30px 0;
     font-size: 80%;
   }

@@ -94,7 +94,7 @@ export default {
     }
   }
   .loading {
-    margin: 100px 0 0 100px;
+    margin: 100px auto;
     font-size: 1.3em;
   }
   .leave {

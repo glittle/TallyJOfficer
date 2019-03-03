@@ -11,7 +11,7 @@
       <tbody>
         <tr v-for="(round,i) in oldRounds" :key="i">
           <td class="roundNum">{{i+1}}</td>
-          <td :class="['vote' + votesFor(round, m.id)]" v-for="m in shared.members" :key="m.id">
+          <td :class="['vote' + resultClass(round, m.id)]" v-for="m in shared.members" :key="m.id">
             <div class="voteCount">{{votesFor(round, m.id)}}</div>
           </td>
         </tr>
@@ -19,7 +19,11 @@
       <tfoot>
         <tr v-if="positionRounds.length">
           <td class="roundNum">{{positionRounds.length}}</td>
-          <td :class="['vote' + votesFor(lastRound, m.id)]" v-for="m in shared.members" :key="m.id">
+          <td
+            :class="['vote' + resultClass(lastRound, m.id)]"
+            v-for="m in shared.members"
+            :key="m.id"
+          >
             <div class="voteListTitle">{{votesFor(lastRound, m.id)}}</div>
             <div
               class="voteDetail"
@@ -96,6 +100,19 @@ export default {
     //     // this.namesWithVotes = hasVotesList;
     //     // this.namesWithVotes = this.shared.members.map(m => m.name);
     //   },
+
+    resultClass: function(round, id) {
+      if (!round) return null;
+      var votes = round.votes.filter(v => v.id === id).length;
+      if (votes === 0) {
+        return "0";
+      }
+      var pct = (10 * votes) / this.shared.numVotesRequired;
+      if (pct >= 10) {
+        return "Done";
+      }
+      return 1 + Math.floor(pct / 3); // 1,2,3,4
+    },
     votesFor: function(round, id) {
       if (!round) return null;
       var votes = round.votes.filter(v => v.id === id);
@@ -110,13 +127,17 @@ export default {
     checkIfCompleted: function(round) {
       var votes = round.votes;
       var members = this.shared.members;
-      var numNeeded = 1 + Math.floor(members.length / 2);
       var membersWithEnoughVotes = members.filter(
-        m => votes.filter(v => v.id === m.id).length >= numNeeded
+        m =>
+          votes.filter(v => v.id === m.id).length >=
+          this.shared.numVotesRequired
       );
       if (membersWithEnoughVotes.length) {
         // check if multiple? - can't happen
         this.position.elected = membersWithEnoughVotes[0];
+
+
+
         round.completed = true;
       } else {
         this.position.elected = null;
@@ -179,19 +200,7 @@ export default {
   .vote4 {
     background-color: #ff9900;
   }
-  .vote5 {
-    background-color: #6bff5d;
-  }
-  .vote6 {
-    background-color: #6bff5d;
-  }
-  .vote7 {
-    background-color: #6bff5d;
-  }
-  .vote8 {
-    background-color: #6bff5d;
-  }
-  .vote9 {
+  .voteDone {
     background-color: #6bff5d;
   }
   table.results {

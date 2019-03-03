@@ -1,49 +1,88 @@
 <template>
   <div class="SetupPositions">
-    <p>Welcome to your Officer Election!</p>
-    <p>Configure the positions to be filled.</p>
-    <table>
-      <tr class="positionHolder" v-for="(m,i) in shared.positions" :key="i" :class="{claimed: m.x}">
-        <td>
-          <input type="text" max-length="20" v-model="m.name">
-        </td>
-        <td>
-          <button v-on:click="remove(i)">Remove</button>
-        </td>
-      </tr>
-      <tfoot>
-        <tr>
-          <td><button v-on:click="add">Add Another</button></td>
-          <td></td>
-        </tr>
-      </tfoot>
-    </table>
+    <p>Defined the positions to be voted for.</p>
+    <p>Add, edit and move positions as desired.</p>
+    <slick-list
+      class="list"
+      helper-class="moving"
+      lock-axis="y"
+      v-on:input="listSorted"
+      v-model="list"
+    >
+      <slick-item class="positionItemHolder" v-for="(item,i) in list" :key="item.id" :index="i">
+        <span class="num">{{i+1}}</span>
+        
+        <input type="text" v-on:change="updated" v-model="item.name">
+        
+        <button class="remove" v-on:click="remove(i)">Remove</button>
+        
+        <span class="moveMe">Move ↕</span>
+      </slick-item>
+    </slick-list>
+
+    <button v-on:click="add">Add Another</button>
   </div>
 </template>
 
 <script>
 import _shared from "@/shared.js";
+import { SlickList, SlickItem } from "vue-slicksort";
 
 export default {
   name: "SetupPositions",
+  components: {
+    SlickList,
+    SlickItem
+  },
   data: function() {
-    return {};
+    return {
+      list: []
+    };
   },
   computed: {
     shared: function() {
       return _shared;
     }
   },
+  watch: {},
   mounted: function() {
-    // var vue = this;
+    this.list = this.shared.positions;
   },
   methods: {
-    claim: function(member) {},
+    // remove: function(i) {
+    //   this.shared.positions.splice(i, 1);
+    // },
+    // add: function(i) {
+    //   this.shared.positions.push(this.shared.makePosition(""));
+    // },
     remove: function(i) {
-      this.shared.positions.splice(i, 1);
+      var vue = this;
+      var removed = this.list.splice(i, 1)[0];
+      var ref = this.shared.dbElectionRef;
+      const dbList = ref.collection("positions");
+      dbList
+        .doc(removed.id)
+        .delete()
+        .then(function() {
+          vue.updated();
+        });
     },
-    add: function(i) {
-      this.shared.positions.push(this.shared.makePosition(""));
+    add: function() {
+      this.list.push(this.shared.makePosition("", this.list));
+      this.listSorted(this.list);
+    },
+    listSorted: function(list) {
+      list.forEach((p, i) => (p.sortOrder = i));
+      this.updated();
+    },
+    updated: function() {
+      var ref = this.shared.dbElectionRef;
+      if (ref) {
+        const dbList = ref.collection("positions");
+        this.list.forEach(item => {
+          dbList.doc(item.id).set(item);
+        });
+      }
     }
   }
 };
@@ -51,29 +90,45 @@ export default {
 
 <style lang="less">
 .SetupPositions {
-  table {
-    margin: 1em auto;
+  .list {
+    margin: 0 0 20px 0;
   }
-  tr.memberHolder {
-    margin: 10px 0;
-    cursor: pointer;
+}
 
-    button {
-      margin: 1em 0;
-    }
+.positionItemHolder {
+  // when moving, this is at the Body level
+  padding: 5px 0;
+  box-sizing: border-box; // match what SlickList uses
+  white-space: nowrap;
+  border-radius: 3px;
 
-    td {
-      font-weight: bold;
-      input {
-        width: 150px;
-      }
-    }
+  &.moving {
+    background-color: lightblue;
+  }
+  .num {
+    display: inline-block;
+    width: 20px;
+    text-align: right;
+    margin: 0 5px 0 0;
+    font-size: 75%;
+    color: grey;
+  }
+  label {
+    display: inline-block;
+    margin: 0 5px;
+  }
+  .remove {
+    margin: 0 5px;
+  }
 
-    &.claimed {
-      td {
-        font-weight: normal;
-      }
-    }
+  .moveMe {
+    display: inline-block;
+    margin: 0 5px 0 20px;
+    font-size: 85%;
+    background-color: lighten(lightblue, 2%);
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: ns-resize;
   }
 }
 </style>

@@ -77,8 +77,7 @@ export default {
 
       this.shared.me = member;
 
-      const dbMembers = this.shared.dbElectionRef.collection("members");
-      dbMembers.doc(member.id).update({ connected: true });
+      this.shared.loginToElection(member.id);
 
       // member.connected = true; // temp
       // this.claimMade = true;
@@ -108,7 +107,7 @@ export default {
           vue.shared.me = {};
           vue.election = {};
 
-          vue.dbUser.updateProfile({
+          vue.shared.dbUser.updateProfile({
             photoURL: "",
             displayName: ""
           });

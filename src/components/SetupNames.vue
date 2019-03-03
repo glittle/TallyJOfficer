@@ -11,23 +11,23 @@
       v-on:click="useQuickList = !useQuickList"
       v-text="useQuickList ? 'Hide Quick Add' : 'Use Quick Add'"
     />
-    <transition-group name="list" tag="div" class="namesList">
+    <transition-group name="list" tag="div" class="list">
       <div
-        class="memberHolder"
-        v-for="(m,i) in shared.members"
-        :key="m.id"
-        :class="{claimed: m.connected}"
+        class="itemHolder"
+        v-for="(item,i) in shared.members"
+        :key="item.id"
+        :class="{claimed: item.connected}"
       >
         <span class="isDup">
-          <span v-if="duplicatedNames[m.name]">Duplicate!</span>
+          <span v-if="duplicatedNames[item.name]">Duplicate!</span>
         </span>
         
         <span class="num">{{i+1}}</span>
         
-        <input type="text" v-on:change="updated" v-model="m.name">
+        <input type="text" v-on:change="updated" v-model="item.name">
         
         <label>
-          <input type="checkbox" v-model="m.isAdmin" v-on:change="updated">
+          <input type="checkbox" v-model="item.isAdmin" v-on:change="updated">
           Admin
         </label>
         
@@ -81,7 +81,7 @@ export default {
         n = n.trim();
         if (!n) return;
 
-        var nextEmpty = this.shared.members.find(m => !m.name);
+        var nextEmpty = this.shared.members.find(item => !item.name);
         if (nextEmpty) {
           nextEmpty.name = n;
         } else {
@@ -98,8 +98,8 @@ export default {
       var vue = this;
       var removed = this.shared.members.splice(i, 1)[0];
       var ref = this.shared.dbElectionRef;
-      const dbMembers = ref.collection("members");
-      dbMembers
+      const dbList = ref.collection("members");
+      dbList
         .doc(removed.id)
         .delete()
         .then(function() {
@@ -119,9 +119,9 @@ export default {
       if (!dupFound && wasUpdated) {
         var ref = this.shared.dbElectionRef;
         if (ref) {
-          const dbMembers = ref.collection("members");
-          this.shared.members.forEach(m => {
-            dbMembers.doc(m.id).set(m);
+          const dbList = ref.collection("members");
+          this.shared.members.forEach(item => {
+            dbList.doc(item.id).set(item);
           });
           // this.editsMade = false;
         }
@@ -129,8 +129,8 @@ export default {
     },
     testForDuplicates: function() {
       var nameCount = {};
-      this.shared.members.forEach(m => {
-        var name = m.name;
+      this.shared.members.forEach(item => {
+        var name = item.name;
         if (!nameCount[name]) {
           nameCount[name] = 1;
         } else {
@@ -154,9 +154,6 @@ export default {
 
 <style lang="less">
 .SetupNames {
-  table {
-    margin: 1em auto;
-  }
   textarea {
     width: 60px;
     height: 11em;
@@ -165,9 +162,9 @@ export default {
     margin: 0 auto;
     padding-left: 3px;
   }
-  .namesList {
+  .list {
     margin-right: 100px; // offset for isDup
-    .memberHolder {
+    .itemHolder {
       margin: 10px 0;
     }
     .isDup {

@@ -35,8 +35,8 @@ export default {
     this.goCurrentHome();
   },
   beforeUpdate: function() {
-    console.log('before update');
-    this.goCurrentHome();
+    // console.log('election - before update');
+    // this.goCurrentHome();
   },
   methods: {
     goCurrentHome: function() {
@@ -60,12 +60,9 @@ export default {
 </script>
 
 <style lang="less">
-body {
-  margin: 0;
-}
-
 .election {
   height: 100vh;
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -73,8 +70,6 @@ body {
   .electionBody {
     flex-grow: 1;
     overflow: auto;
-    max-width: 700px;
-    margin: 0 auto;
   }
 }
 </style>
