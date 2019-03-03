@@ -96,7 +96,9 @@ export default {
   },
   mounted: function() {
     // var vue = this;
-    this.startVoting();
+    if (this.shared.dbElectionRef) {
+      this.startVoting();
+    }
     this.preferNot = false;
   },
   methods: {
@@ -112,13 +114,15 @@ export default {
     confirm: function() {
       var vue = this;
       if (!this.selectedMember) {
+        console.log("no one selected for vote");
         return;
       }
       if (!this.shared.election.votingOpen) {
+        console.log("voting is not open");
         return;
       }
       if (!this.shared.symbol) {
-        // no symbol assigned
+        console.log("no symbol assigned");
         return;
       }
 
@@ -199,10 +203,10 @@ export default {
   }
   .confirm {
     margin: 0 0 20px 0;
-    padding: 3px 10px;
+    padding: 10px 20px;
     &.ready {
-      background-color: blue;
-      color: white;
+      //background-color: blue;
+      //color: white;
     }
   }
   .preferNot {

@@ -256,7 +256,6 @@ export default new Vue({
         loginToElection: function(memberId) {
             var vue = this;
             console.log('set connected', this.dbUser.uid);
-
             vue.me = vue.members.find(m => m.id === memberId);
 
             const dbMembers = this.dbElectionRef.collection("members");
@@ -265,17 +264,19 @@ export default new Vue({
                 connectedTime: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            // make a space for me to get my symbol
-            this.dbElectionRef.collection('memberSymbols').doc(memberId)
-                .set({
-                    symbol: ''
+            // get my symbol, now and keep watching
+            var path = `symbols/${this.electionId}/${memberId}`;
+            console.log('watch', path);
+            firebase.database().ref(path)
+                .on('value', function(snapshot) {
+                    var info = snapshot.val();
+                    vue.symbol = info.symbol;
+                    console.log('incoming symbol', vue.symbol || 'n/a');
                 });
 
-            this.dbElectionRef.collection('memberSymbols').doc(memberId)
-                .onSnapshot(function(ref) {
-                    vue.symbol = ref.data().symbol;
-                    console.log('incoming symbol', vue.symbol)
-                });
+            // this.dbElectionRef.collection('memberSymbols').doc(memberId)
+            //     .onSnapshot(function(ref) {
+            //     });
         },
         // updateList: function(list, doc) {
         //     var item = doc.data();
