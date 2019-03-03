@@ -2,12 +2,17 @@
   <div class="ElectionHome">
     <p>Welcome to our Officer Election!</p>
     <p>These positions need to be filled.</p>
+    
+    <p>
+      <a href="../guidance" target="guidance">Read Guidance about these positions</a>
+    </p>
+
     <table class="positionsToFill">
       <tr
         class="positionHolder"
         v-for="p in shared.positions"
         :key="p.name"
-        :class="{isActive: p.id === shared.election.activePositionId }"
+        :class="{isActive: p.id === shared.election.positionIdToVoteFor }"
       >
         <td>{{ p.name }}</td>
         <td>
@@ -18,10 +23,21 @@
         </td>
       </tr>
     </table>
-    <button :disabled="!shared.election.activePositionId" v-on:click="voteNow">Vote Now</button>
 
-    <p>
-      <a href="../guidance" target="guidance">Read Guidance</a>
+    <button
+      v-if="shared.me.isAdmin"
+      :disabled="!shared.election.positionIdToVoteFor || shared.election.votingOpen"
+      v-on:click="openVoting"
+    >Open Voting Now</button>
+    -
+    <button
+      v-if="shared.me.isAdmin"
+      :disabled="!shared.election.votingOpen"
+      v-on:click="resetVoting"
+    >Cancel and Reset Voting</button>
+
+    <p v-if="shared.me.id && shared.election.votingOpen">
+      <button v-on:click="gotoVotePanel">Cast my Vote</button>
     </p>
 
     <result-panel/>
@@ -65,19 +81,38 @@ export default {
       //   }
       // });
 
-      vue.shared.dbElectionRef.update({ activePositionId: position.id });
+      vue.shared.dbElectionRef.update({ positionIdToVoteFor: position.id });
 
       // this.selectedPosition = position;
     },
-    voteNow: function() {
-      if (!this.shared.isViewer) {
-        this.$router.replace("/e/votingPanel");
-      }
+    gotoVotePanel: function() {
+      this.$router.replace("/e/votingPanel");
     },
-    // clearStorage: function() {
-    //  this.shared.clearStorage();
-    //  this.$router.replace("/e");
-    // },
+    openVoting: function() {
+      // create as many slots for vote as we need, skip by a random number to be less predicable
+      var voteDict = {};
+      var nextLetter = 64;
+      this.shared.members.forEach((m, i) => {
+        nextLetter += 1 + Math.random() * 2;
+        voteDict[String.fromCharCode(nextLetter)] = "";
+      });
+      // var memberIds = this.shared.members.map(m => {
+      //   return { id: m.id, sort: Math.random() };
+      // });
+      // memberIds.sort((a, b) => (a.sort < b.sort ? -1 : 1));
+
+      this.shared.dbElectionRef.update({
+        currentVotes: voteDict,
+        members: this.shared.members.map(m => m.id), // put in this doc for easier access
+        numVoted: 0,
+        votingOpen: true
+      });
+    },
+    resetVoting: function() {
+      this.shared.dbElectionRef.update({
+        votingOpen: false
+      });
+    },
     viewGuidance: function() {
       this.$router.push("/e/guidance");
     }

@@ -38,8 +38,9 @@
       <p>Voting is Complete</p>
       <p>{{position.elected.name}} has been elected to serve as the {{position.name}}.</p>
     </div>
-    <button class="addTemp" v-on:click="tempMakeResult">Add Fake Results</button>
-    <button v-on:click="stopAdding">Stop Adding</button>
+    
+    <!-- <button class="addTemp" v-on:click="tempMakeResult">Add Fake Results</button>
+    <button v-on:click="stopAdding">Stop Adding</button> -->
   </div>
 </template>
 
@@ -61,7 +62,7 @@ export default {
     position: function() {
       return (
         this.shared.positions.find(
-          p => p.id === this.shared.election.activePositionId
+          p => p.id === this.shared.election.positionIdToVoteFor
         ) || {}
       );
     },
@@ -136,46 +137,44 @@ export default {
         // check if multiple? - can't happen
         this.position.elected = membersWithEnoughVotes[0];
 
-
-
         round.completed = true;
       } else {
         this.position.elected = null;
         round.completed = false;
       }
     },
-    tempMakeResult: function() {
-      var votes = [];
-      var members = this.shared.members;
-      for (var i = 0; i < members.length; i++) {
-        var v = {
-          id: members[Math.floor(members.length * Math.random())].id,
-          symbol: String.fromCharCode(65 + i)
-        };
-        votes.push(v);
-      }
-      var round = {
-        id:
-          this.position.id +
-          "_" +
-          ("00" + this.positionRounds.length).slice(-3),
-        votes: votes
-      };
-      this.checkIfCompleted(round);
+    // tempMakeResult: function() {
+    //   var votes = [];
+    //   var members = this.shared.members;
+    //   for (var i = 0; i < members.length; i++) {
+    //     var v = {
+    //       id: members[Math.floor(members.length * Math.random())].id,
+    //       symbol: String.fromCharCode(65 + i)
+    //     };
+    //     votes.push(v);
+    //   }
+    //   var round = {
+    //     id:
+    //       this.position.id +
+    //       "_" +
+    //       ("00" + this.positionRounds.length).slice(-3),
+    //     votes: votes
+    //   };
+    //   this.checkIfCompleted(round);
 
-      this.shared.dbElectionRef
-        .collection("rounds")
-        .doc(round.id)
-        .set(round);
+    //   this.shared.dbElectionRef
+    //     .collection("rounds")
+    //     .doc(round.id)
+    //     .set(round);
 
-      var vue = this;
-      if (!round.completed) {
-        vue.fakeAddTimer = setTimeout(() => {
-          vue.tempMakeResult();
-        }, 1000);
-      }
-      // this.showResults();
-    },
+    //   var vue = this;
+    //   if (!round.completed) {
+    //     vue.fakeAddTimer = setTimeout(() => {
+    //       vue.tempMakeResult();
+    //     }, 1000);
+    //   }
+    //   // this.showResults();
+    // },
     stopAdding: function() {
       clearTimeout(this.fakeAddTimer);
     }
@@ -185,6 +184,9 @@ export default {
 
 <style lang="less">
 .ResultPanel {
+  background-color: #ffeeff;
+  padding: 20px 0;
+
   .addTemp {
     margin: 30px 0;
   }

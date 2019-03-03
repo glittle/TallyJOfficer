@@ -52,7 +52,6 @@ export default {
     }
   },
   mounted: function() {
-    // var vue = this;
     var vue = this;
 
     if (this.shared.election.created) {
@@ -86,6 +85,8 @@ export default {
 .CreateElection {
   text-align: left;
   padding: 0 0 0 15px;
+  max-width: 600px;
+  margin: 0 auto;
 
   .nameInput {
     margin: 0 0 1em;

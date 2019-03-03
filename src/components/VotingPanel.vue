@@ -31,7 +31,7 @@
           >for {{selectedMember.name}} to be {{position.name}}</span>
         </button>
         <label class="choosePreferNot">
-          <input type="checkbox" v-model="me.preferNot">
+          <input type="checkbox" v-model="preferNot">
           I prefer to not be elected as {{position.name}}.
         </label>
       </div>
@@ -40,12 +40,14 @@
           <p>You voted for {{selectedMember.name}} to be {{position.name}}.</p>
         </div>
         <div class="symbolInfo" :class="{revealVote: reveal}">Your symbol for this vote:
-          <div class="symbol">{{me.symbol}}</div>
+          <div class="symbol">{{symbol}}</div>
         </div>
         <button v-on:click="reveal = !reveal" class="reveal">
           <span v-text="reveal ? 'Hide' : 'Reveal'"></span> my Vote on my screen
         </button>
       </div>
+
+      <result-panel/>
     </div>
     <div v-else>No position is being voted for.</div>
   </div>
@@ -53,15 +55,20 @@
 
 <script>
 import _shared from "@/shared.js";
+import ResultPanel from "./ResultPanel.vue";
 
 export default {
   name: "VotingPanel",
-  components: {},
+  components: {
+    ResultPanel
+  },
   data: function() {
     return {
       selectedMember: "",
       confirmed: false,
-      reveal: false
+      symbol: "",
+      reveal: false,
+      preferNot: false
     };
   },
   computed: {
@@ -72,46 +79,85 @@ export default {
       return this.shared.me;
     },
     position: function() {
-      var positionId = this.shared.election.activePositionId;
+      var positionId = this.shared.election.positionIdToVoteFor;
       return this.shared.positions.find(p => p.id === positionId);
+    },
+    dbMe: function() {
+      return this.shared.dbElectionRef.collection("members").doc(this.me.id);
     }
   },
   watch: {
     position: function() {
       this.startVoting();
+    },
+    preferNot: function(a) {
+      this.dbMe.update({ preferNot: a });
     }
   },
   mounted: function() {
     // var vue = this;
     this.startVoting();
+    this.preferNot = false;
   },
   methods: {
     startVoting: function() {
-      var me = this.me;
-      me.voting = true;
-      me.voted = false;
-      me.preferNot = false;
+      this.dbMe.update({
+        voting: true,
+        voted: false
+      });
     },
     voteFor: function(member) {
       this.selectedMember = member;
     },
     confirm: function() {
+      var vue = this;
       if (!this.selectedMember) {
         return;
       }
-      var vue = this;
-      var me = this.me;
+      if (!this.shared.election.votingOpen) {
+        return;
+      }
+      if (!this.shared.symbol) {
+        // no symbol assigned
+        return;
+      }
+
+      var current = this.shared.election.currentVotes;
+      if (!current) {
+        console.log("currentVoting not available");
+        return;
+      }
+
       this.reveal = true;
       this.confirmed = true;
-      me.voted = true;
-      me.voting = false;
-      me.symbol = String.fromCharCode(65 + 15 * Math.random());
 
+      // this.symbol = String.fromCharCode(65 + 15 * Math.random());
+
+      // // setup vote ledger
+      // this.shared.dbElectionRef.doc("currentVoting").update({
+      //   votingOpen: true,
+      //   currentVoting: {
+      //     numVoted: 0, // will be updated be the server
+      //     votes: []
+      //   }
+      // });
+
+      var update = {};
+      update[`currentVotes.${this.shared.symbol}`] = this.selectedMember.id;
+
+      this.shared.dbElectionRef.update(update).then(function() {
+        console.log("voted");
+      });
+
+      this.dbMe.update({
+        voting: false,
+        voted: true
+      });
       // temp
-      var round = {
-        votes: [{ name: this.selectedMember.name, symbol: this.me.symbol }]
-      };
-      this.position.rounds.push(round);
+      // var round = {
+      //   votes: [{ name: this.selectedMember.name, symbol: this.me.symbol }]
+      // };
+      // this.position.rounds.push(round);
 
       setTimeout(function() {
         vue.reveal = false;

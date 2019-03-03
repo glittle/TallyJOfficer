@@ -7,6 +7,7 @@ export default new Vue({
         election: {},
         electionLoadAttempted: false,
         me: {},
+        myUser: null,
         isViewer: false,
         isAdmin: false,
         members: [],
@@ -16,6 +17,7 @@ export default new Vue({
         dbUser: null,
         dbElectionRef: null,
         initialQuery: '',
+        symbol: '',
         electionId: '',
     },
     computed: {
@@ -43,53 +45,9 @@ export default new Vue({
             }
             return null;
         },
-        // userStatusFirestoreRef: function() {
-        //     if (this.dbUser) {
-        //         return firebase.firestore().doc('/status/' + this.dbUser.uid);
-        //     }
-        //     return null;
-        // }
     },
     watch: {
-        // myId: function() {
-        //     localStorage['myId'] = this.myId;
-        // },
-        // isViewer: function() {
-        //     localStorage['isViewer'] = this.isViewer;
-        // },
-        // isAdmin: function() {
-        //     localStorage['isAdmin'] = this.isAdmin;
-        // },
-        // members: {
-        //    handler: function(a, b) {
-        //        if (!this.dbElectionRef) return;
-        //        var dbList = this.dbElectionRef.collection('members');
-        //        this.members.forEach(m => dbList.doc(m.id).set(m, {
-        //            merge: true
-        //        }));
-        //    },
-        //    deep: true
-        // },
-        // viewers: {
-        //    handler: function(a, b) {
-        //        if (!this.dbElectionRef) return;
-        //        var dbList = this.dbElectionRef.collection('viewers');
-        //        this.viewers.forEach(v => dbList.doc(v.id).set(v, {
-        //            merge: true
-        //        }));
-        //    },
-        //    deep: true
-        // },
-        // positions: {
-        //    handler: function(a, b) {
-        //        if (!this.dbElectionRef) return;
-        //        var dbList = this.dbElectionRef.collection('positions');
-        //        this.positions.forEach(p => dbList.doc(p.id).set(p, {
-        //            merge: true
-        //        }));
-        //    },
-        //    deep: true
-        // }
+
     },
     created: function() {
         var vue = this;
@@ -119,7 +77,6 @@ export default new Vue({
                     }
                 } else {
                     // User is signed out.
-                    // ...
                     vue.dbUser = null;
                     vue.dbElectionRef = null;
                 }
@@ -136,11 +93,6 @@ export default new Vue({
             firebase.database().ref('.info/connected')
                 .on('value', function(snapshot) {
                     if (!snapshot.val()) {
-                        // if (vue.userStatusFirestoreRef) {
-                        //     vue.userStatusFirestoreRef.set({
-                        //         status: 'offline'
-                        //     });
-                        // }
                         return; // we are not connected yet
                     };
 
@@ -150,14 +102,7 @@ export default new Vue({
                     vue.userStatusFirebaseRef
                         .onDisconnect()
                         .update(updates);
-                    // .then(function() {
-                    //     vue.userStatusFirebaseRef
-                    //         .set({
-                    //             status: 'online'
-                    //         });
-                    // })
                 });
-
         },
         loadElection: function(electionId) {
             var vue = this;
@@ -204,7 +149,7 @@ export default new Vue({
                     status: 'online',
                     electionId: ref.id,
                     memberId: vue.myIdFromProfile
-                })
+                });
 
             ref.onSnapshot(function(d) {
                 vue.election = d.data() || {};
@@ -230,14 +175,12 @@ export default new Vue({
                         if (change.type === 'added' && !vue.me.id && vue.myIdFromProfile) {
                             var item = change.doc.data();
                             if (item.id === vue.myIdFromProfile) {
-                                vue.me = item;
-
-                                const dbMembers = vue.dbElectionRef.collection("members");
-                                dbMembers.doc(item.id).update({
-                                    connected: vue.dbUser.uid,
-                                    connectedTime: firebase.firestore.FieldValue.serverTimestamp()
-                                })
-
+                                vue.loginToElection(item.id);
+                                // const dbMembers = vue.dbElectionRef.collection("members");
+                                // dbMembers.doc(item.id).update({
+                                //     connected: vue.dbUser.uid,
+                                //     connectedTime: firebase.firestore.FieldValue.serverTimestamp()
+                                // });
                             }
                         }
                     });
@@ -267,6 +210,14 @@ export default new Vue({
             ref.update({
                 lastLogin: new Date()
             });
+
+            vue.userStatusFirebaseRef
+                .on('value', function(snapshot) {
+                    const info = snapshot.val();
+                    vue.symbol = info.symbol;
+                    console.log(info);
+                    console.log('my symbol', info.symbol)
+                });
         },
         changeList: function(list, change) {
             var item = change.doc.data();
@@ -302,14 +253,29 @@ export default new Vue({
                     break;
             }
         },
-        loginToElection: function(id) {
-            const dbMembers = this.dbElectionRef.collection("members");
+        loginToElection: function(memberId) {
+            var vue = this;
             console.log('set connected', this.dbUser.uid);
-            dbMembers.doc(id).update({
+
+            vue.me = vue.members.find(m => m.id === memberId);
+
+            const dbMembers = this.dbElectionRef.collection("members");
+            dbMembers.doc(memberId).update({
                 connected: this.dbUser.uid,
                 connectedTime: firebase.firestore.FieldValue.serverTimestamp()
             });
 
+            // make a space for me to get my symbol
+            this.dbElectionRef.collection('memberSymbols').doc(memberId)
+                .set({
+                    symbol: ''
+                });
+
+            this.dbElectionRef.collection('memberSymbols').doc(memberId)
+                .onSnapshot(function(ref) {
+                    vue.symbol = ref.data().symbol;
+                    console.log('incoming symbol', vue.symbol)
+                });
         },
         // updateList: function(list, doc) {
         //     var item = doc.data();
@@ -455,11 +421,12 @@ export default new Vue({
                 sortOrder: 0
             }
         },
-        getRandomId: function(prefix, list) {
+        getRandomId: function(prefix, list, numDigits) {
             var uniqueIdFound = false;
             var id;
+            numDigits = numDigits || 3;
             while (!uniqueIdFound) {
-                id = prefix + Math.random().toString().substring(3, 6);
+                id = prefix + Math.random().toString().substr(3, numDigits);
                 uniqueIdFound = !list.find(m => m.id === id);
             }
             return id;
@@ -476,7 +443,6 @@ export default new Vue({
                 preferNot: false,
                 voted: false,
                 voting: false,
-                symbol: '',
             };
         },
         startMeAsViewer: function() {
