@@ -7,6 +7,7 @@ export default new Vue({
         election: {},
         electionLoadAttempted: false,
         me: {},
+        currentVoting: {},
         myUser: null,
         isViewer: false,
         isAdmin: false,
@@ -47,10 +48,17 @@ export default new Vue({
         },
     },
     watch: {
-        'election.positionIdToVoteFor': function() {
-            this.me.voted = false;
-            this.me.voting = false;
-        }
+        // 'election.positionIdToVoteFor': function () {
+        //     this.me.voted = false;
+        //     this.me.voting = false;
+        // },
+        // 'election.votingOpen': function(a, b) {
+        //     // when opened or closed, clear my settings
+        //     firebaseDb.ref(`members/${this.electionKey}/${this.me.id}`).update({
+        //         voting: false,
+        //         voted: false
+        //     });
+        // }
     },
     created: function() {
         var vue = this;
@@ -101,9 +109,11 @@ export default new Vue({
                     var updates = {};
                     updates['status'] = 'offline';
 
-                    vue.firebaseDbMyStatus
-                        .onDisconnect()
-                        .update(updates);
+                    if (vue.firebaseDbMyStatus) {
+                        vue.firebaseDbMyStatus
+                            .onDisconnect()
+                            .update(updates);
+                    }
                 });
         },
         loadElection: function(electionKey) {
@@ -169,7 +179,7 @@ export default new Vue({
 
             vue.watchForListChanges(vue.positions, firebaseDb.ref('positions/' + vue.electionKey).orderByChild('sortOrder'));
             vue.watchForListChanges(vue.viewers, firebaseDb.ref('viewers/' + vue.electionKey).orderByChild('id'));
-            vue.watchForListChanges(vue.rounds, firebaseDb.ref('rounds/' + vue.electionKey).orderByChild('id'));
+            vue.watchForListChanges(vue.rounds, firebaseDb.ref('votingRounds/' + vue.electionKey).orderByChild('id'));
 
             electionRef.update({
                 // record when this election was last used
@@ -200,6 +210,11 @@ export default new Vue({
                     } else {
                         console.log('no symbol info');
                     }
+                });
+
+            firebaseDb.ref(`voting/${this.electionKey}/votes`)
+                .on('value', function(snapshot) {
+                    vue.currentVoting = snapshot.val() || {};
                 });
         },
         watchForListChanges: function(localList, listRef, onAdd) {
@@ -252,7 +267,7 @@ export default new Vue({
             });
 
             // get my symbol now and keep watching
-            var path = `users/${this.electionKey}/${memberId}`;
+            var path = `voterSymbols/${this.electionKey}/${memberId}`;
             console.log('watch', path);
             firebaseDb.ref(path)
                 .on('value', function(snapshot) {
@@ -263,10 +278,6 @@ export default new Vue({
                     } else {
                         console.log('no symbol info');
                     }
-
-                    // this.dbElectionRef.collection('memberSymbols').doc(memberId)
-                    //     .onSnapshot(function(ref) {
-                    //     });
                 })
         },
         // updateList: function(list, doc) {
@@ -317,7 +328,6 @@ export default new Vue({
             vue.dbUser.updateProfile({
                 displayName: me.id
             });
-            debugger;
             vue.me = me;
 
             // const dbMembers = vue.dbElectionRef.collection('members');
@@ -436,7 +446,7 @@ export default new Vue({
                 // temp per position vote
                 preferNot: false,
                 voted: false,
-                voting: false,
+                voting: false
             };
         },
         startMeAsViewer: function() {

@@ -38,9 +38,9 @@
       <p>Voting is Complete</p>
       <p>{{position.elected.name}} has been elected to serve as the {{position.name}}.</p>
     </div>
-    
+
     <!-- <button class="addTemp" v-on:click="tempMakeResult">Add Fake Results</button>
-    <button v-on:click="stopAdding">Stop Adding</button> -->
+    <button v-on:click="stopAdding">Stop Adding</button>-->
   </div>
 </template>
 
@@ -72,7 +72,7 @@ export default {
       );
     },
     oldRounds: function() {
-      var lastIndex = this.positionRounds.length - 1;
+       var lastIndex = this.positionRounds.length - 1;
       return this.positionRounds.filter((r, i) => i < lastIndex);
     },
     lastRound: function() {
@@ -104,7 +104,7 @@ export default {
 
     resultClass: function(round, id) {
       if (!round) return null;
-      var votes = round.votes.filter(v => v.id === id).length;
+      var votes = round.votes.filter(v => v.voteId === id).length;
       if (votes === 0) {
         return "0";
       }
@@ -116,33 +116,33 @@ export default {
     },
     votesFor: function(round, id) {
       if (!round) return null;
-      var votes = round.votes.filter(v => v.id === id);
+      var votes = round.votes.filter(v => v.voteId === id);
       return votes.length || "-";
     },
     voteListFor: function(round, id) {
       if (!round) return null;
-      var list = round.votes.filter(v => v.id === id);
+      var list = round.votes.filter(v => v.voteId === id);
       list.sort((a, b) => (a.symbol < b.symbol ? -1 : 1));
       return list;
     },
-    checkIfCompleted: function(round) {
-      var votes = round.votes;
-      var members = this.shared.members;
-      var membersWithEnoughVotes = members.filter(
-        m =>
-          votes.filter(v => v.id === m.id).length >=
-          this.shared.numVotesRequired
-      );
-      if (membersWithEnoughVotes.length) {
-        // check if multiple? - can't happen
-        this.position.elected = membersWithEnoughVotes[0];
+    // checkIfCompleted: function(round) {
+    //   var votes = round.votes;
+    //   var members = this.shared.members;
+    //   var membersWithEnoughVotes = members.filter(
+    //     m =>
+    //       votes.filter(v => v.voteId === m.id).length >=
+    //       this.shared.numVotesRequired
+    //   );
+    //   if (membersWithEnoughVotes.length) {
+    //     // check if multiple? - can't happen
+    //     this.position.elected = membersWithEnoughVotes[0];
 
-        round.completed = true;
-      } else {
-        this.position.elected = null;
-        round.completed = false;
-      }
-    },
+    //     round.completed = true;
+    //   } else {
+    //     this.position.elected = null;
+    //     round.completed = false;
+    //   }
+    // },
     // tempMakeResult: function() {
     //   var votes = [];
     //   var members = this.shared.members;
@@ -185,7 +185,10 @@ export default {
 <style lang="less">
 .ResultPanel {
   background-color: #ffeeff;
-  padding: 20px 0;
+  margin: 20px auto;
+  padding: 1px 20px 40px;
+  width: fit-content;
+  border-radius: 5px;
 
   .addTemp {
     margin: 30px 0;

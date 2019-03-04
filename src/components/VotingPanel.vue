@@ -2,19 +2,26 @@
   <div class="VotingPanel">
     <div v-if="position">
       <p>Voting for {{position.name}}!</p>
+      <p>
+        <label class="choosePreferNot">
+          <input type="checkbox" v-model="preferNot">
+          I prefer to not be elected as {{position.name}}.
+        </label>
+      </p>
+
       <table v-if="!confirmed">
         <tr class="memberHolder" v-for="(m,i) in shared.members" :key="i" :class="{x: m.x}">
           <td>
             <button
               :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
               v-on:click="voteFor(m)"
-            >{{m.name}}</button>
-          </td>
-          <td>
-            <div
-              class="preferNot"
-              v-if="m.preferNot"
-            >Prefers not to be elected as {{position.name}}.</div>
+            >
+              {{m.name}}
+              <div
+                class="preferNot"
+                v-if="m.preferNot"
+              >(Prefers not be elected as {{position.name}})</div>
+            </button>
           </td>
         </tr>
       </table>
@@ -25,26 +32,26 @@
           :class="{ready:selectedMember}"
           :disabled="!selectedMember"
         >
-          Confirm my vote
+          Submit my vote
           <span
             v-if="selectedMember"
           >for {{selectedMember.name}} to be {{position.name}}</span>
+          <span v-else>(pending)</span>
         </button>
-        <label class="choosePreferNot">
-          <input type="checkbox" v-model="preferNot">
-          I prefer to not be elected as {{position.name}}.
-        </label>
       </div>
       <div v-if="confirmed" class="confirmation">
         <div class="voteInfo" :class="{revealVote: reveal}">
           <p>You voted for {{selectedMember.name}} to be {{position.name}}.</p>
         </div>
         <div class="symbolInfo" :class="{revealVote: reveal}">Your symbol for this vote:
-          <div class="symbol">{{symbol}}</div>
+          <div class="symbol">{{shared.symbol}}</div>
         </div>
         <button v-on:click="reveal = !reveal" class="reveal">
           <span v-text="reveal ? 'Hide' : 'Reveal'"></span> my Vote on my screen
         </button>
+        <p v-if="shared.election.votingOpen">
+          <button v-on:click="changeMyVote">Change my vote</button>
+        </p>
       </div>
 
       <result-panel/>
@@ -67,7 +74,6 @@ export default {
     return {
       selectedMember: "",
       confirmed: false,
-      symbol: "",
       reveal: false,
       preferNot: false
     };
@@ -127,50 +133,31 @@ export default {
         return;
       }
 
-      var current = this.shared.election.currentVotes;
-      if (!current) {
-        console.log("currentVoting not available");
-        return;
-      }
+      var path = `voting/${this.shared.electionKey}/votes/${
+        this.shared.symbol
+      }`;
 
-      this.reveal = true;
-      this.confirmed = true;
-
-      // this.symbol = String.fromCharCode(65 + 15 * Math.random());
-
-      // // setup vote ledger
-      // this.shared.dbElectionRef.doc("currentVoting").update({
-      //   votingOpen: true,
-      //   currentVoting: {
-      //     numVoted: 0, // will be updated be the server
-      //     votes: []
-      //   }
-      // });
-
-      // var update = {};
-      // update[`currentVotes.${this.shared.symbol}`] = this.selectedMember.id;
-
-      firebaseDb
-        .ref(`elections/${this.shared.electionKey}/currentVotes/${this.shared.symbol}`)
-        .set(this.selectedMember.id)
-
-      // this.shared.dbElectionRef.update(update).then(function() {
-      //   console.log("voted");
-      // });
+      // cast my vote
+      firebaseDb.ref(path).set(this.selectedMember.id);
 
       this.dbMe.update({
         voting: false,
         voted: true
       });
-      // temp
-      // var round = {
-      //   votes: [{ name: this.selectedMember.name, symbol: this.me.symbol }]
-      // };
-      // this.position.rounds.push(round);
+
+      this.reveal = true;
+      this.confirmed = true;
 
       setTimeout(function() {
         vue.reveal = false;
       }, 2500);
+    },
+    changeMyVote: function() {
+      this.dbMe.update({
+        voting: true,
+        voted: false
+      });
+      this.confirmed = false;
     }
   }
 };
@@ -190,12 +177,12 @@ export default {
       min-width: 200px;
       padding: 6px 6px;
       font-weight: bold;
-      &.selectionMade {
-        color: grey;
-      }
+      // &.selectionMade {
+      //   color: grey;
+      // }
       &.selected {
         color: #000;
-        background-color: #6bff5d;
+        background-color: #afffa8;
       }
     }
 
@@ -218,6 +205,8 @@ export default {
     color: #333;
     font-size: 90%;
     font-weight: normal;
+    margin: 5px 0 0 0;
+    white-space: normal;
   }
   .choosePreferNot {
     display: block;

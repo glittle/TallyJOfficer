@@ -73,6 +73,7 @@ export default {
     }
 
     &.voted {
+      border-color: #fff;
       background-color: #6bff5d;
     }
 
@@ -86,18 +87,18 @@ export default {
 
     &.voting {
       border-color: #fff;
-      background-color: rgba(107, 255, 93, 0.4);
-      animation: pulse 1s infinite;
+      background-color: #ffba42;
+      //animation: pulse 1s infinite;
     }
 
-    @keyframes pulse {
-      0% {
-        background-color: rgba(107, 255, 93, 0.7);
-      }
-      50% {
-        background-color: #fff;
-      }
-    }
+    // @keyframes pulse {
+    //   0% {
+    //     background-color: rgba(107, 255, 93, 0.7);
+    //   }
+    //   50% {
+    //     background-color: #fff;
+    //   }
+    // }
   }
 }
 </style>

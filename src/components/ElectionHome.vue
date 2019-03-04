@@ -2,7 +2,7 @@
   <div class="ElectionHome">
     <p>Welcome to our Officer Election!</p>
     <p>These positions need to be filled.</p>
-    
+
     <p>
       <a href="../guidance" target="guidance">Read Guidance about these positions</a>
     </p>
@@ -18,23 +18,19 @@
         <td>
           <span v-text="p.elected ? p.elected.name : ''"></span>
         </td>
-        <td>
+        <td v-if="shared.me.isAdmin">
           <button v-on:click="select(p)">Select</button>
         </td>
       </tr>
     </table>
 
-    <button
-      v-if="shared.me.isAdmin"
-      :disabled="!shared.election.positionIdToVoteFor || shared.election.votingOpen"
-      v-on:click="openVoting"
-    >Open Voting Now</button>
-    -
-    <button
-      v-if="shared.me.isAdmin"
-      :disabled="!shared.election.votingOpen"
-      v-on:click="resetVoting"
-    >Cancel and Reset Voting</button>
+    <p v-if="shared.me.isAdmin" class="adminBtns">
+      <button
+        :disabled="!shared.election.positionIdToVoteFor || shared.election.votingOpen"
+        v-on:click="openVoting"
+      >Open Voting Now</button>
+      <button :disabled="!shared.election.votingOpen" v-on:click="resetVoting">Cancel and Reset Voting</button>
+    </p>
 
     <p v-if="shared.me.id && shared.election.votingOpen">
       <button v-on:click="gotoVotePanel">Cast my Vote</button>
@@ -54,6 +50,7 @@
 <script>
 import _shared from "@/shared.js";
 import ResultPanel from "./ResultPanel.vue";
+import firebaseDb from "../firebaseInit";
 
 export default {
   name: "ElectionHome",
@@ -73,17 +70,9 @@ export default {
   },
   methods: {
     select: function(position) {
-      var vue = this;
-      // this.shared.positions.forEach(p => {
-      //   var toBeActive = p.id === position.id;
-      //   if (p.isActive !== toBeActive) {
-      //     vue.shared.update("positions", p.id, { isActive: toBeActive });
-      //   }
-      // });
-
-      vue.shared.dbElectionRef.update({ positionIdToVoteFor: position.id });
-
-      // this.selectedPosition = position;
+      firebaseDb
+        .ref(`/elections/${this.shared.electionKey}`)
+        .update({ positionIdToVoteFor: position.id });
     },
     gotoVotePanel: function() {
       this.$router.replace("/e/votingPanel");
@@ -92,24 +81,27 @@ export default {
       // create as many slots for vote as we need, skip by a random number to be less predicable
       var voteDict = {};
       var nextLetter = 64;
+      var numMembers = this.shared.members.length;
+      var randomSpread = 26 / numMembers;
+
+      // do one for each member (doesn't matter which member for each
       this.shared.members.forEach((m, i) => {
-        nextLetter += 1 + Math.random() * 2;
+        nextLetter += 1 + Math.random() * randomSpread;
         voteDict[String.fromCharCode(nextLetter)] = "";
       });
-      // var memberIds = this.shared.members.map(m => {
-      //   return { id: m.id, sort: Math.random() };
-      // });
-      // memberIds.sort((a, b) => (a.sort < b.sort ? -1 : 1));
 
-      this.shared.dbElectionRef.update({
-        currentVotes: voteDict,
+      firebaseDb.ref(`voting/${this.shared.electionKey}`).set({
+        positionId: this.shared.election.positionIdToVoteFor,
         members: this.shared.members.map(m => m.id), // put in this doc for easier access
-        numVoted: 0,
+        votes: voteDict
+      });
+
+      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
         votingOpen: true
       });
     },
     resetVoting: function() {
-      this.shared.dbElectionRef.update({
+      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
         votingOpen: false
       });
     },
@@ -141,6 +133,11 @@ export default {
   .electionLink {
     margin: 30px 0;
     font-size: 80%;
+  }
+  .adminBtns {
+    button {
+      margin: 0 20px;
+    }
   }
 }
 </style>

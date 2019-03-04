@@ -79,9 +79,6 @@ export default {
 
       this.shared.loginToElection(member.id);
 
-      // member.connected = true; // temp
-      // this.claimMade = true;
-      // this.shared.myName = member.name;
       this.$router.replace("/e/home");
     },
     logout: function() {
@@ -99,6 +96,8 @@ export default {
     deleteElection: function() {
       this.deleteStatus = "Deleting...";
       var vue = this;
+      // TODO to upgrade to firebase db
+
       this.shared.dbElectionRef
         .delete()
         .then(function() {

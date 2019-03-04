@@ -3,7 +3,7 @@
     <p>Welcome to your Officer Election!</p>
     <p>Set the names of the members here.</p>
     <div v-if="useQuickList">
-      <p>To quickly add member, enter their first names in this box, one per line, then click "Add".</p>
+      <p>To quickly add members, enter their first names in this box, one per line, then click "Add".</p>
       <textarea v-model="quickList"></textarea>
       <button v-on:click="processQuickList">Add</button>
     </div>
