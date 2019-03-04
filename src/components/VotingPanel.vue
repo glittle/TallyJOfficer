@@ -1,6 +1,6 @@
 <template>
   <div class="VotingPanel">
-    <div v-if="position">
+    <div v-if="position && shared.election.votingOpen">
       <p>Voting for {{position.name}}!</p>
       <p>
         <label class="choosePreferNot">
@@ -39,37 +39,31 @@
           <span v-else>(pending)</span>
         </button>
       </div>
-      <div v-if="confirmed" class="confirmation">
-        <div class="voteInfo" :class="{revealVote: reveal}">
-          <p>You voted for {{selectedMember.name}} to be {{position.name}}.</p>
-        </div>
-        <div class="symbolInfo" :class="{revealVote: reveal}">Your symbol for this vote:
-          <div class="symbol">{{shared.symbol}}</div>
-        </div>
-        <button v-on:click="reveal = !reveal" class="reveal">
-          <span v-text="reveal ? 'Hide' : 'Reveal'"></span> my Vote on my screen
-        </button>
-        <p v-if="shared.election.votingOpen">
-          <button v-on:click="changeMyVote">Change my vote</button>
-        </p>
-      </div>
-
-      <result-panel/>
     </div>
-    <div v-else>No position is being voted for.</div>
+    <div v-else>Voting is not open.</div>
+    <div v-if="confirmed" class="confirmation">
+      <div class="voteInfo" :class="{revealVote: reveal}">
+        <p>You voted for {{selectedMember.name}} to be {{position.name}}.</p>
+      </div>
+      <div class="symbolInfo" :class="{revealVote: reveal}">Your symbol for this vote:
+        <div class="symbol">{{shared.symbol}}</div>
+      </div>
+      <button v-on:click="reveal = !reveal" class="reveal">
+        <span v-text="reveal ? 'Hide' : 'Reveal'"></span> my Vote on my screen
+      </button>
+      <p v-if="shared.election.votingOpen">
+        <button v-on:click="changeMyVote">Change my vote</button>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
 import _shared from "@/shared.js";
-import ResultPanel from "./ResultPanel.vue";
 import firebaseDb from "../firebaseInit";
 
 export default {
   name: "VotingPanel",
-  components: {
-    ResultPanel
-  },
   data: function() {
     return {
       selectedMember: "",
@@ -94,27 +88,27 @@ export default {
     }
   },
   watch: {
-    position: function() {
-      this.startVoting();
-    },
+    // position: function() {
+    // this.startVoting();
+    // },
     preferNot: function(a) {
       this.dbMe.update({ preferNot: a });
     }
   },
   mounted: function() {
     // var vue = this;
-    if (this.shared.dbElectionRef) {
-      this.startVoting();
-    }
-    this.preferNot = false;
+    // if (this.shared.dbElectionRef) {
+    //   this.startVoting();
+    // }
+    // this.preferNot = false;
   },
   methods: {
-    startVoting: function() {
-      this.dbMe.update({
-        voting: true,
-        voted: false
-      });
-    },
+    // startVoting: function() {
+    //   this.dbMe.update({
+    //     voting: true,
+    //     voted: false
+    //   });
+    // },
     voteFor: function(member) {
       this.selectedMember = member;
     },
@@ -165,6 +159,12 @@ export default {
 
 <style lang="less">
 .VotingPanel {
+  background-color: #ffeeee;
+  margin: 20px auto;
+  padding: 20px 20px 20px;
+  width: fit-content;
+  border-radius: 3px;
+
   table {
     margin: 1em auto;
   }
@@ -213,6 +213,7 @@ export default {
     margin: 10px;
   }
   .confirmation {
+    margin: 15px 0 0 0;
     color: grey;
   }
   .voteInfo {

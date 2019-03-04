@@ -16,7 +16,7 @@
       >
         <td>{{ p.name }}</td>
         <td>
-          <span v-text="p.elected ? p.elected.name : ''"></span>
+          <span v-text="nameOf(p.electedId)"></span>
         </td>
         <td v-if="shared.me.isAdmin">
           <button v-on:click="select(p)">Select</button>
@@ -28,13 +28,15 @@
       <button
         :disabled="!shared.election.positionIdToVoteFor || shared.election.votingOpen"
         v-on:click="openVoting"
-      >Open Voting Now</button>
-      <button :disabled="!shared.election.votingOpen" v-on:click="resetVoting">Cancel and Reset Voting</button>
+      >Open Voting Round</button>
+      <button
+        :disabled="!shared.election.votingOpen"
+        v-on:click="resetVoting"
+      >Cancel Voting Round</button>
     </p>
 
-    <p v-if="shared.me.id && shared.election.votingOpen">
-      <button v-on:click="gotoVotePanel">Cast my Vote</button>
-    </p>
+    <!-- <button v-on:click="gotoVotePanel">Cast my Vote</button> -->
+    <voting-panel v-if="shared.me.id"/>
 
     <result-panel/>
 
@@ -50,12 +52,14 @@
 <script>
 import _shared from "@/shared.js";
 import ResultPanel from "./ResultPanel.vue";
+import VotingPanel from "./VotingPanel.vue";
 import firebaseDb from "../firebaseInit";
 
 export default {
   name: "ElectionHome",
   components: {
-    ResultPanel
+    ResultPanel,
+    VotingPanel
   },
   data: function() {
     return {};
@@ -76,6 +80,12 @@ export default {
     },
     gotoVotePanel: function() {
       this.$router.replace("/e/votingPanel");
+    },
+    nameOf: function(id) {
+      if (!id) return "";
+      var member = this.shared.members.find(m => m.id === id);
+      if (!member) return "";
+      return member.name;
     },
     openVoting: function() {
       // create as many slots for vote as we need, skip by a random number to be less predicable

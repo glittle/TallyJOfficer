@@ -8,7 +8,6 @@ export default new Vue({
         electionLoadAttempted: false,
         me: {},
         currentVoting: {},
-        myUser: null,
         isViewer: false,
         isAdmin: false,
         members: [],
@@ -172,8 +171,12 @@ export default new Vue({
                 });
 
             vue.watchForListChanges(vue.members, firebaseDb.ref('members/' + vue.electionKey).orderByChild('name'), member => {
-                if (member.id === vue.myIdFromProfile && !vue.me.id) {
-                    vue.loginToElection(member.id);
+                if (member.id === vue.myIdFromProfile) {
+                    if (vue.me.id) {
+                        vue.me = member;
+                    } else {
+                        vue.loginToElection(member.id);
+                    }
                 }
             });
 
@@ -217,7 +220,7 @@ export default new Vue({
                     vue.currentVoting = snapshot.val() || {};
                 });
         },
-        watchForListChanges: function(localList, listRef, onAdd) {
+        watchForListChanges: function(localList, listRef, onAddChange) {
             var i;
             listRef.on('child_added', data => {
                 // we may have loaded it locally already, so may need to replace it
@@ -228,8 +231,8 @@ export default new Vue({
                 } else {
                     localList.push(item);
                 }
-                if (onAdd) {
-                    onAdd(item);
+                if (onAddChange) {
+                    onAddChange(item);
                 }
             });
 
@@ -242,6 +245,9 @@ export default new Vue({
                     // missing??
                     console.log('missing', item.id);
                     localList.push(item);
+                }
+                if (onAddChange) {
+                    onAddChange(item);
                 }
             });
 

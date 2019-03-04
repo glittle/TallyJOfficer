@@ -1,6 +1,6 @@
 <template>
   <div class="ResultPanel" v-if="position.name">
-    <p>Votes for {{position.name}}!</p>
+    <p>Votes for {{position.name}}</p>
     <table class="results">
       <thead>
         <tr>
@@ -34,9 +34,9 @@
         </tr>
       </tfoot>
     </table>
-    <div v-if="position.elected" class="elected">
+    <div v-if="personElected" class="elected">
       <p>Voting is Complete</p>
-      <p>{{position.elected.name}} has been elected to serve as the {{position.name}}.</p>
+      <p>{{personElected.name}} has been elected to serve as the {{position.name}}.</p>
     </div>
 
     <!-- <button class="addTemp" v-on:click="tempMakeResult">Add Fake Results</button>
@@ -72,12 +72,21 @@ export default {
       );
     },
     oldRounds: function() {
-       var lastIndex = this.positionRounds.length - 1;
+      var lastIndex = this.positionRounds.length - 1;
       return this.positionRounds.filter((r, i) => i < lastIndex);
     },
     lastRound: function() {
       var list = this.positionRounds;
       return list.length ? list[list.length - 1] : null;
+    },
+    personElected: function() {
+      var last = this.lastRound;
+      if (!last) return null;
+      var id = last.electedId;
+      if (!id) return null;
+      return this.shared.members.find(
+        m => m.id === id
+      );
     }
   },
   watch: {
@@ -104,15 +113,18 @@ export default {
 
     resultClass: function(round, id) {
       if (!round) return null;
+      if (round.electedId) {
+        return "Done";
+      }
       var votes = round.votes.filter(v => v.voteId === id).length;
       if (votes === 0) {
         return "0";
       }
-      var pct = (10 * votes) / this.shared.numVotesRequired;
-      if (pct >= 10) {
+      var scale = (10 * votes) / this.shared.numVotesRequired;
+      if (scale >= 10) {
         return "Done";
       }
-      return 1 + Math.floor(pct / 3); // 1,2,3,4
+      return 1 + Math.floor(scale / 3); // 1,2,3,4
     },
     votesFor: function(round, id) {
       if (!round) return null;
@@ -188,7 +200,7 @@ export default {
   margin: 20px auto;
   padding: 1px 20px 40px;
   width: fit-content;
-  border-radius: 5px;
+  border-radius: 3px;
 
   .addTemp {
     margin: 30px 0;
