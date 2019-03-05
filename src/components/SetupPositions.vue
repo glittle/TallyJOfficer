@@ -1,26 +1,28 @@
 <template>
   <div class="SetupPositions">
-    <p>Defined the positions to be voted for.</p>
-    <p>Add, edit and move positions as desired.</p>
-    <slick-list
-      class="list"
-      helper-class="moving"
-      lock-axis="y"
-      v-on:input="listSorted"
-      v-model="list"
-    >
-      <slick-item class="positionItemHolder" v-for="(item,i) in list" :key="item.id" :index="i">
-        <span class="num">{{i+1}}</span>
-        
-        <input type="text" v-on:change="updated" v-model="item.name">
-        
-        <button class="remove" v-on:click="remove(i)">Remove</button>
-        
-        <span class="moveMe">Move ↕</span>
-      </slick-item>
-    </slick-list>
+    <div class="panel">
+      <h1>Defined the positions to be voted for.</h1>
+      <p>Add, edit and move positions as desired.</p>
+      <slick-list
+        class="list"
+        helper-class="moving"
+        lock-axis="y"
+        v-on:input="listSorted"
+        v-model="list"
+      >
+        <slick-item class="positionItemHolder" v-for="(item,i) in list" :key="item.id" :index="i">
+          <span class="num">{{i+1}}</span>
+          
+          <input type="text" v-on:change="updated" v-model="item.name">
+          
+          <button class="remove" v-on:click="remove(i)">Remove</button>
+          
+          <span class="moveMe">Move ↕</span>
+        </slick-item>
+      </slick-list>
 
-    <button v-on:click="add">Add Another</button>
+      <button v-on:click="add">Add Another</button>
+    </div>
   </div>
 </template>
 

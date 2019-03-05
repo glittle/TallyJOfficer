@@ -45,6 +45,9 @@ export default new Vue({
             }
             return null;
         },
+        dbMe: function() {
+            return firebaseDb.ref(`members/${this.electionKey}/${this.me.id}`);
+        }
     },
     watch: {
         // 'election.positionIdToVoteFor': function () {
@@ -190,16 +193,20 @@ export default new Vue({
             });
 
             electionRef.on('value', function(snapshot) {
-                vue.election = snapshot.val() || {};
+                var incomingElection = snapshot.val() || {};
 
-                // if (vue.dbUser.photoURL !== d.id) {
-                //     // remember this election
-                //     vue.dbUser.updateProfile({
-                //         photoURL: d.id
-                //     });
-                // }
+                if (vue.election) {
+                    if (vue.election.votingOpen && !incomingElection.votingOpen) {
+                        // voting in this round just closed
+                        vue.dbMe.update({
+                            voting: false,
+                            voted: false
+                        });
+                    }
+                }
 
-                // get my id
+                vue.election = incomingElection;
+
                 vue.electionLoadAttempted = true;
                 vue.$emit('election-loaded');
             });

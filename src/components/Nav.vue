@@ -12,6 +12,9 @@
         <span></span>
         <router-link to="/e/setupPositions">Positions</router-link>
       </span>
+      <span>
+        <router-link to="/guidance">Guidance</router-link>
+      </span>
     </div>
     <div class="myName" :class="{isViewer: shared.isViewer}">
       <span>{{ shared.me.name }}</span>
@@ -99,7 +102,6 @@ export default {
   }
 
   a {
-    font-weight: bold;
     color: #fff;
     text-decoration: none;
     &:visited {

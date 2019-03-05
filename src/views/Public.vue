@@ -21,6 +21,9 @@
       <a href="guidance" target="guidance">guidance</a>
        regarding Bahá'í officer positions.
     </p>
+    <p>
+      Share on Facebook, Twitter, Instagram...
+    </p>
   </div>
 </template>
 

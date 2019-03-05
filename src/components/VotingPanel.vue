@@ -1,7 +1,16 @@
 <template>
-  <div class="VotingPanel">
+  <div class="VotingPanel panel">
+    <p v-if="shared.me.isAdmin" class="adminBtns">
+      <button
+        :disabled="!shared.election.positionIdToVoteFor || shared.election.votingOpen"
+        v-on:click="openVoting"
+        class="primary"
+      >Open Voting Round</button>
+      <button :disabled="!shared.election.votingOpen" class="caution" v-on:click="resetVoting">Cancel Voting Round</button>
+    </p>
+
     <div v-if="position && shared.election.votingOpen">
-      <p>Voting for {{position.name}}!</p>
+      <h2>Voting for {{position.name}}</h2>
       <p>
         <label class="choosePreferNot">
           <input type="checkbox" v-model="preferNot">
@@ -27,21 +36,24 @@
       </table>
       <div v-if="!confirmed">
         <button
-          class="confirm"
+          class="confirm primary"
           v-on:click="confirm()"
-          :class="{ready:selectedMember}"
-          :disabled="!selectedMember"
+          :class="{ready:selectedMember.name}"
+          :disabled="!selectedMember.name"
         >
           Submit my vote
           <span
             v-if="selectedMember"
-          >for {{selectedMember.name}} to be {{position.name}}</span>
+          >for {{selectedMember.name || '___'}} to be {{position.name}}</span>
           <span v-else>(pending)</span>
         </button>
       </div>
     </div>
     <div v-else>Voting is not open.</div>
-    <div v-if="confirmed" class="confirmation">
+    <div
+      v-if="confirmed || !shared.election.votingOpen && selectedMember.name"
+      class="confirmation"
+    >
       <div class="voteInfo" :class="{revealVote: reveal}">
         <p>You voted for {{selectedMember.name}} to be {{position.name}}.</p>
       </div>
@@ -66,7 +78,7 @@ export default {
   name: "VotingPanel",
   data: function() {
     return {
-      selectedMember: "",
+      selectedMember: {},
       confirmed: false,
       reveal: false,
       preferNot: false
@@ -88,9 +100,16 @@ export default {
     }
   },
   watch: {
-    // position: function() {
-    // this.startVoting();
-    // },
+    position: function(a, b) {
+      if (a.id !== b.id) {
+        this.dbMe.update({
+          voting: false,
+          voted: false
+        });
+        this.confirmed = false;
+        this.selectedMember = {};
+      }
+    },
     preferNot: function(a) {
       this.dbMe.update({ preferNot: a });
     }
@@ -103,13 +122,39 @@ export default {
     // this.preferNot = false;
   },
   methods: {
-    // startVoting: function() {
-    //   this.dbMe.update({
-    //     voting: true,
-    //     voted: false
-    //   });
-    // },
+    openVoting: function() {
+      // create as many slots for vote as we need, skip by a random number to be less predicable
+      var voteDict = {};
+      var nextLetter = 64;
+      var numMembers = this.shared.members.length;
+      var randomSpread = 26 / numMembers;
+
+      // do one for each member (doesn't matter which member for each
+      this.shared.members.forEach((m, i) => {
+        nextLetter += 1 + Math.random() * randomSpread;
+        voteDict[String.fromCharCode(nextLetter)] = "";
+      });
+
+      firebaseDb.ref(`voting/${this.shared.electionKey}`).set({
+        positionId: this.shared.election.positionIdToVoteFor,
+        members: this.shared.members.map(m => m.id), // put in this doc for easier access
+        votes: voteDict
+      });
+
+      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
+        votingOpen: true
+      });
+    },
+    resetVoting: function() {
+      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
+        votingOpen: false
+      });
+    },
     voteFor: function(member) {
+      if (this.selectedMember.id === member.id) {
+        this.selectedMember = {};
+        return;
+      }
       this.selectedMember = member;
     },
     confirm: function() {
@@ -159,11 +204,11 @@ export default {
 
 <style lang="less">
 .VotingPanel {
-  background-color: #ffeeee;
-  margin: 20px auto;
-  padding: 20px 20px 20px;
-  width: fit-content;
-  border-radius: 3px;
+  // background-color: #ffeeee;
+  // margin: 20px auto;
+  // padding: 20px 20px 20px;
+  // width: fit-content;
+  // border-radius: 3px;
 
   table {
     margin: 1em auto;
@@ -175,11 +220,7 @@ export default {
     button {
       margin: 0.25em 0;
       min-width: 200px;
-      padding: 6px 6px;
-      font-weight: bold;
-      // &.selectionMade {
-      //   color: grey;
-      // }
+      font-size: 1em;
       &.selected {
         color: #000;
         background-color: #afffa8;
@@ -194,8 +235,8 @@ export default {
     }
   }
   .confirm {
-    margin: 0 0 20px 0;
-    padding: 10px 20px;
+    margin: 1em 0 3em;
+    font-size: 1em;
     &.ready {
       //background-color: blue;
       //color: white;

@@ -1,6 +1,6 @@
 <template>
-  <div class="ResultPanel" v-if="position.name">
-    <p>Votes for {{position.name}}</p>
+  <div class="ResultPanel panel" v-if="position.name">
+    <h2>Votes for {{position.name}}</h2>
     <table class="results">
       <thead>
         <tr>
@@ -84,9 +84,7 @@ export default {
       if (!last) return null;
       var id = last.electedId;
       if (!id) return null;
-      return this.shared.members.find(
-        m => m.id === id
-      );
+      return this.shared.members.find(m => m.id === id);
     }
   },
   watch: {
@@ -196,11 +194,11 @@ export default {
 
 <style lang="less">
 .ResultPanel {
-  background-color: #ffeeff;
-  margin: 20px auto;
-  padding: 1px 20px 40px;
-  width: fit-content;
-  border-radius: 3px;
+  // background-color: #ffeeff;
+  // margin: 20px auto;
+  // padding: 1px 20px 1px;
+  // width: fit-content;
+  // border-radius: 3px;
 
   .addTemp {
     margin: 30px 0;
@@ -256,9 +254,9 @@ export default {
     margin: 2px auto 0;
   }
   .elected {
-    font-size: 1.5em;
-    margin: 0 auto 40px auto;
-    padding: 10px 20px;
+    font-size: 1.4em;
+    margin: 10px auto 20px auto;
+    padding: 1px 40px;
     border-radius: 15px;
     background-color: #6bff5d;
   }

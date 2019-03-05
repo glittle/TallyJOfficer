@@ -1,5 +1,6 @@
 <template>
-  <div class="guidance">
+  <div class="guidance panel">
+    <button class="goBack" v-on:click="goBack">Go Back</button>
     <p>Guidance regarding the election of officers to Baha'i Assemblies.</p>
     <a name="General"/>
     <h1>General</h1>
@@ -33,11 +34,13 @@
       <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, February 9, 1987)</cite>
     </blockquote>
 
+    <hr>
     <a name="Chair"/>
     <h1>Chair</h1>
 
     <blockquote>sfdsf</blockquote>
     <blockquote>sfdsf</blockquote>
+    <hr>
     <a name="ViceChair"/>
     <h1>Vice-Chair</h1>
     <blockquote>sfdsf</blockquote>
@@ -51,14 +54,30 @@
 // @ is an alias to /src
 
 export default {
-  name: "Guidance"
+  name: "Guidance",
+  methods: {
+    goBack: function() {
+      history.go(-1); // not sure why -1 doesn't work
+    }
+  }
 };
 </script>
 
 <style lang="less">
 .guidance {
-  margin: 2em auto;
-  max-width: 700px; // easier reading
+  padding: 1em;
+  font-family: serif;
+  h1,
+  h2 {
+    font-family: "Acme", sans-serif;
+    color: #1e331d;
+  }
+  button{
+    font-family: "Acme", sans-serif;
+  }
+  blockquote {
+    margin: 1em 1em;
+  }
   hr {
     margin: 2em 0 1em;
   }

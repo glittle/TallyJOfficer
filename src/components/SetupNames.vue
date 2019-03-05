@@ -1,41 +1,42 @@
 <template>
   <div class="SetupNames">
-    <p>Welcome to your Officer Election!</p>
-    <p>Set the names of the members here.</p>
-    <div v-if="useQuickList">
-      <p>To quickly add members, enter their first names in this box, one per line, then click "Add".</p>
-      <textarea v-model="quickList"></textarea>
-      <button v-on:click="processQuickList">Add</button>
-    </div>
-    <button
-      v-on:click="useQuickList = !useQuickList"
-      v-text="useQuickList ? 'Hide Quick Add' : 'Use Quick Add'"
-    />
-    <transition-group name="list" tag="div" class="list">
-      <div
-        class="itemHolder"
-        v-for="(item,i) in shared.members"
-        :key="item.id"
-        :class="{claimed: item.connected}"
-      >
-        <span class="isDup">
-          <span v-if="duplicatedNames[item.name]">Duplicate!</span>
-        </span>
-        
-        <span class="num">{{i+1}}</span>
-        
-        <input type="text" v-on:change="updated" v-model="item.name">
-        
-        <label>
-          <input type="checkbox" v-model="item.isAdmin" v-on:change="updated">
-          Admin
-        </label>
-        
-        <button class="remove" v-on:click="remove(i)">Remove</button>
+    <div class="panel">
+      <h1>Set the names of the members here.</h1>
+      <div v-if="useQuickList">
+        <p>To quickly add members, enter their first names in this box, one per line, then click "Add".</p>
+        <textarea v-model="quickList"></textarea>
+        <button v-on:click="processQuickList">Add</button>
       </div>
-    </transition-group>
+      <button
+        v-on:click="useQuickList = !useQuickList"
+        v-text="useQuickList ? 'Hide Quick Add' : 'Use Quick Add'"
+      />
+      <transition-group name="list" tag="div" class="list">
+        <div
+          class="itemHolder"
+          v-for="(item,i) in shared.members"
+          :key="item.id"
+          :class="{claimed: item.connected}"
+        >
+          <span class="isDup">
+            <span v-if="duplicatedNames[item.name]">Duplicate!</span>
+          </span>
+          
+          <span class="num">{{i+1}}</span>
+          
+          <input type="text" v-on:change="updated" v-model="item.name">
+          
+          <label>
+            <input type="checkbox" v-model="item.isAdmin" v-on:change="updated">
+            Admin
+          </label>
+          
+          <button class="remove" v-on:click="remove(i)">Remove</button>
+        </div>
+      </transition-group>
 
-    <button v-on:click="add">Add Another</button>
+      <button v-on:click="add">Add Another</button>
+    </div>
   </div>
 </template>
 

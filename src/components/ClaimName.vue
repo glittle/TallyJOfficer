@@ -36,7 +36,7 @@
     </p>
     <hr>
     <p class="electionLink" v-if="shared.link">
-      Shareable link to this election
+      Here is the shareable link to this election: 
       <a :href="shared.link">{{shared.link}}</a>
     </p>
   </div>
