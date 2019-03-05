@@ -8,7 +8,7 @@
         <router-link to="/e/home">Home</router-link>
       </span>
       <span v-if="shared.me.isAdmin">
-        <router-link to="/e/setupNames">Names</router-link>
+        <router-link to="/e/setupNames">Members</router-link>
         <span></span>
         <router-link to="/e/setupPositions">Positions</router-link>
       </span>

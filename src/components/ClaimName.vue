@@ -1,43 +1,45 @@
 <template>
   <div class="ClaimName">
-    <p>Welcome to our officer election!</p>
-    <p>Please claim your name...</p>
-    <table>
-      <tr
-        class="memberHolder"
-        v-for="m in shared.members"
-        :key="m.id"
-        :class="{claimed: m.connected}"
-      >
-        <td>{{ m.name }}</td>
-        <td>
-          <button v-on:click="claim(m)" v-if="!m.connected" :disabled="claimMade">This is me!</button>
-          <span v-else>Claimed</span>
-        </td>
-      </tr>
-    </table>
-    <hr>
-    <p>
-      Or, if this computer will be used to display results, click
-      <button
-        v-on:click="claimViewer"
-      >Viewer</button>
-    </p>
-    <hr>
-    <p v-if="!shared.me.id">
-      To leave this election entirely, click
-      <button v-on:click="logout">Logout</button>
-    </p>
-    <hr>
-    <p v-if="!shared.me.id">
-      To delete this election entirely, click
-      <button v-on:click="deleteElection">Delete and Logout</button>
-      <span class="deleteStatus">{{deleteStatus}}</span>
-    </p>
-    <hr>
+    <div class="panel">
+      <p>Please claim your name...</p>
+      <table>
+        <tr
+          class="memberHolder"
+          v-for="m in shared.members"
+          :key="m.id"
+          :class="{claimed: m.connected}"
+        >
+          <td>{{ m.name }}</td>
+          <td>
+            <button v-on:click="claim(m)" v-if="!m.connected" :disabled="claimMade">This is me!</button>
+            <span v-else>Claimed</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="panel">
+      <p>
+        Or, if this computer will be used to display results, click
+        <button
+          v-on:click="claimViewer"
+        >Viewer</button>
+      </p>
+      <p>This should be used for any computer used to project results for all to see.</p>
+    </div>
+    <div class="panel" v-if="!shared.me.id">
+      <p>
+        To leave this election entirely, click
+        <button v-on:click="logout">Logout</button>
+      </p>
+      <p>
+        To delete this election entirely, click
+        <button v-on:click="deleteElection">Delete and Logout</button>
+        <span class="deleteStatus">{{deleteStatus}}</span>
+      </p>
+    </div>
     <p class="electionLink" v-if="shared.link">
-      Here is the shareable link to this election: 
-      <a :href="shared.link">{{shared.link}}</a>
+      Shareable link to this election:
+      <a :href="shared.link">{{shared.link}}</a>. Be sure to keep a copy of the link - it is your team's secret key to this election!
     </p>
   </div>
 </template>
@@ -128,6 +130,10 @@ export default {
 
 <style lang="less">
 .ClaimName {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 10px;
+
   table {
     margin: 1em auto;
   }

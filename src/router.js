@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Election from './views/Election.vue'
 import Public from './views/Public.vue'
 import ClaimName from './components/ClaimName.vue'
 import SetupNames from './components/SetupNames.vue'
@@ -23,12 +22,13 @@ export default new Router({
             path: '/guidance',
             name: 'guidance',
             component: () =>
-                import ( /* webpackChunkName: "about" */ './views/Guidance.vue')
+                import ( /* webpackChunkName: "guidance" */ './views/Guidance.vue')
         },
         {
             path: '/e',
             name: 'electionRoot',
-            component: Election,
+            component: () =>
+                import ( /* webpackChunkName: "election" */ './views/Election.vue'),
             children: [{
                     path: 'home',
                     name: 'electionHome',

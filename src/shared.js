@@ -35,7 +35,7 @@ export default new Vue({
         },
         link: function() {
             if (this.dbUser) {
-                return `${location.origin}/e?${this.dbUser.photoURL}`;
+                return `${location.origin}/e?${this.electionKey}`;
             }
             return null;
         },
@@ -195,14 +195,12 @@ export default new Vue({
             electionRef.on('value', function(snapshot) {
                 var incomingElection = snapshot.val() || {};
 
-                if (vue.election) {
-                    if (vue.election.votingOpen && !incomingElection.votingOpen) {
-                        // voting in this round just closed
-                        vue.dbMe.update({
-                            voting: false,
-                            voted: false
-                        });
-                    }
+                if (vue.election.votingOpen && !incomingElection.votingOpen) {
+                    // voting in this round just closed
+                    vue.dbMe.update({
+                        voting: false,
+                        voted: false
+                    });
                 }
 
                 vue.election = incomingElection;
@@ -215,7 +213,7 @@ export default new Vue({
                 .on('value', function(snapshot) {
                     const info = snapshot.val();
                     if (info) {
-                        vue.symbol = info.symbol;
+                        vue.symbol = info.symbol || '';
                         console.log('incoming symbol', vue.symbol || 'n/a');
                     } else {
                         console.log('no symbol info');
@@ -359,7 +357,7 @@ export default new Vue({
         createPositions: function() {
             // var vue = this;
             var list = [
-                'Sample for Practice',
+                'Sample',
                 'Chair',
                 'Secretary',
                 'Vice-Chair',

@@ -1,21 +1,22 @@
 <template>
   <div class="SetupNames">
     <div class="panel">
-      <h1>Set the names of the members here.</h1>
-      <div v-if="useQuickList">
-        <p>To quickly add members, enter their first names in this box, one per line, then click "Add".</p>
-        <textarea v-model="quickList"></textarea>
+      <h1>Set the names of the members</h1>
+      <p>Use short names!</p>
+
+      <div v-if="useQuickList" class="quickAdd">
+        <button v-on:click="useQuickList = false">Hide Quick Add</button>
+        <p>To quickly add members, enter their names in this box, one per line, then click "Add".</p>
+        <textarea ref="quickText" v-model="quickList"></textarea>
         <button v-on:click="processQuickList">Add</button>
       </div>
-      <button
-        v-on:click="useQuickList = !useQuickList"
-        v-text="useQuickList ? 'Hide Quick Add' : 'Use Quick Add'"
-      />
+      <button v-else v-on:click="useQuickList = true">Use Quick Add</button>
+
       <transition-group name="list" tag="div" class="list">
         <div
           class="itemHolder"
           v-for="(item,i) in shared.members"
-          :key="item.id"
+          :key="item.id + i"
           :class="{claimed: item.connected}"
         >
           <span class="isDup">
@@ -31,11 +32,12 @@
             Admin
           </label>
           
-          <button class="remove" v-on:click="remove(i)">Remove</button>
+          <button class="remove caution" v-on:click="remove(i)">Remove</button>
         </div>
       </transition-group>
-
-      <button v-on:click="add">Add Another</button>
+      <p v-if="warning" class="warning">{{warning}}</p>
+      <button v-on:click="add">Add Another Member</button>
+      <p>Anyone marked as "Admin" is able to open and close voting and set up the names of members and positions. You must have at least one person marked as an admin.</p>
     </div>
   </div>
 </template>
@@ -50,6 +52,7 @@ export default {
     return {
       duplicatedNames: {},
       quickList: "",
+      warning: "",
       useQuickList: false
       // editsMade: false
     };
@@ -99,9 +102,20 @@ export default {
     remove: function(i) {
       // var vue = this;
       var toRemove = this.shared.members[i];
+
+      var adminFound =
+        this.shared.members.filter(m => m.id !== toRemove.id && m.isAdmin)
+          .length > 0;
+      if (!adminFound) {
+        this.warning = "Cannot remove an Admin!";
+        return;
+      }
+      this.warning = "";
+
       firebaseDb
         .ref(`members/${this.shared.electionKey}/${toRemove.id}`)
-        .remove();
+        .remove()
+        .then(() => this.testForDuplicates());
 
       // var removed = this.shared.members.splice(i, 1)[0];
       // var ref = this.shared.dbElectionRef;
@@ -122,6 +136,14 @@ export default {
       );
 
       var dupFound = this.testForDuplicates();
+
+      var adminFound = this.shared.members.filter(m => m.isAdmin).length > 0;
+
+      if (!adminFound) {
+        this.warning = "Please mark at least one Admin!";
+        return;
+      }
+      this.warning = "";
 
       if (!dupFound && wasUpdated) {
         var ref = this.shared.dbElectionRef;
@@ -165,21 +187,26 @@ export default {
 <style lang="less">
 .SetupNames {
   textarea {
-    width: 60px;
+    width: 70px;
     height: 11em;
     display: block;
     font-family: inherit;
-    margin: 0 auto;
-    padding-left: 3px;
+    font-size: 1em;
+    margin: -10px auto 10px;
+    text-align: center;
+    white-space: nowrap;
   }
   .list {
-    margin-right: 100px; // offset for isDup
+    margin: 20px 0;
     .itemHolder {
       margin: 10px 0;
     }
     .isDup {
       display: inline-block;
       width: 100px;
+    }
+    input[type="text"] {
+      width: 5em;
     }
     .num {
       display: inline-block;
@@ -194,11 +221,18 @@ export default {
       margin: 0 5px;
     }
     .remove {
-      margin: 0 5px;
+      margin: 0 0 0 20px;
     }
+  }
+  .quickAdd {
+    margin: 0 auto 20px;
+    width: 60%;
   }
   .list-move {
     transition: transform 1s;
+  }
+  p.warning {
+    color: #993e4a;
   }
 }
 </style>

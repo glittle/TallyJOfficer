@@ -7,13 +7,25 @@
 <style lang="less">
 body {
   font-family: "Acme", sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #2c3e50;
   margin: 0;
   background-color: #ededed;
 }
+p {
+  font-family: "Open Sans", sans-serif;
+}
 input {
   font-size: inherit;
+  padding: 0 1px;
+  border: none;
+  border-bottom: solid 1px lightgray;
+  margin: 0 20px 20px 10px;
+
+  &[type=checkbox] {
+    margin: 0;
+    border: inherit;
+  }
 }
 h1 {
   font-size: 1.6em;
@@ -33,19 +45,19 @@ h2 {
   // border: 1px solid #eaeaea;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   border-radius: 5px;
-  padding: 10px;
+  padding: 10px 10px 20px;
   margin: 10px auto;
   max-width: 700px;
 }
 
 button {
   display: inline-block;
-  font-family: inherit;
+  font-family: "Acme", sans-serif;
   white-space: nowrap;
   text-align: center;
-  vertical-align: middle;
+  vertical-align: baseline;
   height: 2em;
-  font-size: 0.8em;
+  font-size: 0.9em;
   padding: 0 0.8em;
   border-radius: 4px;
   margin: 0.1em 0.3em;
@@ -59,6 +71,7 @@ button {
   }
   &.caution {
     background-color: #993e4a;
+    font-size: 0.8em;
   }
 
   &:hover,

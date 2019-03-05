@@ -66,7 +66,6 @@ export default {
 <style lang="less">
 .guidance {
   padding: 1em;
-  font-family: serif;
   h1,
   h2 {
     font-family: "Acme", sans-serif;

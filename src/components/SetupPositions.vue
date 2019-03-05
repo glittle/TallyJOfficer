@@ -1,8 +1,8 @@
 <template>
   <div class="SetupPositions">
     <div class="panel">
-      <h1>Defined the positions to be voted for.</h1>
-      <p>Add, edit and move positions as desired.</p>
+      <h1>Defined the positions to be voted for</h1>
+      <p>Add, edit and move positions as required by your team.</p>
       <slick-list
         class="list"
         helper-class="moving"
@@ -15,13 +15,15 @@
           
           <input type="text" v-on:change="updated" v-model="item.name">
           
-          <button class="remove" v-on:click="remove(i)">Remove</button>
-          
           <span class="moveMe">Move ↕</span>
+          
+          <button class="remove caution" v-on:click="remove(i)">Remove</button>
         </slick-item>
       </slick-list>
 
-      <button v-on:click="add">Add Another</button>
+      <button v-on:click="add">Add Another Position</button>
+
+      <p>A "Sample" position is included for your team to use to practice with.</p>
     </div>
   </div>
 </template>
@@ -116,7 +118,9 @@ export default {
   border-radius: 3px;
 
   &.moving {
+    text-align: center;
     background-color: lightblue;
+    margin: 5px auto;
   }
   .num {
     display: inline-block;
@@ -126,21 +130,21 @@ export default {
     font-size: 75%;
     color: grey;
   }
+
   label {
     display: inline-block;
     margin: 0 5px;
   }
   .remove {
-    margin: 0 5px;
   }
 
   .moveMe {
     display: inline-block;
-    margin: 0 5px 0 20px;
+    margin: 0 20px 0 20px;
     font-size: 85%;
-    background-color: lighten(lightblue, 2%);
-    padding: 2px 6px;
-    border-radius: 3px;
+    background-color: #b5dce8;
+    padding: 5px 15px;
+    border-radius: 50%;
     cursor: ns-resize;
   }
 }

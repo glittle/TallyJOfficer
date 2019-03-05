@@ -31,7 +31,7 @@
     <result-panel/>
 
     <p class="electionLink" v-if="shared.link">
-      Here is the shareable link to this election:
+      Shareable link to this election:
       <a :href="shared.link">{{shared.link}}</a>. Be sure to keep a copy of the link - it is your team's secret key to this election!
     </p>
     <!-- <button class="reset" v-on:click="clearStorage">Reset All</button> -->
