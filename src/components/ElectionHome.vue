@@ -64,10 +64,10 @@ export default {
   methods: {
     select: function(position) {
       // change for everyone
-      // do twice, in case we've made a local change
       firebaseDb
         .ref(`/elections/${this.shared.electionKey}`)
         .update({ positionIdToVoteFor: "" });
+      // do twice, in case we've made a local change
       firebaseDb
         .ref(`/elections/${this.shared.electionKey}`)
         .update({ positionIdToVoteFor: position.id });

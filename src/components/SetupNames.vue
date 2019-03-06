@@ -7,10 +7,10 @@
       <div v-if="useQuickList" class="quickAdd">
         <button v-on:click="useQuickList = false">Hide Quick Add</button>
         <p>To quickly add members, enter their names in this box, one per line, then click "Add".</p>
-        <textarea ref="quickText" v-model="quickList"></textarea>
+        <textarea ref="quickList" v-model="quickList"></textarea>
         <button v-on:click="processQuickList">Add</button>
       </div>
-      <button v-else v-on:click="useQuickList = true">Use Quick Add</button>
+      <button v-else v-on:click="openQuickList">Use Quick Add</button>
 
       <transition-group name="list" tag="div" class="list">
         <div
@@ -28,6 +28,11 @@
           <input type="text" v-on:change="updated" v-model="item.name">
           
           <label>
+            <input type="checkbox" v-model="item.participating" v-on:change="updated">
+            Voting
+          </label>
+          
+          <label>
             <input type="checkbox" v-model="item.isAdmin" v-on:change="updated">
             Admin
           </label>
@@ -37,6 +42,7 @@
       </transition-group>
       <p v-if="warning" class="warning">{{warning}}</p>
       <button v-on:click="add">Add Another Member</button>
+      <p>If a member is not able to participate in this voting, uncheck their "Voting" mark.</p>
       <p>Anyone marked as "Admin" is able to open and close voting and set up the names of members and positions. You must have at least one person marked as an admin.</p>
     </div>
   </div>
@@ -74,12 +80,16 @@ export default {
     var vue = this;
     this.updated();
     this.shared.$on("election-loaded", function() {
-      if (vue.shared.numBlankNames) {
+      if (vue.shared.numBlankNames && vue.shared.me.isAdmin) {
         vue.useQuickList = true;
       }
     });
   },
   methods: {
+    openQuickList: function() {
+      this.useQuickList = true;
+      this.$nextTick(() => this.$refs.quickList.focus());
+    },
     processQuickList: function() {
       var names = this.quickList.split(/\n/);
       names.forEach(n => {
@@ -112,8 +122,10 @@ export default {
       }
       this.warning = "";
 
+      var path = `members/${this.shared.electionKey}/${toRemove.id}`;
+      console.log("remove", path);
       firebaseDb
-        .ref(`members/${this.shared.electionKey}/${toRemove.id}`)
+        .ref(path)
         .remove()
         .then(() => this.testForDuplicates());
 
@@ -128,7 +140,12 @@ export default {
       //   });
     },
     add: function(i) {
-      this.shared.members.push(this.shared.makeMember("", this.shared.members));
+      var newMember = this.shared.makeMember("", this.shared.members);
+      var path = `members/${this.shared.electionKey}/${newMember.id}`;
+      console.log("add", path);
+      firebaseDb
+        .ref(path)
+        .set(newMember);
     },
     updated: function(wasUpdated) {
       this.shared.members.sort((a, b) =>

@@ -7,9 +7,9 @@ export default new Vue({
         election: {},
         electionLoadAttempted: false,
         me: {},
-        currentVoting: {},
+        // currentVoting: {},
         isViewer: false,
-        isAdmin: false,
+        // isAdmin: false,
         members: [],
         positions: [],
         viewers: [],
@@ -176,6 +176,9 @@ export default new Vue({
             vue.watchForListChanges(vue.members, firebaseDb.ref('members/' + vue.electionKey).orderByChild('name'), member => {
                 if (member.id === vue.myIdFromProfile) {
                     if (vue.me.id) {
+                        // if (vue.me.isAdmin !== member.isAdmin) {
+                        //     vue.isAdmin = member.isAdmin;
+                        // }
                         vue.me = member;
                     } else {
                         vue.loginToElection(member.id);
@@ -220,10 +223,10 @@ export default new Vue({
                     }
                 });
 
-            firebaseDb.ref(`voting/${this.electionKey}/votes`)
-                .on('value', function(snapshot) {
-                    vue.currentVoting = snapshot.val() || {};
-                });
+            // firebaseDb.ref(`voting/${this.electionKey}/votes`)
+            //     .on('value', function(snapshot) {
+            //         vue.currentVoting = snapshot.val() || {};
+            //     });
         },
         watchForListChanges: function(localList, listRef, onAddChange) {
             var i;
@@ -453,6 +456,7 @@ export default new Vue({
                 id: id,
                 isAdmin: false,
                 connected: false,
+                participating: true,
 
                 // temp per position vote
                 preferNot: false,

@@ -3,7 +3,7 @@
   <div class="MemberStatus">
     <div
       class="member"
-      :class="{connected: m.connected, voting: m.voting, voted: m.voted, isAdmin: m.isAdmin}"
+      :class="{connected: m.connected, voting: m.voting, voted: m.voted, isAdmin: m.isAdmin, participating: m.participating}"
       v-for="m in shared.members"
       :key="m.id"
     >{{ m.name }}</div>
@@ -63,9 +63,14 @@ export default {
   }
 
   .member {
-    border: 1px solid transparent;
-    background-color: #d0d0d0;
     position: relative;
+    background-color: #fff;
+    border: 1px dashed #3f3fff;
+
+    &.participating {
+      border: 1px solid transparent;
+      background-color: #d0d0d0;
+    }
 
     &.connected {
       border-color: #3f3fff;
@@ -80,7 +85,7 @@ export default {
     &.isAdmin:after {
       content: "A"; // for Admin
       position: absolute;
-      bottom: -5px;;
+      bottom: -5px;
       right: -8px;
       font-size: 60%;
     }

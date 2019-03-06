@@ -6,7 +6,11 @@
         v-on:click="openVoting"
         class="primary"
       >Open Voting Round</button>
-      <button :disabled="!shared.election.votingOpen" class="caution" v-on:click="resetVoting">Cancel Voting Round</button>
+      <button
+        :disabled="!shared.election.votingOpen"
+        class="caution"
+        v-on:click="resetVoting"
+      >Cancel Voting Round</button>
     </p>
 
     <div v-if="position && shared.election.votingOpen">
@@ -19,7 +23,7 @@
       </p>
 
       <table v-if="!confirmed">
-        <tr class="memberHolder" v-for="(m,i) in shared.members" :key="i" :class="{x: m.x}">
+        <tr class="memberHolder" v-for="(m,i) in shared.members" :key="m.id" :class="{x: m.x}">
           <td>
             <button
               :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
@@ -101,9 +105,9 @@ export default {
   },
   watch: {
     position: function(a, b) {
-      if (a.id !== b.id) {
+      if (!b || a.id !== b.id) {
         this.dbMe.update({
-          voting: false,
+          voting: true,
           voted: false
         });
         this.confirmed = false;
@@ -123,29 +127,32 @@ export default {
   },
   methods: {
     openVoting: function() {
-      // create as many slots for vote as we need, skip by a random number to be less predicable
-      var voteDict = {};
-      var nextLetter = 64;
-      var numMembers = this.shared.members.length;
-      var randomSpread = 26 / numMembers;
+      // create as many slots for votes as we need, skip by a random number to be less predicable
+      var participants = this.shared.members.filter(m => m.participating);
+      var numParticipants = participants.length;
+      var randomSpread = 26 / numParticipants;
 
-      // do one for each member (doesn't matter which member for each
-      this.shared.members.forEach((m, i) => {
+      // prepare a list of vote slots, one for each member who is participating (doesn't matter which member for each)
+      var nextLetter = 64;
+      var voteDict = {};
+      participants.forEach((m, i) => {
         nextLetter += 1 + Math.random() * randomSpread;
         voteDict[String.fromCharCode(nextLetter)] = "";
       });
 
+      // save the vote slots
       firebaseDb.ref(`voting/${this.shared.electionKey}`).set({
         positionId: this.shared.election.positionIdToVoteFor,
-        members: this.shared.members.map(m => m.id), // put in this doc for easier access
         votes: voteDict
       });
 
+      // turn on voting
       firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
         votingOpen: true
       });
     },
     resetVoting: function() {
+      // turn off voting
       firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
         votingOpen: false
       });

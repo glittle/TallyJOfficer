@@ -9,10 +9,15 @@
           :key="m.id"
           :class="{claimed: m.connected}"
         >
-          <td>{{ m.name }}</td>
+          <th>{{ m.name }}</th>
           <td>
-            <button v-on:click="claim(m)" v-if="!m.connected" :disabled="claimMade">This is me!</button>
-            <span v-else>Claimed</span>
+            <button
+              v-if="m.participating && !m.connected"
+              v-on:click="claim(m)"
+              :disabled="claimMade"
+            >This is me!</button>
+            <span v-if="m.connected">Claimed</span>
+            <span v-if="!m.participating">Not Voting</span>
           </td>
         </tr>
       </table>
@@ -136,24 +141,14 @@ export default {
 
   table {
     margin: 1em auto;
+    th {
+      font-weight: normal;
+      padding-right: 40px;
+    }
   }
   tr.memberHolder {
-    margin: 10px 0;
+    height: 50px;
     cursor: pointer;
-
-    button {
-      margin: 0.6em 10px;
-    }
-
-    td {
-      font-weight: bold;
-    }
-
-    &.claimed {
-      td {
-        font-weight: normal;
-      }
-    }
   }
   .deleteStatus {
     display: block;

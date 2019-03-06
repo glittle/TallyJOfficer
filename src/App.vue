@@ -45,7 +45,7 @@ h2 {
   // border: 1px solid #eaeaea;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   border-radius: 5px;
-  padding: 10px 10px 20px;
+  padding: 10px 20px 20px;
   margin: 10px auto;
   max-width: 700px;
 }
