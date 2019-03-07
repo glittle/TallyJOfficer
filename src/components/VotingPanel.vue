@@ -107,7 +107,7 @@ export default {
   },
   watch: {
     position: function(a, b) {
-      if (!b || a.id !== b.id) {
+      if (a && (!b || a.id !== b.id)) {
         this.startVote();
       }
     },

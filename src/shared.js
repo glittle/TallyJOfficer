@@ -111,6 +111,8 @@ export default new Vue({
                     var updates = {};
                     updates['status'] = 'offline';
 
+                    // gtag('event', 'login')
+
                     if (vue.firebaseDbMyStatus) {
                         vue.firebaseDbMyStatus
                             .onDisconnect()
@@ -204,6 +206,13 @@ export default new Vue({
                     });
                 }
 
+                console.log('election changed', incomingElection);
+                if (!incomingElection || !incomingElection.createdBy) {
+                    // deleted!
+                    vue.logout();
+                    return;
+                }
+
                 vue.election = incomingElection;
 
                 vue.electionLoadAttempted = true;
@@ -225,6 +234,17 @@ export default new Vue({
             //     .on('value', function(snapshot) {
             //         vue.currentVoting = snapshot.val() || {};
             //     });
+        },
+        logout: function() {
+            this.electionKey = "";
+            this.me = {};
+            this.dbUser.updateProfile({
+                photoURL: "",
+                displayName: ""
+            });
+            this.dbElectionRef = null;
+            // this.$root.$router.replace("/");
+            location.reload(); // force a new page to load
         },
         watchForListChanges: function(localList, listRef, onAddChange) {
             var i;
@@ -308,7 +328,7 @@ export default new Vue({
             }
             var electionRef = firebaseDb.ref('elections').push(); // generate new election doc
             electionRef.set({
-                    created: firebase.database.ServerValue.TIMESTAMP,
+                    created: new Date().toString(),
                     createdBy: nameOfAdmin
                         // focusPosition: ''
                 }).then(function() {
@@ -316,6 +336,8 @@ export default new Vue({
 
                     vue.createMembers(nameOfAdmin);
                     vue.createPositions();
+
+                    gtag('event', 'createElection');
 
                     vue.$emit('election-created');
                 })

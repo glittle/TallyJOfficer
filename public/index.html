@@ -8,12 +8,27 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Acme|Open+Sans" rel="stylesheet">
     <title>TallyJ for Officers</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1312528-13"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-1312528-13', {
+            app_name: 'TallyJ Officers'
+        });
+    </script>
 </head>
 
 <body>
     <noscript>
-      <strong>We're sorry but TallyJ Officer doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
+    <strong>We're sorry but TallyJ Officer doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
 </body>

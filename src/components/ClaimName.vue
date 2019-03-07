@@ -80,16 +80,7 @@ export default {
       this.$router.replace("/e/home");
     },
     logout: function() {
-      var vue = this;
-      vue.shared.electionKey = "";
-      vue.shared.me = {};
-      vue.election = {};
-      this.shared.dbUser.updateProfile({
-        photoURL: "",
-        displayName: ""
-      });
-      this.shared.dbElectionRef = null;
-      this.$router.replace("/");
+     this.shared.logout();
     },
     claimViewer: function() {
       this.shared.startMeAsViewer();

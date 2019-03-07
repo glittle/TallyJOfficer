@@ -76,7 +76,9 @@ export default {
   },
   methods: {
     create: function() {
-      this.shared.createElection(this.name);
+      if (this.name) {
+        this.shared.createElection(this.name);
+      }
     },
     leave: function() {
       this.$router.replace("/");

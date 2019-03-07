@@ -51,23 +51,10 @@ export default {
             connected: false
           });
 
-        // const dbMembers = this.shared.dbElectionRef.collection("members");
-        // dbMembers.doc(this.shared.me.id).update({ connected: false });
 
         this.shared.me = {};
 
         this.$router.replace("/e");
-      } else {
-        // log out of the election
-        // var i = this.shared.viewers.findIndex(
-        //   v => v.code === this.shared.myName
-        // );
-        // if (i !== -1) {
-        //   this.shared.viewers.splice(i, 1);
-        // }
-        // this.shared.isViewer = false;
-        // this.shared.myName = "";
-        // this.$router.replace("/e");
       }
     },
     forgetViewer: function() {
