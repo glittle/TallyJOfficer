@@ -8,6 +8,7 @@ import ElectionHome from './components/ElectionHome.vue'
 import VotingPanel from './components/VotingPanel.vue'
 import ResultPanel from './components/ResultPanel.vue'
 import CreateElection from './components/CreateElection.vue'
+import AdminPanel from './components/AdminPanel.vue'
 
 Vue.use(Router)
 
@@ -57,6 +58,10 @@ export default new Router({
                     path: 'create',
                     name: 'createElection',
                     component: CreateElection
+                }, {
+                    path: 'admin',
+                    name: 'adminPanel',
+                    component: AdminPanel
                 }
                 // { path: 'names', component: x },
                 // { path: 'positions', component: x },

@@ -7,7 +7,7 @@
           class="positionHolder"
           v-for="p in shared.positions"
           :key="p.name"
-          :class="{isActive: p.id === shared.election.positionIdToVoteFor }"
+          :class="{ isActive: p.id === shared.election.positionIdToVoteFor }"
         >
           <td>{{ p.name }}</td>
           <td>
@@ -30,11 +30,6 @@
 
     <result-panel/>
 
-    <p class="electionLink" v-if="shared.link">
-      Shareable link to this election:
-      <a :href="shared.link">{{shared.link}}</a>. Be sure to keep a copy of the link - it is your team's secret key to this election!
-    </p>
-    <!-- <button class="reset" v-on:click="clearStorage">Reset All</button> -->
   </div>
 </template>
 
@@ -51,12 +46,16 @@ export default {
     VotingPanel
   },
   data: function() {
-    return {};
+    return {
+    };
   },
   computed: {
     shared: function() {
       return _shared;
     }
+  },
+  watch: {
+    
   },
   mounted: function() {
     // var vue = this;
@@ -84,7 +83,8 @@ export default {
       var member = this.shared.members.find(m => m.id === id);
       if (!member) return "";
       return member.name;
-    }
+    },
+    
   }
 };
 </script>
@@ -96,7 +96,7 @@ export default {
   padding: 0 10px;
   .positionsToFill {
     table {
-      margin: 1em auto;
+      margin: 1em auto 0;
       border-collapse: collapse;
       td {
         width: 200px;
@@ -109,7 +109,7 @@ export default {
       }
       tr.positionHolder {
         &.isActive {
-          background: #9fef93;
+          background: linear-gradient(to right, rgba(159, 239, 146, 0) 0%, #9fef93 2%, #9fef93 10%, #9fef93 90%, #9fef93 98%, rgba(159, 239, 147, 0) 100%);
         }
       }
     }
@@ -117,10 +117,7 @@ export default {
   .reset {
     margin: 100px 0 10px 0;
   }
-  .electionLink {
-    margin: 30px 0;
-    font-size: 80%;
-  }
+  
   .positionBtns {
     button {
       margin: 0 10px;

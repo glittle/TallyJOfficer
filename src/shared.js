@@ -176,12 +176,10 @@ export default new Vue({
             vue.watchForListChanges(vue.members, firebaseDb.ref('members/' + vue.electionKey).orderByChild('name'), member => {
                 if (member.id === vue.myIdFromProfile) {
                     if (vue.me.id) {
-                        // if (vue.me.isAdmin !== member.isAdmin) {
-                        //     vue.isAdmin = member.isAdmin;
-                        // }
+                        // my member info has been updated
                         vue.me = member;
                     } else {
-                        vue.loginToElection(member.id);
+                        vue.claimMember(member.id);
                     }
                 }
             });
@@ -212,16 +210,16 @@ export default new Vue({
                 vue.$emit('election-loaded');
             });
 
-            vue.firebaseDbMyStatus
-                .on('value', function(snapshot) {
-                    const info = snapshot.val();
-                    if (info) {
-                        vue.symbol = info.symbol || '';
-                        console.log('incoming symbol', vue.symbol || 'n/a');
-                    } else {
-                        console.log('no symbol info');
-                    }
-                });
+            // vue.firebaseDbMyStatus
+            //     .on('value', function(snapshot) {
+            //         const info = snapshot.val();
+            //         if (info) {
+            //             vue.symbol = info.symbol || '';
+            //             console.log('incoming symbol 1', vue.symbol || 'n/a');
+            //         } else {
+            //             // console.log('no symbol info');
+            //         }
+            //     });
 
             // firebaseDb.ref(`voting/${this.electionKey}/votes`)
             //     .on('value', function(snapshot) {
@@ -270,9 +268,9 @@ export default new Vue({
                 }
             });
         },
-        loginToElection: function(memberId) {
+        claimMember: function(memberId) {
             var vue = this;
-            console.log('set connected', this.dbUser.uid);
+            // console.log('set connected', this.dbUser.uid);
             vue.me = vue.members.find(m => m.id === memberId);
 
             firebaseDb.ref(`members/${this.electionKey}/${memberId}`).update({
@@ -282,15 +280,15 @@ export default new Vue({
 
             // get my symbol now and keep watching
             var path = `voterSymbols/${this.electionKey}/${memberId}`;
-            console.log('watch', path);
+            // console.log('watch', path);
             firebaseDb.ref(path)
                 .on('value', function(snapshot) {
                     var info = snapshot.val();
                     if (info) {
                         vue.symbol = info.symbol;
-                        console.log('incoming symbol', vue.symbol || 'n/a');
+                        console.log('incoming symbol 2', vue.symbol || 'n/a');
                     } else {
-                        console.log('no symbol info');
+                        // console.log('no symbol info');
                     }
                 })
         },

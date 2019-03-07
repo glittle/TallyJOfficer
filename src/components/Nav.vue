@@ -11,6 +11,8 @@
         <router-link to="/e/setupNames">Members</router-link>
         <span></span>
         <router-link to="/e/setupPositions">Positions</router-link>
+        <span></span>
+        <router-link to="/e/admin">Admin</router-link>
       </span>
       <span>
         <router-link to="/guidance">Guidance</router-link>
@@ -83,6 +85,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   min-height: 2em;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 
   > div {
     flex-grow: 1;
@@ -115,6 +118,10 @@ export default {
   span {
     display: inline-block;
     margin: 3px 0.5em;
+  }
+
+  button {
+    font-size: 0.8em
   }
 
   .myName {

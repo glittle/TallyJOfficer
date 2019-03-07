@@ -5,38 +5,38 @@
       <thead>
         <tr>
           <td class="roundNum">#</td>
-          <td v-for="m in shared.members" :key="m.id">{{m.name}}</td>
+          <td v-for="m in shared.members" :key="m.id">{{ m.name }}</td>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(round,i) in oldRounds" :key="i">
-          <td class="roundNum">{{i+1}}</td>
+          <td class="roundNum">{{ i+1 }}</td>
           <td :class="['vote' + resultClass(round, m.id)]" v-for="m in shared.members" :key="m.id">
-            <div class="voteCount">{{votesFor(round, m.id)}}</div>
+            <div class="voteCount">{{ votesFor(round, m.id) }}</div>
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr v-if="positionRounds.length">
-          <td class="roundNum">{{positionRounds.length}}</td>
+          <td class="roundNum">{{ positionRounds.length }}</td>
           <td
             :class="['vote' + resultClass(lastRound, m.id)]"
             v-for="m in shared.members"
             :key="m.id"
           >
-            <div class="voteListTitle">{{votesFor(lastRound, m.id)}}</div>
+            <div class="voteListTitle">{{ votesFor(lastRound, m.id) }}</div>
             <div
               class="voteDetail"
               v-for="(v,i) in voteListFor(lastRound, m.id)"
               :key="i"
-            >{{v.symbol}}</div>
+            >{{ v.symbol }}</div>
           </td>
         </tr>
       </tfoot>
     </table>
     <div v-if="personElected" class="elected">
       <p>Voting is Complete</p>
-      <p>{{personElected.name}} has been elected to serve as the {{position.name}}.</p>
+      <p>{{ personElected.name }} has been elected to serve as the {{ position.name }}.</p>
     </div>
 
     <!-- <button class="addTemp" v-on:click="tempMakeResult">Add Fake Results</button>
@@ -244,8 +244,9 @@ export default {
 
     td.roundNum {
       border-right: 1px solid #333;
-      padding: 0 5px 0 5px;
+      padding: 1px 5px 0 5px;
       text-align: right;
+      font-size: 60%;
     }
   }
   .voteListTitle {

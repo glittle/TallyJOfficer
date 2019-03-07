@@ -1,14 +1,30 @@
 
 <template>
   <div class="MemberStatus">
-    <div
-      class="member"
-      :class="{connected: m.connected, voting: m.voting, voted: m.voted, isAdmin: m.isAdmin, participating: m.participating}"
-      v-for="m in shared.members"
-      :key="m.id"
-    >{{ m.name }}</div>
+    <div class="top">
+      <button class="blink" v-on:click="testNow" v-if="shared.me.connected">Blink Me</button>
 
-    <div class="viewer" v-for="(m,i) in shared.viewers" :key="'v' + i">{{ m.code }}</div>
+      <div class="members">
+        <div
+          v-for="m in shared.members"
+          :key="m.id"
+          class="member"
+          :class="{connected: m.connected, highlight: m.highlight, voting: m.voting, voted: m.voted, isAdmin: m.isAdmin, participating: m.participating}"
+        >{{ m.name }}</div>
+      </div>
+
+      <div class="viewers">
+        <div class="viewer" v-for="(m,i) in shared.viewers" :key="'v' + i">{{ m.code }}</div>
+      </div>
+    </div>
+
+    <div class="siteInfo">
+      <div v-if="shared.link">
+        Shareable link to this election:
+        <a :href="shared.link">{{shared.link}}</a>.
+        <br>Be sure to keep a copy of this link - it is your team's secret key to this election!
+      </div>
+    </div>
   </div>
 </template>
 
@@ -25,29 +41,56 @@ export default {
       return _shared;
     }
   },
-  mounted: function() {
-    // var vue = this;
-    // setTimeout(function() {
-    //   vue.shared.members[3].voting = true;
-    // }, 1500);
-    // setTimeout(function() {
-    //   vue.shared.members[7].voting = false;
-    //   vue.shared.members[7].voted = true;
-    // }, 5000);
+  mounted: function() {},
+  methods: {
+    testNow: function() {
+      var vue = this;
+      vue.shared.dbMe.update({
+        highlight: true
+      });
+
+      setTimeout(function() {
+        vue.shared.dbMe.update({
+          highlight: false
+        });
+      }, 2000);
+    }
   }
 };
 </script>
 
 <style lang="less">
 .MemberStatus {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: center;
-  min-height: 2em;
-  padding: 3px 0;
-  background: #e4e4fd;
-  border-top: 1px solid #3f3fff;
+  flex-shrink: 0;
+  box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 2em;
+    border-top: 1px solid #5d6560;
+    border-bottom: 1px solid #5d6560;
+    background: #e3e0cf;
+  }
+
+  .members {
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .blink {
+    font-size: 75%;
+  }
+
+  .siteInfo {
+    font-size: 80%;
+    padding: 5px 0 5px;
+    background: #9fa8a3;
+  }
 
   .viewer,
   .member {
@@ -96,14 +139,18 @@ export default {
       //animation: pulse 1s infinite;
     }
 
-    // @keyframes pulse {
-    //   0% {
-    //     background-color: rgba(107, 255, 93, 0.7);
-    //   }
-    //   50% {
-    //     background-color: #fff;
-    //   }
-    // }
+    &.highlight {
+      animation: pulse 0.3s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        background-color: #fff;
+      }
+      50% {
+        background-color: #ffba42;
+      }
+    }
   }
 }
 </style>

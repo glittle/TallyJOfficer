@@ -10,7 +10,7 @@ body {
   font-size: 1.1rem;
   color: #2c3e50;
   margin: 0;
-  background-color: #ededed;
+  background-color: #e3e0cf;
 }
 p {
   font-family: "Open Sans", sans-serif;

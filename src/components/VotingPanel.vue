@@ -5,7 +5,7 @@
         :disabled="!shared.election.positionIdToVoteFor || shared.election.votingOpen"
         v-on:click="openVoting"
         class="primary"
-      >Open Voting Round</button>
+      >Start Voting Round</button>
       <button
         :disabled="!shared.election.votingOpen"
         class="caution"
@@ -23,7 +23,12 @@
       </p>
 
       <table v-if="!confirmed">
-        <tr class="memberHolder" v-for="(m,i) in shared.members" :key="m.id" :class="{x: m.x}">
+        <tr
+          class="memberHolder"
+          v-for="(m, i) in shared.members"
+          :key="m.id"
+          :class="{preferNot: m.preferNot}"
+        >
           <td>
             <button
               :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
@@ -98,24 +103,21 @@ export default {
     position: function() {
       var positionId = this.shared.election.positionIdToVoteFor;
       return this.shared.positions.find(p => p.id === positionId);
-    },
-    dbMe: function() {
-      return firebaseDb.ref(`members/${this.shared.electionKey}/${this.me.id}`);
     }
   },
   watch: {
     position: function(a, b) {
       if (!b || a.id !== b.id) {
-        this.dbMe.update({
-          voting: true,
-          voted: false
-        });
-        this.confirmed = false;
-        this.selectedMember = {};
+        this.startVote();
+      }
+    },
+    "shared.election.votingOpen": function(a) {
+      if (a) {
+        this.startVote();
       }
     },
     preferNot: function(a) {
-      this.dbMe.update({ preferNot: a });
+      this.shared.dbMe.update({ preferNot: a });
     }
   },
   mounted: function() {
@@ -126,6 +128,14 @@ export default {
     // this.preferNot = false;
   },
   methods: {
+    startVote: function() {
+      this.shared.dbMe.update({
+        voting: true,
+        voted: false
+      });
+      this.confirmed = false;
+      this.selectedMember = {};
+    },
     openVoting: function() {
       // create as many slots for votes as we need, skip by a random number to be less predicable
       var participants = this.shared.members.filter(m => m.participating);
@@ -186,7 +196,7 @@ export default {
       // cast my vote
       firebaseDb.ref(path).set(this.selectedMember.id);
 
-      this.dbMe.update({
+      this.shared.dbMe.update({
         voting: false,
         voted: true
       });
@@ -199,7 +209,7 @@ export default {
       }, 2500);
     },
     changeMyVote: function() {
-      this.dbMe.update({
+      this.shared.dbMe.update({
         voting: true,
         voted: false
       });
@@ -226,14 +236,21 @@ export default {
 
     button {
       margin: 0.25em 0;
-      min-width: 200px;
+      padding: 10px 30px;
       font-size: 1em;
+      height: auto;
       &.selected {
         color: #000;
         background-color: #afffa8;
       }
     }
 
+    &.preferNot {
+      button {
+        padding: 10px 10px;
+        height: auto;
+      }
+    }
     td {
       font-weight: bold;
       input {
@@ -242,18 +259,18 @@ export default {
     }
   }
   .confirm {
-    margin: 1em 0 3em;
+    margin: 1em 0;
     font-size: 1em;
     &.ready {
       //background-color: blue;
       //color: white;
     }
   }
-  .preferNot {
-    color: #333;
-    font-size: 90%;
+  div.preferNot {
+    color: #2b2b2b;
+    font-size: 85%;
     font-weight: normal;
-    margin: 5px 0 0 0;
+    margin: 1px 0 0 0;
     white-space: normal;
   }
   .choosePreferNot {

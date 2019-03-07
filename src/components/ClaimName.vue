@@ -36,28 +36,21 @@
         To leave this election entirely, click
         <button v-on:click="logout">Logout</button>
       </p>
-      <p>
-        To delete this election entirely, click
-        <button v-on:click="deleteElection">Delete and Logout</button>
-        <span class="deleteStatus">{{deleteStatus}}</span>
-      </p>
+      
     </div>
-    <p class="electionLink" v-if="shared.link">
-      Shareable link to this election:
-      <a :href="shared.link">{{shared.link}}</a>. Be sure to keep a copy of the link - it is your team's secret key to this election!
-    </p>
+    
   </div>
 </template>
 
 <script>
 import _shared from "@/shared.js";
+// import firebaseDb from "../firebaseInit";
 
 export default {
   name: "ClaimName",
   data: function() {
     return {
-      claimMade: false,
-      deleteStatus: null
+      claimMade: false
     };
   },
   computed: {
@@ -82,9 +75,7 @@ export default {
         displayName: member.id
       });
 
-      this.shared.me = member;
-
-      this.shared.loginToElection(member.id);
+      this.shared.claimMember(member.id);
 
       this.$router.replace("/e/home");
     },
@@ -99,31 +90,6 @@ export default {
       });
       this.shared.dbElectionRef = null;
       this.$router.replace("/");
-    },
-    deleteElection: function() {
-      this.deleteStatus = "Deleting...";
-      var vue = this;
-      // TODO to upgrade to firebase db
-
-      this.shared.dbElectionRef
-        .delete()
-        .then(function() {
-          vue.deleteStatus = "Done. Good-bye!";
-          vue.shared.electionKey = "";
-          vue.shared.me = {};
-          vue.election = {};
-
-          vue.shared.dbUser.updateProfile({
-            photoURL: "",
-            displayName: ""
-          });
-
-          vue.dbElectionRef = null;
-          vue.$router.replace("/");
-        })
-        .catch(function(err) {
-          vue.deleteStatus = "Error: " + err;
-        });
     },
     claimViewer: function() {
       this.shared.startMeAsViewer();
@@ -149,14 +115,6 @@ export default {
   tr.memberHolder {
     height: 50px;
     cursor: pointer;
-  }
-  .deleteStatus {
-    display: block;
-    margin: 5px 0 20px 0;
-  }
-  .electionLink {
-    margin: 30px 0;
-    font-size: 80%;
   }
 }
 </style>
