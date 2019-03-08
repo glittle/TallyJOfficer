@@ -6,8 +6,8 @@
 
 <style lang="less">
 body {
-  font-family: "Acme", sans-serif;
-  font-size: 1.1rem;
+  font-family: "Open Sans", sans-serif;
+  font-size: 1rem;
   color: #2c3e50;
   margin: 0;
   background-color: #e3e0cf;
@@ -52,12 +52,13 @@ h2 {
 
 button {
   display: inline-block;
-  font-family: "Acme", sans-serif;
+  // font-family: "Acme", sans-serif;
+  font-family: "Open Sans", sans-serif;
   white-space: nowrap;
   text-align: center;
   vertical-align: baseline;
-  height: 2em;
-  font-size: 0.9em;
+  height: 1.8em;
+  font-size: 0.8em;
   padding: 0 0.8em;
   border-radius: 4px;
   margin: 0.1em 0.3em;

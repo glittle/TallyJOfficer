@@ -230,6 +230,9 @@ export default {
   table {
     margin: 1em auto;
   }
+  .adminBtns{
+    white-space: nowrap;
+  }
   tr.memberHolder {
     margin: 10px 0;
     cursor: pointer;
@@ -292,7 +295,7 @@ export default {
   }
   .symbolInfo {
     margin: 5px;
-    opacity: 0;
+    opacity: 0.1;
     &.revealVote {
       opacity: 0.8;
     }

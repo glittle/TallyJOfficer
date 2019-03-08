@@ -27,6 +27,9 @@ export default new Vue({
         numBlankNames: function() {
             return this.members.filter(m => !m.name).length;
         },
+        numNonBlankNames: function() {
+            return this.members.filter(m => m.name).length;
+        },
         numMembers: function() {
             return this.members.length;
         },

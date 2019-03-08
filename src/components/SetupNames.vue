@@ -5,45 +5,49 @@
       <p>Use short names!</p>
 
       <div v-if="useQuickList" class="quickAdd">
-        <button v-on:click="useQuickList = false">Hide Quick Add</button>
         <p>To quickly add members, enter their names in this box, one per line, then click "Add".</p>
         <textarea ref="quickList" v-model="quickList"></textarea>
         <button v-on:click="processQuickList">Add</button>
+        <button v-on:click="useQuickList = false, editing = true">Hide Quick Add</button>
       </div>
-      <button v-else v-on:click="openQuickList">Use Quick Add</button>
+      <div v-if="editing">
+        <button v-on:click="openQuickList" v-if="!useQuickList">Use Quick Add</button>
 
-      <transition-group name="list" tag="div" class="list">
-        <div
-          class="itemHolder"
-          v-for="(item,i) in shared.members"
-          :key="item.id + i"
-          :class="{claimed: item.connected}"
-        >
-          <span class="isDup">
-            <span v-if="duplicatedNames[item.name]">Duplicate!</span>
-          </span>
-          
-          <span class="num">{{i+1}}</span>
-          
-          <input type="text" v-on:change="updated" v-model="item.name">
-          
-          <label>
-            <input type="checkbox" v-model="item.participating" v-on:change="updated">
-            Voting
-          </label>
-          
-          <label>
-            <input type="checkbox" v-model="item.isAdmin" v-on:change="updated">
-            Admin
-          </label>
-          
-          <button class="remove caution" v-on:click="remove(i)">Remove</button>
-        </div>
-      </transition-group>
-      <p v-if="warning" class="warning">{{warning}}</p>
-      <button v-on:click="add">Add Another Member</button>
-      <p>If a member is not able to participate in this voting, uncheck their "Voting" mark.</p>
-      <p>Anyone marked as "Admin" is able to open and close voting and set up the names of members and positions. You must have at least one person marked as an admin.</p>
+        <transition-group name="list" tag="div" class="list">
+          <div
+            class="itemHolder"
+            v-for="(item,i) in shared.members"
+            :key="item.id + i"
+            :class="{claimed: item.connected}"
+          >
+            <div>
+              <span class="num">{{i+1}}</span>
+              
+              <input type="text" v-on:change="updated" v-model="item.name">
+              
+              <label>
+                <input type="checkbox" v-model="item.participating" v-on:change="updated">
+                Voting
+              </label>
+              
+              <label>
+                <input type="checkbox" v-model="item.isAdmin" v-on:change="updated">
+                Admin
+              </label>
+            </div>
+            <div class="part2">
+              <span class="isDup" v-if="duplicatedNames[item.name]">
+                <span>Duplicate!</span>
+              </span>
+              <button class="remove caution" v-on:click="remove(i)">Remove</button>
+            </div>
+          </div>
+        </transition-group>
+        <p v-if="warning" class="warning">{{warning}}</p>
+        <button v-on:click="add">Add Another Member</button>
+        <p>If a member is not able to participate in this voting, uncheck their "Voting" mark.</p>
+        <p>Anyone marked as "Admin" is able to open and close voting and set up the names of members and positions. You must have at least one person marked as an admin.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +63,8 @@ export default {
       duplicatedNames: {},
       quickList: "",
       warning: "",
-      useQuickList: false
+      useQuickList: false,
+      editing: true
       // editsMade: false
     };
   },
@@ -77,15 +82,18 @@ export default {
     // }
   },
   mounted: function() {
-    var vue = this;
     this.updated();
-    this.shared.$on("election-loaded", function() {
-      if (vue.shared.numBlankNames && vue.shared.me.isAdmin) {
-        vue.useQuickList = true;
-      }
-    });
+    this.shared.$on("election-loaded", () => this.useQuickOnOpen());
+    this.useQuickOnOpen();
   },
   methods: {
+    useQuickOnOpen: function() {
+      var vue = this;
+      if (vue.shared.numNonBlankNames === 1 && vue.shared.me.isAdmin) {
+        vue.useQuickList = true;
+        vue.editing = false;
+      }
+    },
     openQuickList: function() {
       this.useQuickList = true;
       this.$nextTick(() => this.$refs.quickList.focus());
@@ -106,6 +114,7 @@ export default {
         }
       });
       this.useQuickList = false;
+      this.editing = true;
       this.quickList = "";
       this.updated(true);
     },
@@ -143,9 +152,7 @@ export default {
       var newMember = this.shared.makeMember("", this.shared.members);
       var path = `members/${this.shared.electionKey}/${newMember.id}`;
       console.log("add", path);
-      firebaseDb
-        .ref(path)
-        .set(newMember);
+      firebaseDb.ref(path).set(newMember);
     },
     updated: function(wasUpdated) {
       this.shared.members.sort((a, b) =>
@@ -216,14 +223,26 @@ export default {
   .list {
     margin: 20px 0;
     .itemHolder {
-      margin: 10px 0;
+      margin: 20px 15px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      > div {
+        white-space: nowrap;
+        margin: 2px;
+        &.part2 {
+          // text-align: right;
+        }
+      }
     }
     .isDup {
       display: inline-block;
       width: 100px;
+      color: red;
     }
     input[type="text"] {
       width: 5em;
+      margin: 0 20px 0 10px;
     }
     .num {
       display: inline-block;

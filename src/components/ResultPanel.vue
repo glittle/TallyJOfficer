@@ -194,12 +194,7 @@ export default {
 
 <style lang="less">
 .ResultPanel {
-  // background-color: #ffeeff;
-  // margin: 20px auto;
-  // padding: 1px 20px 1px;
-  // width: fit-content;
-  // border-radius: 3px;
-
+  overflow: auto;
   .addTemp {
     margin: 30px 0;
   }

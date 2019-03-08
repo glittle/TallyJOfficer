@@ -2,7 +2,9 @@
 <template>
   <div class="MemberStatus">
     <div class="top">
-      <button class="blink" v-on:click="testNow" v-if="shared.me.connected">Blink Me</button>
+      <div>
+        <button class="blink" v-on:click="testNow" v-if="shared.me.connected">Blink Me</button>
+      </div>
 
       <div class="members">
         <div
@@ -24,6 +26,7 @@
         <a :href="shared.link">{{shared.link}}</a>.
         <br>Be sure to keep a copy of this link - it is your team's secret key to this election!
       </div>
+      <div class="version">v 0.2</div>
     </div>
   </div>
 </template>
@@ -74,7 +77,8 @@ export default {
     background: #e3e0cf;
   }
 
-  .members {
+  .members,
+  .viewers {
     padding: 5px;
     display: flex;
     flex-wrap: wrap;
@@ -88,8 +92,17 @@ export default {
 
   .siteInfo {
     font-size: 80%;
-    padding: 5px 0 5px;
+    padding: 10px 0;
     background: #9fa8a3;
+    color: #343c38;
+    position: relative;
+    .version {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 5px;
+      background: #9fa8a3; // if squished, will cover text beside it
+    }
   }
 
   .viewer,

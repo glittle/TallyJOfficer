@@ -9,9 +9,11 @@
       </span>
       <span v-if="shared.me.isAdmin">
         <router-link to="/e/setupNames">Members</router-link>
-        <span></span>
+      </span>
+      <span v-if="shared.me.isAdmin">
         <router-link to="/e/setupPositions">Positions</router-link>
-        <span></span>
+      </span>
+      <span v-if="shared.me.isAdmin">
         <router-link to="/e/admin">Admin</router-link>
       </span>
       <span>
@@ -51,7 +53,6 @@ export default {
             connected: false
           });
 
-
         this.shared.me = {};
 
         this.$router.replace("/e");
@@ -66,17 +67,25 @@ export default {
 
 <style lang="less">
 #nav {
+  flex-shrink: 0;
   background: #000;
   color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 2em;
+  min-height: 2.5em;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 
   > div {
-    flex-grow: 1;
-    min-width: 150px;
+    flex: 1 0 1px;
+  }
+
+  div.middle {
+    flex-grow: 2;
+    padding: 2px 0 6px;
+    span {
+      margin: 0 10px;
+    }
   }
 
   .image {
@@ -85,10 +94,6 @@ export default {
     img {
       height: 1.5em;
     }
-  }
-
-  div.middle {
-    flex-grow: 10;
   }
 
   a {
@@ -105,10 +110,11 @@ export default {
   span {
     display: inline-block;
     margin: 3px 0.5em;
+    vertical-align: middle;
   }
 
   button {
-    font-size: 0.8em
+    font-size: 0.8em;
   }
 
   .myName {

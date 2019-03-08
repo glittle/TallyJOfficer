@@ -116,7 +116,10 @@ export default {
   box-sizing: border-box; // match what SlickList uses
   white-space: nowrap;
   border-radius: 3px;
-
+  input {
+    width: 100px;
+    margin: 0 0 20px 10px;
+  }
   &.moving {
     text-align: center;
     background-color: lightblue;

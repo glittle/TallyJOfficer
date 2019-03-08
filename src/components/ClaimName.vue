@@ -104,7 +104,7 @@ export default {
     }
   }
   tr.memberHolder {
-    height: 50px;
+    height: 3em;
     cursor: pointer;
   }
 }
