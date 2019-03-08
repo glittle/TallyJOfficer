@@ -78,10 +78,12 @@ export default {
 
   > div {
     flex: 1 0 1px;
+    white-space: nowrap;
   }
 
   div.middle {
-    flex-grow: 2;
+    flex-grow: 19;
+    white-space: normal;
     padding: 2px 0 6px;
     span {
       margin: 0 10px;
