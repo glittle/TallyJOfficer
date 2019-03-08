@@ -49,7 +49,7 @@ export default {
     color: #1e331d;
   }
   button {
-    font-family: "Acme", sans-serif;
+    font-family: "Open Sans", sans-serif;
   }
   img {
     &.left {
