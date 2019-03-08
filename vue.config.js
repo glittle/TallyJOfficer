@@ -12,7 +12,9 @@ module.exports = {
             appleTouchIcon: 'img/icons/apple-touch-icon.png?2',
             maskIcon: 'img/icons/safari-pinned-tab.svg?2',
             msTileImage: 'img/icons/mstile-150x150.png?2'
-        }
+        },
+        themeColor: '#ffffff',
+        assetsVersion: '2'
     },
 
     lintOnSave: undefined
