@@ -57,9 +57,8 @@ button {
   white-space: nowrap;
   text-align: center;
   vertical-align: baseline;
-  height: 1.8em;
-  font-size: 0.8em;
-  padding: 0 0.8em;
+  font-size: 0.9em;
+  padding: 4px 0.8em 5px;
   border-radius: 4px;
   margin: 0.1em 0.3em;
   border: none;
