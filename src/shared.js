@@ -8,7 +8,7 @@ export default new Vue({
         electionLoadAttempted: false,
         me: {},
         // currentVoting: {},
-        isViewer: false,
+        //isViewer: false,
         // isAdmin: false,
         members: [],
         positions: [],
@@ -190,7 +190,17 @@ export default new Vue({
             });
 
             vue.watchForListChanges(vue.positions, firebaseDb.ref('positions/' + vue.electionKey).orderByChild('sortOrder'));
-            vue.watchForListChanges(vue.viewers, firebaseDb.ref('viewers/' + vue.electionKey).orderByChild('id'));
+            vue.watchForListChanges(vue.viewers, firebaseDb.ref('viewers/' + vue.electionKey).orderByChild('id'), viewer => {
+                debugger;
+                if (viewer.id === vue.myIdFromProfile) {
+                    if (vue.me.id) {
+                        // my viewer info has been updated (not likely used)
+                        vue.me = viewer;
+                    } else {
+                        vue.claimViewer(viewer.id);
+                    }
+                }
+            });
             vue.watchForListChanges(vue.rounds, firebaseDb.ref('votingRounds/' + vue.electionKey).orderByChild('id'));
 
             electionRef.update({
@@ -314,6 +324,14 @@ export default new Vue({
                         // console.log('no symbol info');
                     }
                 })
+        },
+        claimViewer: function(viewerId) {
+            this.me = this.viewers.find(v => v.id === viewerId);
+
+            firebaseDb.ref(`viewers/${this.electionKey}/${viewerId}`).update({
+                connected: this.dbUser.uid,
+                connectedTime: firebase.database.ServerValue.TIMESTAMP
+            });
         },
         // updateList: function(list, doc) {
         //     var item = doc.data();
@@ -488,13 +506,25 @@ export default new Vue({
             };
         },
         startMeAsViewer: function() {
-            var last = this.viewers.length ? this.viewers[this.viewers.length - 1].code : null;
+            debugger;
+            var id = this.getRandomId('v', this.viewers);
+            var last = this.viewers.length ? this.viewers[this.viewers.length - 1].id : null;
+            // can handle 26 viewers... should not have more than 1 or 2
             var nextNum = last ? last.charCodeAt(0) + 1 : 65;
-            var id = String.fromCharCode(nextNum);
-            this.isViewer = true;
-            this.viewers.push({
-                id: id
+            var name = String.fromCharCode(nextNum);
+            var viewer = {
+                id: id,
+                name: name
+            };
+
+            this.dbUser.updateProfile({
+                // TODO: is this reflected locally immediately?
+                displayName: viewer.id
             });
+
+
+            // save it. this will trigger update code above to connect us to it
+            firebaseDb.ref(`viewers/${this.electionKey}/${id}`).set(viewer);
         }
     }
 });

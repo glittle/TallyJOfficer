@@ -16,7 +16,7 @@
       </div>
 
       <div class="viewers">
-        <div class="viewer" v-for="(m,i) in shared.viewers" :key="'v' + i">{{ m.code }}</div>
+        <div class="viewer" v-for="v in shared.viewers" :key="v.id">{{ v.name }}</div>
       </div>
     </div>
 

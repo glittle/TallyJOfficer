@@ -36,9 +36,7 @@
         To leave this election entirely, click
         <button v-on:click="logout">Logout</button>
       </p>
-      
     </div>
-    
   </div>
 </template>
 
@@ -80,10 +78,12 @@ export default {
       this.$router.replace("/e/home");
     },
     logout: function() {
-     this.shared.logout();
+      this.shared.logout();
     },
     claimViewer: function() {
       this.shared.startMeAsViewer();
+
+
       this.$router.replace("/e/home");
     }
   }

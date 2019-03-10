@@ -42,18 +42,31 @@ export default {
   methods: {
     forgetMe: function() {
       if (this.shared.me) {
-        // disconnect from the member
+        var id = this.shared.me.id;
+
+        debugger;
+
+// disconnect from the member/viewer
         this.shared.dbUser.updateProfile({
           displayName: ""
         });
 
-        firebaseDb
-          .ref(`members/${this.shared.electionKey}/${this.shared.me.id}`)
-          .update({
-            connected: false
-          });
-
         this.shared.me = {};
+        switch (id[0]) {
+          case "m":
+            firebaseDb.ref(`members/${this.shared.electionKey}/${id}`).update({
+              connected: false
+            });
+            break;
+
+          case "v":
+            firebaseDb.ref(`viewers/${this.shared.electionKey}/${id}`).remove();
+            break;
+
+          default:
+            console.log("unexpected", id);
+            break;
+        }
 
         this.$router.replace("/e");
       }
