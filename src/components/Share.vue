@@ -8,16 +8,20 @@
           <a :href="shared.link">{{shared.link}}</a>.
         </p>
         <p>Be sure to keep a copy of this URL - it is your team's secret link to this election!</p>
-        <p>Here is the same secret key in a QR Code format:<br>
-          <qrcode :value="shared.link" :options="{ 
+        <p>Here is the same secret key in a QR Code format:
+          <br>
+          <qrcode
+            :value="shared.link"
+            :options="{ 
             width: 200,
             color:{
               light: '#f3f0dfff',
               dark: '#092c50ff'
             }
-            }"></qrcode>
+            }"
+          ></qrcode>
         </p>
-        <div class="version">v 0.3</div>
+        <div class="version">Version {{version}}</div>
       </div>
     </div>
     <div class="panel">
@@ -46,6 +50,9 @@ export default {
   computed: {
     shared: function() {
       return _shared;
+    },
+    version: function() {
+      return _version;
     }
   },
   watch: {},

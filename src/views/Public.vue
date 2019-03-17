@@ -28,6 +28,7 @@
       <a href="guidance" target="guidance">guidance</a> regarding various aspects of electing officers.
     </p>
     <p>Share on Facebook, Twitter, Instagram...</p>
+    <p>Version {{version}}</p>
   </div>
 </template>
 
@@ -35,7 +36,12 @@
 // @ is an alias to /src
 
 export default {
-  name: "Public"
+  name: "Public",
+  computed: {
+    version: function() {
+      return _version;
+    }
+  },
 };
 </script>
 
