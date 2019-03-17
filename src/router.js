@@ -62,6 +62,11 @@ var router = new Router({
                     name: 'adminPanel',
                     component: () =>
                         import ( /* webpackChunkName: "admin" */ './components/AdminPanel.vue')
+                }, {
+                    path: 'share',
+                    name: 'share',
+                    component: () =>
+                        import ( /* webpackChunkName: "admin" */ './components/Share.vue')
                 }
                 // { path: 'names', component: x },
                 // { path: 'positions', component: x },

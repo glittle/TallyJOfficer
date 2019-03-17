@@ -5,19 +5,22 @@
     </div>
     <div class="middle" v-if="$route.name !== 'createElection'">
       <span>
-        <router-link to="/e/home">Home</router-link>
+        <router-link to="home">Home</router-link>
       </span>
       <span v-if="shared.me.isAdmin">
-        <router-link to="/e/setupNames">Members</router-link>
+        <router-link to="setupNames">Members</router-link>
       </span>
       <span v-if="shared.me.isAdmin">
-        <router-link to="/e/setupPositions">Positions</router-link>
+        <router-link to="setupPositions">Positions</router-link>
       </span>
       <span v-if="shared.me.isAdmin">
-        <router-link to="/e/admin">Admin</router-link>
+        <router-link to="admin">Admin</router-link>
       </span>
       <span>
         <router-link to="/guidance">Guidance</router-link>
+      </span>
+      <span>
+        <router-link to="share">Share</router-link>
       </span>
     </div>
     <div class="myName" :class="{isViewer: shared.isViewer}">
@@ -44,7 +47,7 @@ export default {
       if (this.shared.me) {
         var id = this.shared.me.id;
 
-        debugger;
+        // debugger;
 
 // disconnect from the member/viewer
         this.shared.dbUser.updateProfile({

@@ -20,14 +20,6 @@
       </div>
     </div>
 
-    <div class="siteInfo">
-      <div v-if="shared.link">
-        Shareable link to this election:
-        <a :href="shared.link">{{shared.link}}</a>.
-        <br>Be sure to keep a copy of this link - it is your team's secret key to this election!
-      </div>
-      <div class="version">v 0.2</div>
-    </div>
   </div>
 </template>
 
@@ -90,20 +82,20 @@ export default {
     font-size: 75%;
   }
 
-  .siteInfo {
-    font-size: 80%;
-    padding: 10px 0;
-    background: #9fa8a3;
-    color: #343c38;
-    position: relative;
-    .version {
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: 5px;
-      background: #9fa8a3; // if squished, will cover text beside it
-    }
-  }
+  // .siteInfo {
+  //   font-size: 80%;
+  //   padding: 10px 0;
+  //   background: #9fa8a3;
+  //   color: #343c38;
+  //   position: relative;
+  //   .version {
+  //     position: absolute;
+  //     top: 0;
+  //     right: 0;
+  //     padding: 5px;
+  //     background: #9fa8a3; // if squished, will cover text beside it
+  //   }
+  // }
 
   .viewer,
   .member {

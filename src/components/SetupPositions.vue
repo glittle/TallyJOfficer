@@ -118,7 +118,7 @@ export default {
   border-radius: 3px;
   input {
     width: 100px;
-    margin: 0 0 20px 10px;
+    margin: 10px 10px;
   }
   &.moving {
     text-align: center;
@@ -149,6 +149,8 @@ export default {
     padding: 5px 15px;
     border-radius: 50%;
     cursor: ns-resize;
+    user-select: none;
+    pointer-events: none;
   }
 }
 </style>

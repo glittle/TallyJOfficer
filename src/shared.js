@@ -191,7 +191,6 @@ export default new Vue({
 
             vue.watchForListChanges(vue.positions, firebaseDb.ref('positions/' + vue.electionKey).orderByChild('sortOrder'));
             vue.watchForListChanges(vue.viewers, firebaseDb.ref('viewers/' + vue.electionKey).orderByChild('id'), viewer => {
-                debugger;
                 if (viewer.id === vue.myIdFromProfile) {
                     if (vue.me.id) {
                         // my viewer info has been updated (not likely used)
@@ -506,7 +505,7 @@ export default new Vue({
             };
         },
         startMeAsViewer: function() {
-            debugger;
+            // debugger;
             var id = this.getRandomId('v', this.viewers);
             var last = this.viewers.length ? this.viewers[this.viewers.length - 1].id : null;
             // can handle 26 viewers... should not have more than 1 or 2
