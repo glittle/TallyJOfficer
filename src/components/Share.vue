@@ -43,7 +43,7 @@ import Vue from "vue";
 Vue.component(VueQrcode.name, VueQrcode);
 
 export default {
-  name: "Admin",
+  name: "Share",
   data: function() {
     return {};
   },

@@ -5,7 +5,12 @@ module.exports = {
     },
 
     pwa: {
-        name: 'TallyJ Officers',
+        workboxPluginMode: 'InjectManifest',
+        workboxOptions: {
+            // swSrc is required in InjectManifest mode.
+            swSrc: './service-worker.js',
+        },
+        name: 'TallyJ for Officers',
         iconPaths: {
             favicon32: 'img/icons/favicon-32x32.png?2',
             favicon16: 'img/icons/favicon-16x16.png?2',

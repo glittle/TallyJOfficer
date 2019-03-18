@@ -16,10 +16,14 @@
       </div>
 
       <div class="viewers">
-        <div class="viewer" v-for="v in shared.viewers" :key="v.id">{{ v.name }}</div>
+        <div
+          v-for="v in shared.viewers"
+          :key="v.id"
+          class="viewer"
+          :class="{highlight: v.highlight}"
+        >{{ v.name }}</div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -102,6 +106,10 @@ export default {
     display: block;
     margin: 3px 10px;
     padding: 1px 3px;
+
+    &.highlight {
+      animation: pulse 0.3s infinite;
+    }
   }
 
   .viewer {
@@ -143,18 +151,14 @@ export default {
       background-color: #ffba42;
       //animation: pulse 1s infinite;
     }
+  }
 
-    &.highlight {
-      animation: pulse 0.3s infinite;
+  @keyframes pulse {
+    0% {
+      background-color: #fff;
     }
-
-    @keyframes pulse {
-      0% {
-        background-color: #fff;
-      }
-      50% {
-        background-color: #ffba42;
-      }
+    50% {
+      background-color: #ffba42;
     }
   }
 }

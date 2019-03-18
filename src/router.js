@@ -16,6 +16,11 @@ var router = new Router({
             name: 'guidance',
             component: () =>
                 import ( /* webpackChunkName: "guidance" */ './views/Guidance.vue')
+        }, {
+            path: '/faq',
+            name: 'faq',
+            component: () =>
+                import ( /* webpackChunkName: "public2" */ './components/FAQ.vue')
         },
         {
             path: '/e',
@@ -66,7 +71,7 @@ var router = new Router({
                     path: 'share',
                     name: 'share',
                     component: () =>
-                        import ( /* webpackChunkName: "admin" */ './components/Share.vue')
+                        import ( /* webpackChunkName: "main2" */ './components/Share.vue')
                 }
                 // { path: 'names', component: x },
                 // { path: 'positions', component: x },

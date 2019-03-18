@@ -69,10 +69,6 @@ export default {
         return;
       }
 
-      this.shared.dbUser.updateProfile({
-        displayName: member.id
-      });
-
       this.shared.claimMember(member.id);
 
       this.$router.replace("/e/home");
@@ -82,7 +78,6 @@ export default {
     },
     claimViewer: function() {
       this.shared.startMeAsViewer();
-
 
       this.$router.replace("/e/home");
     }

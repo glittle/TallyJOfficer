@@ -2,7 +2,7 @@
   <div class="public panel">
     <img alt="TallyJ logo" src="../assets/logo.png">
     <h1>TallyJ for Officers</h1>
-    <p>Small teams should use this app when electing their officers.</p>
+    <p></p>
     <p>To create your own election now, press here:</p>
     <!-- <button>Create an Election</button> -->
     <p>
@@ -14,6 +14,8 @@
     <p>
       <button v-on:click="$router.push('/e')">Election Home</button>
     </p>
+    <p>See some <a href="faq">Frequently Asked Questions (FAQ)</a>.</p>
+
     <hr>
     <h2>Learn More</h2>
     <p>

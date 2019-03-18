@@ -47,9 +47,7 @@ export default {
       if (this.shared.me) {
         var id = this.shared.me.id;
 
-        // debugger;
-
-// disconnect from the member/viewer
+        // disconnect from the member/viewer
         this.shared.dbUser.updateProfile({
           displayName: ""
         });

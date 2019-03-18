@@ -49,7 +49,18 @@ export default new Vue({
             return null;
         },
         dbMe: function() {
-            return firebaseDb.ref(`members/${this.electionKey}/${this.me.id}`);
+            var id = this.me.id;
+            if (!id) return {};
+
+            switch (id[0]) {
+                case 'm':
+                    return firebaseDb.ref(`members/${this.electionKey}/${this.me.id}`);
+
+                case 'v':
+                    return firebaseDb.ref(`viewers/${this.electionKey}/${this.me.id}`);
+            }
+
+            return {};
         }
     },
     watch: {
@@ -191,6 +202,7 @@ export default new Vue({
 
             vue.watchForListChanges(vue.positions, firebaseDb.ref('positions/' + vue.electionKey).orderByChild('sortOrder'));
             vue.watchForListChanges(vue.viewers, firebaseDb.ref('viewers/' + vue.electionKey).orderByChild('id'), viewer => {
+                console.log('my id', vue.myIdFromProfile, ' test viewer id', viewer.id);
                 if (viewer.id === vue.myIdFromProfile) {
                     if (vue.me.id) {
                         // my viewer info has been updated (not likely used)
@@ -310,6 +322,10 @@ export default new Vue({
                 connectedTime: firebase.database.ServerValue.TIMESTAMP
             });
 
+            this.dbUser.updateProfile({
+                displayName: memberId
+            });
+
             // get my symbol now and keep watching
             var path = `voterSymbols/${this.electionKey}/${memberId}`;
             // console.log('watch', path);
@@ -327,10 +343,34 @@ export default new Vue({
         claimViewer: function(viewerId) {
             this.me = this.viewers.find(v => v.id === viewerId);
 
-            firebaseDb.ref(`viewers/${this.electionKey}/${viewerId}`).update({
-                connected: this.dbUser.uid,
-                connectedTime: firebase.database.ServerValue.TIMESTAMP
-            });
+            if (this.me.id) {
+                firebaseDb.ref(`viewers/${this.electionKey}/${viewerId}`).update({
+                    connected: this.dbUser.uid,
+                    connectedTime: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                this.dbUser.updateProfile({
+                    displayName: viewerId
+                });
+            } else {
+                console.log('Did not find viewer', viewerId);
+            }
+
+        },
+        startMeAsViewer: function() {
+            var id = this.getRandomId('v', this.viewers);
+            var lastName = this.viewers.length ? this.viewers[this.viewers.length - 1].name : null;
+            // can handle 26 viewers... should not have more than 1 or 2
+            var nextNum = lastName ? lastName.charCodeAt(0) + 1 : 65;
+            var name = String.fromCharCode(nextNum);
+            var viewer = {
+                id: id,
+                name: name
+            };
+
+            firebaseDb.ref(`viewers/${this.electionKey}/${id}`).set(viewer);
+
+            this.claimViewer(id);
         },
         // updateList: function(list, doc) {
         //     var item = doc.data();
@@ -384,10 +424,8 @@ export default new Vue({
             });
             vue.me = me;
 
-            // const dbMembers = vue.dbElectionRef.collection('members');
-            // dbMembers.doc(me.id).set(me);
-
-            for (var i = 0; i < 8; i++) {
+            // default to 5 members
+            for (var i = 0; i < 4; i++) {
                 var member = vue.makeMember('', members);
                 members.push(member);
                 // dbMembers.doc(member.id).set(member);
@@ -503,27 +541,6 @@ export default new Vue({
                 voted: false,
                 voting: false
             };
-        },
-        startMeAsViewer: function() {
-            // debugger;
-            var id = this.getRandomId('v', this.viewers);
-            var last = this.viewers.length ? this.viewers[this.viewers.length - 1].id : null;
-            // can handle 26 viewers... should not have more than 1 or 2
-            var nextNum = last ? last.charCodeAt(0) + 1 : 65;
-            var name = String.fromCharCode(nextNum);
-            var viewer = {
-                id: id,
-                name: name
-            };
-
-            this.dbUser.updateProfile({
-                // TODO: is this reflected locally immediately?
-                displayName: viewer.id
-            });
-
-
-            // save it. this will trigger update code above to connect us to it
-            firebaseDb.ref(`viewers/${this.electionKey}/${id}`).set(viewer);
         }
     }
 });

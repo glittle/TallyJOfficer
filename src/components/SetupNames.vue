@@ -17,7 +17,7 @@
           <div
             class="itemHolder"
             v-for="(item,i) in shared.members"
-            :key="item.id + i"
+            :key="item.id"
             :class="{claimed: item.connected}"
           >
             <div>
