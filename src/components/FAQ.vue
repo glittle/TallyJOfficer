@@ -130,6 +130,14 @@
           </blockquote>
         </li>
         <li>
+          <span>How much time does it take to set up an election?</span>
+          <blockquote>
+            Less time than reading these questions and answers!  From starting an election to having all members ready
+            to vote can take as little as 5 minutes.  It takes just a minute to type (or copy and paste) the first names
+            of the members, then another few minutes to share the election's private address with the rest of the team..
+          </blockquote>
+        </li>
+        <li>
           <span>What if it doesn't work?</span>
           <blockquote>
             If, for any reason, you are unable to use TallyJ for Officers, you can revert at any time to whatever
