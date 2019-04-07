@@ -7,12 +7,10 @@
       <div v-if="useQuickList" class="quickAdd">
         <p>To quickly add members, enter their names in this box, one per line, then click "Add".</p>
         <textarea ref="quickList" v-model="quickList"></textarea>
-        <button v-on:click="processQuickList">Add</button>
-        <button v-on:click="useQuickList = false, editing = true">Hide Quick Add</button>
+        <button v-on:click="processQuickList">Add Now</button>
+        <button class="other" v-on:click="useQuickList = false, editing = true">Hide Quick Add</button>
       </div>
       <div v-if="editing">
-        <button v-on:click="openQuickList" v-if="!useQuickList">Use Quick Add</button>
-
         <transition-group name="list" tag="div" class="list">
           <div
             class="itemHolder"
@@ -22,14 +20,14 @@
           >
             <div>
               <span class="num">{{i+1}}</span>
-              
+
               <input type="text" v-on:change="updated" v-model="item.name">
-              
+
               <label>
                 <input type="checkbox" v-model="item.participating" v-on:change="updated">
                 Voting
               </label>
-              
+
               <label>
                 <input type="checkbox" v-model="item.isAdmin" v-on:change="updated">
                 Admin
@@ -39,12 +37,16 @@
               <span class="isDup" v-if="duplicatedNames[item.name]">
                 <span>Duplicate!</span>
               </span>
-              <button class="remove caution" v-on:click="remove(i)">Remove</button>
+              <button v-on:click="remove(i)" class="icon remove caution">
+                <i class="material-icons">delete</i>
+                <span>Delete</span>
+              </button>
             </div>
           </div>
         </transition-group>
         <p v-if="warning" class="warning">{{warning}}</p>
         <button v-on:click="add">Add Another Member</button>
+        <button v-on:click="openQuickList" v-if="!useQuickList">Use Quick Add</button>
         <p>If a member is not able to participate in this voting, uncheck their "Voting" mark.</p>
         <p>Anyone marked as "Admin" is able to open and close voting and set up the names of members and positions. You must have at least one person marked as an admin.</p>
       </div>
@@ -80,6 +82,12 @@ export default {
     //   },
     //   deep: true
     // }
+    quickList: function(a, b) {
+      var byComma = a.split(/,/g);
+      if (byComma.length > 1) {
+        this.quickList = byComma.join("/r");
+      }
+    }
   },
   mounted: function() {
     this.updated();

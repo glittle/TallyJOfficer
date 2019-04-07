@@ -19,7 +19,7 @@
               v-if="shared.me.isAdmin"
               v-on:click="select(p)"
             >Select for Voting</button>
-            <button class v-on:click="view(p)">View</button>
+            <button v-on:click="view(p)">View</button>
           </td>
         </tr>
       </table>

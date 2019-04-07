@@ -1,7 +1,7 @@
 <template>
   <div class="ClaimName">
     <div class="panel">
-      <p>Please claim your name...</p>
+      <p>Welcome to our officer election! Please claim your name...</p>
       <table>
         <tr
           class="memberHolder"
@@ -24,12 +24,12 @@
     </div>
     <div class="panel">
       <p>
-        Or, if this computer will be used to display results, click
+        Or, if this browser will be used to display results, click
         <button
           v-on:click="claimViewer"
         >Viewer</button>
       </p>
-      <p>This should be used for any computer used to project results for all to see.</p>
+      <p>If you also want to use this computer as a voter in this election, use an "In Private" or "Incognito" window for the Viewer session!</p>
     </div>
     <div class="panel" v-if="!shared.me.id">
       <p>

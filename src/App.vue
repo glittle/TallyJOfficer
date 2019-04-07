@@ -5,12 +5,19 @@
 </template>
 
 <style lang="less">
+html {
+  height: 100%;
+}
 body {
   font-family: "Open Sans", sans-serif;
   font-size: 1rem;
   color: #2c3e50;
   margin: 0;
+  height: 100%;
   background-color: #e3e0cf;
+}
+#app {
+  height: 100%;
 }
 p {
   font-family: "Open Sans", sans-serif;
@@ -22,7 +29,7 @@ input {
   border-bottom: solid 1px lightgray;
   margin: 0 20px 20px 10px;
 
-  &[type=checkbox] {
+  &[type="checkbox"] {
     margin: 0;
     border: inherit;
   }
@@ -69,6 +76,11 @@ button {
   &.primary {
     background-color: #3e4a99;
   }
+  &.other {
+    background-color: #fff;
+    box-shadow: inset 0 0 2px 1px #4a993e;
+    color: #333;
+  }
   &.caution {
     background-color: #993e4a;
     font-size: 0.8em;
@@ -98,6 +110,32 @@ button {
   &:active {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5) inset;
+  }
+
+  &.icon {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    padding: 0 10px 0 5px;
+    min-width: 40px;
+    margin: 0.1em 0.5em;
+    color: #4a993e;
+    i {
+      margin: 4px -1px;
+      font-size: 1.2em;
+      display: inline-block;
+    }
+    span {
+      padding: 0 0 0 3px;
+    }
+    &.primary {
+      color: #3e4a99;
+    }
+    &.caution {
+      color: #993e4a;
+      font-size: 0.9em;
+    }
   }
 }
 </style>

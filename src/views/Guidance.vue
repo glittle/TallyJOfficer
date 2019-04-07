@@ -74,6 +74,9 @@ export default {
   button{
     font-family: "Acme", sans-serif;
   }
+  .goBack{
+    float: right;
+  }
   blockquote {
     margin: 1em 1em;
   }

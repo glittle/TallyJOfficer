@@ -106,6 +106,7 @@ export default {
     display: block;
     margin: 3px 10px;
     padding: 1px 3px;
+    border-radius: 1px;
 
     &.highlight {
       animation: pulse 0.3s infinite;

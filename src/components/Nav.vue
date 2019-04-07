@@ -1,7 +1,9 @@
 <template>
   <div id="nav">
     <div class="image">
-      <img alt="TallyJ logo" src="../assets/logo.png">
+      <router-link to="../">
+        <img alt="TallyJ logo" src="../assets/logo.png">
+      </router-link>
     </div>
     <div class="middle" v-if="$route.name !== 'createElection'">
       <span>
@@ -18,6 +20,9 @@
       </span>
       <span>
         <router-link to="/guidance">Guidance</router-link>
+      </span>
+      <span>
+        <router-link to="/faq">FAQ</router-link>
       </span>
       <span>
         <router-link to="share">Share</router-link>
@@ -48,6 +53,7 @@ export default {
         var id = this.shared.me.id;
 
         // disconnect from the member/viewer
+        this.shared.disconnecting = true;
         this.shared.dbUser.updateProfile({
           displayName: ""
         });
@@ -56,7 +62,9 @@ export default {
         switch (id[0]) {
           case "m":
             firebaseDb.ref(`members/${this.shared.electionKey}/${id}`).update({
-              connected: false
+              connected: false,
+              voted: false,
+              voting: false
             });
             break;
 

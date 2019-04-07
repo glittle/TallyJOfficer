@@ -15,6 +15,7 @@ export default new Vue({
         viewers: [],
         rounds: [],
         dbUser: null,
+        disconnecting: false,
         dbElectionRef: null,
         initialQuery: '',
         symbol: '',
@@ -22,7 +23,7 @@ export default new Vue({
     },
     computed: {
         myIdFromProfile: function() {
-            return this.dbUser ? this.dbUser.displayName : null;
+            return this.dbUser && this.dbUser.displayName;
         },
         numBlankNames: function() {
             return this.members.filter(m => !m.name).length;
@@ -37,7 +38,7 @@ export default new Vue({
             return 1 + Math.floor(this.numMembers / 2);
         },
         link: function() {
-            if (this.dbUser) {
+            if (this.dbUser && this.electionKey) {
                 return `${location.origin}/e?${this.electionKey}`;
             }
             return null;
@@ -194,9 +195,12 @@ export default new Vue({
                     if (vue.me.id) {
                         // my member info has been updated
                         vue.me = member;
+                    } else if (vue.disconnecting) {
+                        vue.disconnecting = false;
                     } else {
                         vue.claimMember(member.id);
                     }
+
                 }
             });
 
@@ -316,7 +320,6 @@ export default new Vue({
             var vue = this;
             // console.log('set connected', this.dbUser.uid);
             vue.me = vue.members.find(m => m.id === memberId);
-
             firebaseDb.ref(`members/${this.electionKey}/${memberId}`).update({
                 connected: this.dbUser.uid,
                 connectedTime: firebase.database.ServerValue.TIMESTAMP
@@ -411,7 +414,6 @@ export default new Vue({
             // vue.members.splice(0, vue.members.length);
 
             var members = [];
-            // debugger;
 
             var me = vue.makeMember(nameOfAdmin, members);
             me.isAdmin = true;

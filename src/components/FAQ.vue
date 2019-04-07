@@ -1,10 +1,11 @@
 <template>
   <div class="FAQ">
     <div class="panel">
+    <button class="goBack" v-on:click="goBack">Go Back</button>
       <h2>Frequently Asked Questions</h2>
       <ol>
         <li>
-          <span>How much does this cost?</span>
+          <span>How much does it cost to use TallyJ for Officers?</span>
           <blockquote>It is free to use. There are no paid options or ads.</blockquote>
         </li>
         <li>
@@ -19,8 +20,7 @@
           <span>Is voting anonymous?</span>
           <blockquote>
             Who each person votes for is completely anonymous. While voting, all members can see which members have
-            voted, but they cannot see who they voted for. Once all members have submitted their vote, the results are
-            immediately displayed to everyone.
+            voted, but they cannot see who they voted for.
           </blockquote>
         </li>
         <li>
@@ -28,6 +28,7 @@
           <blockquote>
             During each round of voting, each voter is given a random letter privately on their own
             screen. The letters of all voters are displayed together when the results are shown.
+            Once all members have submitted their vote, the results are immediately displayed to everyone.
             Each voter can verify that their vote was correctly counted and raise concerns if they see that
             it was not tallied correctly. In this way, every voter can be assured that their vote was accurately included.
           </blockquote>
@@ -42,34 +43,24 @@
         <li>
           <span>Do all members need to be together?</span>
           <blockquote>
-            No. Remote voting is one of the benefits of using TallyJ for Officers. Your members each vote at their own computer.
+            No. Remote voting is one of the benefits of using TallyJ for Officers. Each member votes at their own computer / tablet / phone.
             They can be sitting in a room together, or they can be at home or any other location where they have an
             internet connection.
           </blockquote>
         </li>
         <li>
-          <span>How do other members log into the election I create?</span>
+          <span>How do other members join the election I create?</span>
           <blockquote>
             Your election is private to you and your team. Once you, the administrator of the election, have created
             the election, you will be given a new private web address to share with the team. You need to share this with
-            the others in whatever way you typically share information, such as email or WhatsApp or a shared document. 
-            (Reading the address
-            over the phone is not recommended because the private address is cryptic and difficult to read!)
+            them in whatever way you typically share information, such as email or WhatsApp or a shared document.
+            (Reading the address over the phone is not recommended because the private address is cryptic and difficult to read!)
           </blockquote>
           <blockquote>
             No passwords or login accounts are used. Everyone in your team simply accesses the same web address. When
             they connect to that web address, they will be asked to "claim" their name. If someone claims the wrong name
             they can change to claim the correct name. Your team needs to ensure that everyone is satisfied that they
             have their own name.
-          </blockquote>
-        </li>
-        <li>
-          <span>Can I let someone else be the administrator?</span>
-          <blockquote>
-            Whoever creates the election is automatically made to be an administrator of the election. However, you can
-            make any number of other members to also be administrators. There must always be at least one administrator.
-            The administrator is responsible to enter the member's names, enter the positions to be voted for, to open
-            and close voting for each position, and finally, to erase the election when you are done.
           </blockquote>
         </li>
         <li>
@@ -84,10 +75,9 @@
         <li>
           <span>Can I display the results on a shared screen?</span>
           <blockquote>
-            Yes. While each voter needs to have their own private connection to the election, you can also connect a 
-            computer to the election
-            as a "Viewer". This is used solely to show the results of the voting as it progresses. If one computer is being
-            used by a member to submit their votes and to display results, you can use another browser or an incognito window
+            Yes. While each voter needs to have their own private connection to the election, you can also connect other
+            computers to the election as "Viewers". This is used solely to show the results of the voting as it progresses. If one computer is being
+            used by a member to submit their votes and to display results, you can use another browser or an "incognito" window
             to connect as a Viewer and display that on a screen that all can see.
           </blockquote>
         </li>
@@ -95,9 +85,18 @@
           <span>How big can my team be?</span>
           <blockquote>
             There is no technical limit to how many members your team has, but the system was designed to support
-            teams of less than twelve members. If you need to elect a number of individuals from a
+            teams of less than twelve members. If you need to elect a group of individuals from a
             larger population, you should consider using the
             <a href="https://tallyj.com">standard TallyJ</a>.
+          </blockquote>
+        </li>
+        <li>
+          <span>Can I let someone else be the administrator?</span>
+          <blockquote>
+            Whoever creates the election is automatically made to be an administrator of the election. However, you can
+            make any number of other members to also be administrators. There must always be at least one administrator.
+            The administrator is responsible to enter the member's names, enter the positions to be voted for, to open
+            and close voting for each position, and finally, to erase the election when you are done.
           </blockquote>
         </li>
         <li>
@@ -111,8 +110,8 @@
         <li>
           <span>How can I test the system?</span>
           <blockquote>
-            Each voter must have their own browser. For testing, you can open a second "incognito" or "private" tab in any
-            browser and log into your test election as another person. If your computer or phone has multiple browsers,
+            For initial testing, you can open a second "incognito" or "in private" tab in any computer or phone
+            browser and log into your test election as another person. If your computer or phone has multiple types of web browsers,
             such as Chrome, Firefox, Safari and Edge, you can open windows in each of them to test multiple log-ins.
             To make your testing easier, you may want to create a smaller team in your test election of, say, 5 members.
           </blockquote>
@@ -133,8 +132,8 @@
           <span>How much time does it take to set up an election?</span>
           <blockquote>
             Less time than reading these questions and answers!  From starting an election to having all members ready
-            to vote can take as little as 5 minutes.  It takes just a minute to type (or copy and paste) the first names
-            of the members, then another few minutes to share the election's private address with the rest of the team..
+            to vote takes just a few minutes.  You just need to type (or copy and paste) the first names
+            of the members, then name the positions that will be voted for, then share the election's private address with the rest of the team..
           </blockquote>
         </li>
         <li>
@@ -175,7 +174,11 @@ export default {
     }
   },
   watch: {},
-  methods: {}
+  methods: {
+    goBack: function() {
+      history.go(-1); // not sure why -1 doesn't work
+    }
+  }
 };
 </script>
 
@@ -185,6 +188,12 @@ export default {
     > span {
       font-weight: bold;
     }
+  }
+  button{
+    font-family: "Acme", sans-serif;
+  }
+  .goBack{
+    float: right;
   }
 }
 </style>
