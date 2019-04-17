@@ -3,8 +3,8 @@
     <h2>Administration</h2>
     <p>
       To delete this election, click
-      <button v-on:click="pendingDelete = true">Delete and Logout</button>
-      <button v-if="pendingDelete" v-on:click="deleteNow" class="caution">Are you sure? Delete Now</button>
+      <button v-if="!pendingDelete" v-on:click="pendingDelete = true">Delete and Logout</button>
+      <button v-if="pendingDelete" v-on:click="deleteNow" class="caution">Are you sure? Click again to Delete Now!</button>
     </p>
   </div>
 </template>

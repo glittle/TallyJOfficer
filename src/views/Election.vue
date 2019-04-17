@@ -36,7 +36,9 @@ export default {
   },
   mounted: function() {
     // this.goCurrentHome();
-    if (this.$route.name === "electionRoot" || !this.shared.me.id) {
+    if (this.$route.name === "join") {
+      this.$router.replace("/e/claim");
+    } else if (this.$route.name === "electionRoot" || !this.shared.me.id) {
       this.goCurrentHome();
     }
   },

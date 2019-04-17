@@ -1,7 +1,7 @@
 <template>
   <div class="Share">
     <div v-if="shared.link" class="panel">
-      <h2>Share this Election's Secret Link</h2>
+      <h2>This Election's Secret Link</h2>
       <div class="siteInfo">
         <p>Copy and share this link to your election with your team:</p>
         <p>

@@ -14,22 +14,33 @@
             <span v-text="nameOf(p.electedId)"></span>
           </td>
           <td class="positionBtns">
-            <button
+            <!-- <button
               class="primary"
               v-if="shared.me.isAdmin"
               v-on:click="select(p)"
-            >Select for Voting</button>
-            <button v-on:click="view(p)">View</button>
+            >Select for Voting</button>-->
+            <button v-if="!shared.election.votingOpen" v-on:click="view(p)">View</button>
           </td>
         </tr>
       </table>
+      <p v-if="shared.me.isAdmin" class="adminBtns">
+        <button
+          v-if="viewedPosition && !shared.election.votingOpen"
+          v-on:click="openVoting"
+          class="primary"
+        >Admin: Open Voting for {{viewedPosition.name}}</button>
+        <button
+          v-if="shared.election.votingOpen"
+          class="caution"
+          v-on:click="resetVoting"
+        >Admin: Cancel Voting</button>
+      </p>
     </div>
 
     <!-- <button v-on:click="gotoVotePanel">Cast my Vote</button> -->
-    <voting-panel v-if="shared.me.id"/>
+    <voting-panel v-if="shared.isViewer || shared.isMember"/>
 
     <result-panel/>
-
   </div>
 </template>
 
@@ -47,6 +58,7 @@ export default {
   },
   data: function() {
     return {
+      viewedPosition: null
     };
   },
   computed: {
@@ -54,25 +66,57 @@ export default {
       return _shared;
     }
   },
-  watch: {
-    
-  },
+  watch: {},
   mounted: function() {
-    // var vue = this;
+     var vue = this;
+     vue.viewedPosition = vue.shared.positions.find(p => p.id === vue.shared.election.positionIdToVoteFor);
   },
   methods: {
-    select: function(position) {
+    openVoting: function() {
       // change for everyone
+      var positionIdToOpen = this.viewedPosition.id;
+
       firebaseDb
         .ref(`/elections/${this.shared.electionKey}`)
         .update({ positionIdToVoteFor: "" });
+
       // do twice, in case we've made a local change
       firebaseDb
         .ref(`/elections/${this.shared.electionKey}`)
-        .update({ positionIdToVoteFor: position.id });
+        .update({ positionIdToVoteFor: positionIdToOpen });
+
+      // create as many slots for votes as we need, skip by a random number to be less predicable
+      var participants = this.shared.members.filter(m => m.participating);
+      var numParticipants = participants.length;
+      var randomSpread = 26 / numParticipants;
+
+      // prepare a list of vote slots, one for each member who is participating (doesn't matter which member for each)
+      var nextLetter = 64;
+      var voteDict = {};
+      participants.forEach((m, i) => {
+        nextLetter += 1 + Math.random() * randomSpread;
+        voteDict[String.fromCharCode(nextLetter)] = "";
+      });
+
+      // save the vote slots
+      firebaseDb.ref(`voting/${this.shared.electionKey}`).set({
+        positionId: positionIdToOpen,
+        votes: voteDict
+      });
+
+      // turn on voting
+      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
+        votingOpen: true
+      });
+    },
+    resetVoting: function() {
+      // turn off voting
+      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
+        votingOpen: false
+      });
     },
     view: function(position) {
-      // just for me, temporarily
+      this.viewedPosition = position;
       this.shared.election.positionIdToVoteFor = position.id;
     },
     gotoVotePanel: function() {
@@ -83,8 +127,7 @@ export default {
       var member = this.shared.members.find(m => m.id === id);
       if (!member) return "";
       return member.name;
-    },
-    
+    }
   }
 };
 </script>
@@ -109,7 +152,15 @@ export default {
       }
       tr.positionHolder {
         &.isActive {
-          background: linear-gradient(to right, rgba(159, 239, 146, 0) 0%, #9fef93 2%, #9fef93 10%, #9fef93 90%, #9fef93 98%, rgba(159, 239, 147, 0) 100%);
+          background: linear-gradient(
+            to right,
+            rgba(159, 239, 146, 0) 0%,
+            #9fef93 2%,
+            #9fef93 10%,
+            #9fef93 90%,
+            #9fef93 98%,
+            rgba(159, 239, 147, 0) 100%
+          );
         }
       }
     }
@@ -117,7 +168,7 @@ export default {
   .reset {
     margin: 100px 0 10px 0;
   }
-  
+
   .positionBtns {
     button {
       margin: 0 10px;

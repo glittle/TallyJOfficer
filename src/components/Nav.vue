@@ -9,6 +9,9 @@
       <span>
         <router-link to="home">Home</router-link>
       </span>
+      <span>
+        <router-link to="share">Share</router-link>
+      </span>
       <span v-if="shared.me.isAdmin">
         <router-link to="setupNames">Members</router-link>
       </span>
@@ -24,14 +27,14 @@
       <span>
         <router-link to="/faq">FAQ</router-link>
       </span>
-      <span>
-        <router-link to="share">Share</router-link>
-      </span>
     </div>
-    <div class="myName" :class="{isViewer: shared.isViewer}">
+    <div
+      class="myName"
+      :class="{isViewer: shared.isViewer}"
+      :title="shared.electionKey.substring(1,5)"
+    >
       <span>{{ shared.me.name }}</span>
-      <button v-if="shared.me.id" v-on:click="forgetMe">X</button>
-      <button v-if="shared.isViewer" v-on:click="forgetViewer">X</button>
+      <button v-if="shared.isMember || shared.isViewer" v-on:click="forgetMe">X</button>
     </div>
   </div>
 </template>
@@ -51,7 +54,6 @@ export default {
     forgetMe: function() {
       if (this.shared.me) {
         var id = this.shared.me.id;
-
         // disconnect from the member/viewer
         this.shared.disconnecting = true;
         this.shared.dbUser.updateProfile({
@@ -79,9 +81,6 @@ export default {
 
         this.$router.replace("/e");
       }
-    },
-    forgetViewer: function() {
-      this.shared.isViewer = false;
     }
   }
 };

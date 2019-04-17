@@ -5,7 +5,6 @@
       <div>
         <button class="blink" v-on:click="testNow" v-if="shared.me.connected">Blink Me</button>
       </div>
-
       <div class="members">
         <div
           v-for="m in shared.members"
@@ -17,7 +16,7 @@
 
       <div class="viewers">
         <div
-          v-for="v in shared.viewers"
+          v-for="v in activeViewers"
           :key="v.id"
           class="viewer"
           :class="{highlight: v.highlight}"
@@ -38,6 +37,9 @@ export default {
   computed: {
     shared: function() {
       return _shared;
+    },
+    activeViewers: function() {
+      return this.shared.viewers.filter(v => v.id);
     }
   },
   mounted: function() {},
@@ -121,17 +123,18 @@ export default {
 
   .member {
     position: relative;
-    background-color: #fff;
+    background-color: #d0d0d0;
     border: 1px dashed #3f3fff;
 
     &.participating {
       border: 1px solid transparent;
+      background-color: #fff;
       background-color: #d0d0d0;
     }
 
     &.connected {
-      border-color: #3f3fff;
-      background-color: #fff;
+      background-color: #c8c8ff;
+      box-shadow: 0 0 2px 1px #8585d4;
     }
 
     &.voted {

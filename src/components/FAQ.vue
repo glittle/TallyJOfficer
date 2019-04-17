@@ -36,8 +36,8 @@
         <li>
           <span>What technology do we need to use it?</span>
           <blockquote>
-            Every voter must have their own direct access to a web browser. This can be on an iPhone, iPad,
-            Android phone or tablet, MacBook, Chromebook, laptop or computer.
+            Every voter must have their own direct access to a web browser connected to the Internet.
+            This can be on an iPhone, iPad, Android phone or tablet, MacBook, Chromebook, Windows or Linux laptop or computer.
           </blockquote>
         </li>
         <li>

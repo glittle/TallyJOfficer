@@ -8,7 +8,7 @@ export default new Vue({
         electionLoadAttempted: false,
         me: {},
         // currentVoting: {},
-        //isViewer: false,
+        // isViewer: false,
         // isAdmin: false,
         members: [],
         positions: [],
@@ -19,6 +19,7 @@ export default new Vue({
         dbElectionRef: null,
         initialQuery: '',
         symbol: '',
+        justClaimed: '',
         electionKey: '',
     },
     computed: {
@@ -37,9 +38,17 @@ export default new Vue({
         numVotesRequired: function() {
             return 1 + Math.floor(this.numMembers / 2);
         },
+        isMember: function() {
+            var id = this.me.id;
+            return id && id.startsWith('m');
+        },
+        isViewer: function() {
+            var id = this.me.id;
+            return id && id.startsWith('v');
+        },
         link: function() {
             if (this.dbUser && this.electionKey) {
-                return `${location.origin}/e?${this.electionKey}`;
+                return `${location.origin}/j?${this.electionKey}`;
             }
             return null;
         },
@@ -191,7 +200,9 @@ export default new Vue({
                 });
 
             vue.watchForListChanges(vue.members, firebaseDb.ref('members/' + vue.electionKey).orderByChild('name'), member => {
-                if (member.id === vue.myIdFromProfile) {
+                if (member.id === vue.myIdFromProfile || member.id === vue.justClaimed) {
+                    vue.justClaimed = null;
+
                     if (vue.me.id) {
                         // my member info has been updated
                         vue.me = member;
@@ -206,7 +217,7 @@ export default new Vue({
 
             vue.watchForListChanges(vue.positions, firebaseDb.ref('positions/' + vue.electionKey).orderByChild('sortOrder'));
             vue.watchForListChanges(vue.viewers, firebaseDb.ref('viewers/' + vue.electionKey).orderByChild('id'), viewer => {
-                console.log('my id', vue.myIdFromProfile, ' test viewer id', viewer.id);
+                // console.log('my id', vue.myIdFromProfile, ' test viewer id', viewer.id);
                 if (viewer.id === vue.myIdFromProfile) {
                     if (vue.me.id) {
                         // my viewer info has been updated (not likely used)
@@ -226,7 +237,7 @@ export default new Vue({
             electionRef.on('value', function(snapshot) {
                 var incomingElection = snapshot.val() || {};
 
-                if (vue.election.votingOpen && !incomingElection.votingOpen) {
+                if (!incomingElection.votingOpen && vue.dbMe.update) { // vue.election.votingOpen && 
                     // voting in this round just closed
                     vue.dbMe.update({
                         voting: false,
@@ -234,7 +245,7 @@ export default new Vue({
                     });
                 }
 
-                console.log('election changed', incomingElection);
+                //                console.log('election changed', incomingElection);
                 if (!incomingElection || !incomingElection.createdBy) {
                     // deleted!
                     vue.logout();
@@ -272,7 +283,7 @@ export default new Vue({
             });
             this.dbElectionRef = null;
             // this.$root.$router.replace("/");
-            location.reload(); // force a new page to load
+            location.href = "../";
         },
         watchForListChanges: function(localList, listRef, onAddChange) {
             var i;
@@ -320,16 +331,26 @@ export default new Vue({
             var vue = this;
             // console.log('set connected', this.dbUser.uid);
             vue.me = vue.members.find(m => m.id === memberId);
-            firebaseDb.ref(`members/${this.electionKey}/${memberId}`).update({
-                connected: this.dbUser.uid,
+
+            vue.justClaimed = memberId;
+
+            firebaseDb.ref(`members/${vue.electionKey}/${memberId}`).update({
+                connected: vue.dbUser.uid,
                 connectedTime: firebase.database.ServerValue.TIMESTAMP
             });
 
-            this.dbUser.updateProfile({
+            vue.dbUser.updateProfile({
                 displayName: memberId
             });
 
-            // get my symbol now and keep watching
+            vue.firebaseDbMyStatus
+                .set({
+                    status: 'online',
+                    electionKey: vue.electionKey,
+                    memberId: memberId
+                });
+
+            // start watching for symbols to be assigned to me
             var path = `voterSymbols/${this.electionKey}/${memberId}`;
             // console.log('watch', path);
             firebaseDb.ref(path)
@@ -337,7 +358,7 @@ export default new Vue({
                     var info = snapshot.val();
                     if (info) {
                         vue.symbol = info.symbol;
-                        console.log('incoming symbol 2', vue.symbol || 'n/a');
+                        // console.log('incoming symbol 2', vue.symbol || 'n/a');
                     } else {
                         // console.log('no symbol info');
                     }

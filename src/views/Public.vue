@@ -15,14 +15,13 @@
       </em>
     </p>
 
-    
-
     <h1>Learn More</h1>
     <p>
       Here are some
       <a href="faq">Frequently Asked Questions (FAQ)</a> about how this website works.
     </p>
     <img src="../../public/img/team.png">
+    <p>Whenever responsibilities need to be assigned to team members, TallyJ for Officers can help!</p>
     <p>Samples of where this might be useful:</p>
     <ul class="samples">
       <li>
@@ -66,7 +65,6 @@
         <p>Swimmer, Rope Puller, Puzzle Solver</p>
       </li>
     </ul>
-    <p>Any time responsibilities (short-term or long-term) need to be assigned to team members, TallyJ for Officers can help!</p>
     <p>Share on Facebook, Twitter, Instagram...</p>
     <p>Version {{version}}</p>
   </div>

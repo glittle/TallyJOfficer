@@ -1,28 +1,16 @@
 <template>
   <div class="VotingPanel panel">
-    <p v-if="shared.me.isAdmin" class="adminBtns">
-      <button
-        :disabled="!shared.election.positionIdToVoteFor || shared.election.votingOpen"
-        v-on:click="openVoting"
-        class="primary"
-      >Start Voting Round</button>
-      <button
-        :disabled="!shared.election.votingOpen"
-        class="caution"
-        v-on:click="resetVoting"
-      >Cancel Voting Round</button>
-    </p>
-
+    
     <div v-if="position && shared.election.votingOpen">
-      <h2>Voting for {{position.name}}</h2>
-      <p>
-        <label class="choosePreferNot">
+      <h2>Voting for {{positionName}}</h2>
+      <div class="choosePreferNot" v-if="shared.isMember">
+        <label>
           <input type="checkbox" v-model="preferNot">
-          I prefer to not be elected as {{position.name}}.
+          I prefer to not be elected as {{positionName}}.
         </label>
-      </p>
+      </div>
 
-      <table v-if="!confirmed">
+      <table v-if="!confirmed && shared.isMember">
         <tr
           class="memberHolder"
           v-for="(m, i) in shared.members"
@@ -33,17 +21,15 @@
             <button
               :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
               v-on:click="voteFor(m)"
-            >
-              {{m.name}}
-              <div
-                class="preferNot"
-                v-if="m.preferNot"
-              >(Prefers not be elected as {{position.name}})</div>
-            </button>
+            >{{m.name}}</button>
+            <div
+              class="preferNot"
+              v-if="m.preferNot"
+            >({{m.name}} prefers not be elected as {{positionName}})</div>
           </td>
         </tr>
       </table>
-      <div v-if="!confirmed">
+      <div v-if="!confirmed && shared.isMember">
         <button
           class="confirm primary"
           v-on:click="confirm()"
@@ -53,7 +39,7 @@
           Submit my vote
           <span
             v-if="selectedMember"
-          >for {{selectedMember.name || '___'}} to be {{position.name}}</span>
+          >for {{selectedMember.name || '___'}} to be {{positionName}}</span>
           <span v-else>(pending)</span>
         </button>
       </div>
@@ -64,9 +50,10 @@
       class="confirmation"
     >
       <div class="voteInfo" :class="{revealVote: reveal}">
-        <p>You voted for {{selectedMember.name}} to be {{position.name}}.</p>
+        <p>You voted for {{selectedMember.name}} to be {{positionName}}.</p>
       </div>
-      <div class="symbolInfo" :class="{revealVote: reveal}">Your symbol for this vote:
+      <div class="symbolInfo" :class="{revealVote: reveal}">
+        Your symbol for this vote:
         <div class="symbol">{{shared.symbol}}</div>
       </div>
       <button v-on:click="reveal = !reveal" class="reveal">
@@ -99,6 +86,9 @@ export default {
     },
     me: function() {
       return this.shared.me;
+    },
+    positionName: function() {
+      return this.position ? this.position.name : '';
     },
     position: function() {
       var positionId = this.shared.election.positionIdToVoteFor;
@@ -135,37 +125,6 @@ export default {
       });
       this.confirmed = false;
       this.selectedMember = {};
-    },
-    openVoting: function() {
-      // create as many slots for votes as we need, skip by a random number to be less predicable
-      var participants = this.shared.members.filter(m => m.participating);
-      var numParticipants = participants.length;
-      var randomSpread = 26 / numParticipants;
-
-      // prepare a list of vote slots, one for each member who is participating (doesn't matter which member for each)
-      var nextLetter = 64;
-      var voteDict = {};
-      participants.forEach((m, i) => {
-        nextLetter += 1 + Math.random() * randomSpread;
-        voteDict[String.fromCharCode(nextLetter)] = "";
-      });
-
-      // save the vote slots
-      firebaseDb.ref(`voting/${this.shared.electionKey}`).set({
-        positionId: this.shared.election.positionIdToVoteFor,
-        votes: voteDict
-      });
-
-      // turn on voting
-      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
-        votingOpen: true
-      });
-    },
-    resetVoting: function() {
-      // turn off voting
-      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
-        votingOpen: false
-      });
     },
     voteFor: function(member) {
       if (this.selectedMember.id === member.id) {
@@ -230,7 +189,7 @@ export default {
   table {
     margin: 1em auto;
   }
-  .adminBtns{
+  .adminBtns {
     white-space: nowrap;
   }
   tr.memberHolder {
@@ -248,12 +207,6 @@ export default {
       }
     }
 
-    &.preferNot {
-      button {
-        padding: 10px 10px;
-        height: auto;
-      }
-    }
     td {
       font-weight: bold;
       input {
@@ -262,7 +215,7 @@ export default {
     }
   }
   .confirm {
-    margin: 1em 0;
+    margin: 0 0 1em;
     font-size: 1em;
     &.ready {
       //background-color: blue;
@@ -270,15 +223,14 @@ export default {
     }
   }
   div.preferNot {
-    color: #2b2b2b;
+    margin: -5px 0 5px 0;
     font-size: 85%;
     font-weight: normal;
-    margin: 1px 0 0 0;
     white-space: normal;
+    color: #2b2b2b;
   }
   .choosePreferNot {
-    display: block;
-    margin: 10px;
+    margin: -5px 0 20px;
   }
   .confirmation {
     margin: 15px 0 0 0;

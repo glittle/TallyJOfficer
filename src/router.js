@@ -28,6 +28,11 @@ var router = new Router({
             component: () =>
                 import ( /* webpackChunkName: "main" */ './views/Election.vue'),
             children: [{
+                    path: '/j',
+                    name: 'join',
+                    component: () =>
+                        import ( /* webpackChunkName: "public2" */ './components/Join.vue')
+                }, {
                     path: 'home',
                     name: 'electionHome',
                     component: () =>
