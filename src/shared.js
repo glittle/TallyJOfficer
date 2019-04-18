@@ -385,8 +385,8 @@ export default new Vue({
             var id = this.getRandomId('v', this.viewers);
             var lastName = this.viewers.length ? this.viewers[this.viewers.length - 1].name : null;
             // can handle 26 viewers... should not have more than 1 or 2
-            var nextNum = lastName ? lastName.charCodeAt(0) + 1 : 65;
-            var name = String.fromCharCode(nextNum);
+            var nextNum = lastName ? +lastName.substr(1) : 0;
+            var name = 'V' + (1 + nextNum);
             var viewer = {
                 id: id,
                 name: name

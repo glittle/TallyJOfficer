@@ -17,7 +17,7 @@
         </tr>
       </tbody>
       <tfoot>
-        <tr v-if="positionRounds.length">
+        <tr v-if="positionRounds.length && !shared.election.votingOpen">
           <td class="roundNum">{{ positionRounds.length }}</td>
           <td
             :class="['vote' + resultClass(lastRound, m.id)]"
@@ -30,6 +30,14 @@
               v-for="(v,i) in voteListFor(lastRound, m.id)"
               :key="i"
             >{{ v.symbol }}</div>
+          </td>
+        </tr>
+        <tr v-if="shared.election.votingOpen">
+          <td class="roundNum">{{ positionRounds.length + 1 }}</td>
+          <td
+            v-for="m in shared.members"
+            :key="m.id"
+          >
           </td>
         </tr>
       </tfoot>
@@ -73,10 +81,17 @@ export default {
     },
     oldRounds: function() {
       var lastIndex = this.positionRounds.length - 1;
+      if (this.shared.election.votingOpen) {
+        lastIndex++;
+      }
       return this.positionRounds.filter((r, i) => i < lastIndex);
     },
     lastRound: function() {
       var list = this.positionRounds;
+      if (this.shared.election.votingOpen) {
+        // when voting is open, don't show previous round's symbols
+        return null;
+      }
       return list.length ? list[list.length - 1] : null;
     },
     personElected: function() {
@@ -199,13 +214,13 @@ export default {
     margin: 30px 0;
   }
   .vote1 {
-    background-color: #ff990022;
+    background-color: rgba(255, 153, 0, 0.14);
   }
   .vote2 {
-    background-color: #ff990066;
+    background-color: rgba(255, 153, 0, 0.4);
   }
   .vote3 {
-    background-color: #ff9900aa;
+    background-color: rgba(255, 153, 0, 0.66);
   }
   .vote4 {
     background-color: #ff9900;

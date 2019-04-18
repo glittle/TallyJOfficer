@@ -29,12 +29,12 @@
           v-on:click="claimViewer"
         >Viewer</button>
       </p>
-      <p>If you also want to use this computer as a voter in this election, use an "In Private" or "Incognito" window for the Viewer session!</p>
+      <p>To use this computer as a voter <strong>and</strong> as a viewer, use an "In Private"/"Incognito" window for one of the sessions!</p>
     </div>
     <div class="panel" v-if="!shared.me.id">
       <p>
         To leave this election entirely, click
-        <button v-on:click="logout">Logout</button>
+        <button class="caution" v-on:click="logout">Logout</button>
       </p>
     </div>
   </div>

@@ -91,8 +91,11 @@ export default {
   },
   mounted: function() {
     this.updated();
-    this.shared.$on("election-loaded", () => this.useQuickOnOpen());
+    this.shared.$on("election-loaded", this.useQuickOnOpen);
     this.useQuickOnOpen();
+  },
+  beforeDestroy: function() {
+    this.shared.$off("election-loaded", this.useQuickOnOpen);
   },
   methods: {
     useQuickOnOpen: function() {

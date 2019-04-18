@@ -11,7 +11,7 @@
         >
           <td>{{ p.name }}</td>
           <td>
-            <span v-text="nameOf(p.electedId)"></span>
+            <span v-text="nameOf(p.electedId) || '-'"></span>
           </td>
           <td class="positionBtns">
             <!-- <button
@@ -19,7 +19,7 @@
               v-if="shared.me.isAdmin"
               v-on:click="select(p)"
             >Select for Voting</button>-->
-            <button v-if="!shared.election.votingOpen" v-on:click="view(p)">View</button>
+            <button v-if="!shared.election.votingOpen || shared.isViewer" v-on:click="view(p)">View</button>
           </td>
         </tr>
       </table>
@@ -28,7 +28,7 @@
           v-if="viewedPosition && !shared.election.votingOpen"
           v-on:click="openVoting"
           class="primary"
-        >Admin: Open Voting for {{viewedPosition.name}}</button>
+        >Admin: Start a round of voting for {{viewedPosition.name}}</button>
         <button
           v-if="shared.election.votingOpen"
           class="caution"
@@ -38,7 +38,7 @@
     </div>
 
     <!-- <button v-on:click="gotoVotePanel">Cast my Vote</button> -->
-    <voting-panel v-if="shared.isViewer || shared.isMember"/>
+    <voting-panel v-if="shared.isMember"/>
 
     <result-panel/>
   </div>
@@ -152,15 +152,7 @@ export default {
       }
       tr.positionHolder {
         &.isActive {
-          background: linear-gradient(
-            to right,
-            rgba(159, 239, 146, 0) 0%,
-            #9fef93 2%,
-            #9fef93 10%,
-            #9fef93 90%,
-            #9fef93 98%,
-            rgba(159, 239, 147, 0) 100%
-          );
+          background-color: #9fef93;
         }
       }
     }

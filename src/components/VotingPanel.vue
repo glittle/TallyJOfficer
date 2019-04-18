@@ -1,6 +1,5 @@
 <template>
   <div class="VotingPanel panel">
-    
     <div v-if="position && shared.election.votingOpen">
       <h2>Voting for {{positionName}}</h2>
       <div class="choosePreferNot" v-if="shared.isMember">
@@ -44,7 +43,7 @@
         </button>
       </div>
     </div>
-    <div v-else>Voting is not open.</div>
+    <!-- <div v-else>Voting is nt open.</div> -->
     <div
       v-if="confirmed || !shared.election.votingOpen && selectedMember.name"
       class="confirmation"
@@ -57,7 +56,7 @@
         <div class="symbol">{{shared.symbol}}</div>
       </div>
       <button v-on:click="reveal = !reveal" class="reveal">
-        <span v-text="reveal ? 'Hide' : 'Reveal'"></span> my Vote on my screen
+        <span v-text="reveal ? 'Hide my Vote' : 'Reveal my Vote on my screen'"></span>
       </button>
       <p v-if="shared.election.votingOpen">
         <button v-on:click="changeMyVote">Change my vote</button>
@@ -88,7 +87,7 @@ export default {
       return this.shared.me;
     },
     positionName: function() {
-      return this.position ? this.position.name : '';
+      return this.position ? this.position.name : "";
     },
     position: function() {
       var positionId = this.shared.election.positionIdToVoteFor;
@@ -96,11 +95,11 @@ export default {
     }
   },
   watch: {
-    position: function(a, b) {
-      if (a && (!b || a.id !== b.id)) {
-        this.startVote();
-      }
-    },
+    // position: function(a, b) {
+    //   if (a && (!b || a.id !== b.id)) {
+    //     this.startVote();
+    //   }
+    // },
     "shared.election.votingOpen": function(a) {
       if (a) {
         this.startVote();
@@ -202,8 +201,8 @@ export default {
       font-size: 1em;
       height: auto;
       &.selected {
-        color: #000;
-        background-color: #afffa8;
+        // want this to be subtle - to avoid shoulder surfing of neighbours
+        box-shadow: 0 0 3px 1px #000;
       }
     }
 
@@ -242,7 +241,7 @@ export default {
     transition: opacity 0.1s;
     &.revealVote {
       opacity: 0.8;
-      transition: opacity 1.2s;
+      transition: opacity 1.5s;
     }
   }
   .symbolInfo {

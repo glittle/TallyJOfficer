@@ -56,25 +56,30 @@ export default {
     }
   },
   mounted: function() {
-    var vue = this;
-
     if (this.shared.election.created) {
       this.$router.replace("/e");
       return;
     }
 
-    this.shared.$on("election-created", function() {
+    this.shared.$on("election-created", this.electionCreated);
+    this.shared.$on("election-loaded", this.goHome);
+  },
+  beforeDestroy: function() {
+    this.shared.$off("election-created", this.electionCreated);
+    this.shared.$off("election-loaded", this.goHome);
+  },
+  methods: {
+    goHome: function() {
+      this.$router.replace("/e");
+    },
+    electionCreated: function() {
+      var vue = this;
       if (vue.shared.members.filter(m => m.name).length < 2) {
         vue.$router.replace("/e/setupNames");
         return;
       }
       vue.$router.replace("/e");
-    });
-    this.shared.$on("election-loaded", function() {
-      vue.$router.replace("/e");
-    });
-  },
-  methods: {
+    },
     create: function() {
       if (this.name) {
         this.shared.createElection(this.name);

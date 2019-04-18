@@ -10,7 +10,7 @@
           v-for="m in shared.members"
           :key="m.id"
           class="member"
-          :class="{connected: m.connected, highlight: m.highlight, voting: m.voting, voted: m.voted, isAdmin: m.isAdmin, participating: m.participating}"
+          :class="{connected: m.connected, highlight: m.highlight, voting: m.voting, votingOnViewer: shared.isViewer && m.voting, voted: m.voted, isAdmin: m.isAdmin, participating: m.participating}"
         >{{ m.name }}</div>
       </div>
 
@@ -110,7 +110,7 @@ export default {
     padding: 1px 3px;
     border-radius: 1px;
 
-    &.highlight {
+    &div.highlight { // include div to take priority
       animation: pulse 0.3s infinite;
     }
   }
@@ -123,18 +123,24 @@ export default {
 
   .member {
     position: relative;
-    background-color: #d0d0d0;
     border: 1px dashed #3f3fff;
 
     &.participating {
       border: 1px solid transparent;
-      background-color: #fff;
-      background-color: #d0d0d0;
     }
 
     &.connected {
       background-color: #c8c8ff;
-      box-shadow: 0 0 2px 1px #8585d4;
+      box-shadow: 0 0 2px 1px #6b5dff;
+    }
+
+    &.voting {
+      //border-color: #fff;
+      background-color: yellow;
+    }
+
+    &.votingOnViewer{
+      animation: voting 1s linear infinite;
     }
 
     &.voted {
@@ -149,12 +155,6 @@ export default {
       right: -8px;
       font-size: 60%;
     }
-
-    &.voting {
-      border-color: #fff;
-      background-color: #ffba42;
-      //animation: pulse 1s infinite;
-    }
   }
 
   @keyframes pulse {
@@ -163,6 +163,20 @@ export default {
     }
     50% {
       background-color: #ffba42;
+    }
+  }
+  @keyframes voting {
+    0% {
+      background-color: #fff;
+    }
+    45% {
+      background-color: yellow;
+    }
+    55% {
+      background-color: yellow;
+    }
+    100% {
+      background-color: #fff;
     }
   }
 }
