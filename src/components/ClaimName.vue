@@ -33,9 +33,10 @@
     </div>
     <div class="panel" v-if="!shared.me.id">
       <p>
-        To leave this election entirely, click
-        <button class="caution" v-on:click="logout">Leave Election</button>
+        To forget about this election, click
+        <button class="caution" v-on:click="logout">Forget Election</button>
       </p>
+      <p>An administrator can delete this election on the Manage page.</p>
     </div>
   </div>
 </template>

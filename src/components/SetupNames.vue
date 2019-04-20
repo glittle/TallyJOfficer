@@ -21,7 +21,12 @@
             <div>
               <span class="num">{{i+1}}</span>
 
-              <input type="text" v-on:change="updated" v-model="item.name">
+              <input
+                type="text"
+                :class="{missing: !item.name}"
+                v-on:change="updated"
+                v-model="item.name"
+              >
 
               <label>
                 <input type="checkbox" v-model="item.participating" v-on:change="updated">
@@ -256,6 +261,9 @@ export default {
     input[type="text"] {
       width: 5em;
       margin: 0 20px 0 10px;
+      &.missing {
+        background-color: rgba(255, 0, 0, 0.14);
+      }
     }
     .num {
       display: inline-block;

@@ -19,7 +19,7 @@
         <router-link to="share">Share</router-link>
       </span>
       <span v-if="shared.me.isAdmin">
-        <router-link to="admin">Setup</router-link>
+        <router-link to="admin">Manage</router-link>
       </span>
       <span>
         <router-link to="/guidance">Guidance</router-link>

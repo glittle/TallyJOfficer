@@ -238,6 +238,13 @@ export default new Vue({
             electionRef.on('value', function(snapshot) {
                 var incomingElection = snapshot.val() || {};
 
+                //                console.log('election changed', incomingElection);
+                if (!incomingElection || !incomingElection.createdBy) {
+                    // deleted!
+                    vue.logout();
+                    return;
+                }
+
                 if (!incomingElection.votingOpen && vue.dbMe.update) { // vue.election.votingOpen && 
                     // voting in this round just closed
                     vue.dbMe.update({
@@ -246,16 +253,10 @@ export default new Vue({
                     });
                 }
 
-                //                console.log('election changed', incomingElection);
-                if (!incomingElection || !incomingElection.createdBy) {
-                    // deleted!
-                    vue.logout();
-                    return;
-                }
-
                 vue.election = incomingElection;
 
                 vue.electionLoadAttempted = true;
+                console.log('election-loaded');
                 vue.$emit('election-loaded');
             });
 

@@ -74,6 +74,7 @@ export default {
   data: function() {
     return {
       selectedMember: {},
+      positionName: '',
       confirmed: false,
       reveal: false,
       preferNot: false

@@ -26,9 +26,9 @@ export default {
   },
   watch: {
     $route: function(a, b) {
-      // console.log("from", b && b.name, "to", a.name);
+      console.log("from", b && b.name, "to", a.name);
       // console.log(this.shared.me);
-      if (!this.shared.me.id) {
+      if (!this.shared.me.id && a.name !== "createElection") {
         // console.log("go claim 1");
         this.$router.replace("/e/claim");
       } else if (a.name === "electionShell") {
@@ -51,7 +51,11 @@ export default {
   methods: {
     electionLoaded: function() {
       // console.log("loaded");
-      this.goCurrentHome();
+      var currentRoute = this.$route.name;
+      console.log("already on", currentRoute);
+      if (currentRoute !== "adminPanel") {
+        this.goCurrentHome();
+      }
     },
     goCurrentHome: function() {
       // console.log(
@@ -60,12 +64,13 @@ export default {
       //   this.shared.electionLoadAttempted,
       //   this.shared.electionKey
       // );
+      if (!this.shared.electionKey) {
+        // console.log("go create");
+        this.$router.replace("/e/create");
+        return;
+      }
+
       if (this.shared.electionLoadAttempted) {
-        if (!this.shared.electionKey) {
-          // console.log("go create");
-          this.$router.replace("/e/create");
-          return;
-        }
         if (!this.shared.me.id) {
           // console.log("go claim");
           this.$router.replace("/e/claim");
@@ -73,11 +78,15 @@ export default {
         }
       }
 
-      if (this.$route.name === "electionShell") {
-        // console.log("go root");
+      if (this.$route.name === "overview") {
+        console.log(
+          "overview",
+          this.shared.numBlankNames,
+          this.shared.me.isAdmin
+        );
         if (this.shared.numBlankNames && this.shared.me.isAdmin) {
           // console.log("setup");
-          this.$router.replace("/e/setupNames");
+          this.$router.replace("/e/admin");
           return;
         }
       }

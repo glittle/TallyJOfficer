@@ -78,7 +78,7 @@ export default {
     electionCreated: function() {
       var vue = this;
       if (vue.shared.members.filter(m => m.name).length < 2) {
-        vue.$router.replace("/e/setupNames");
+        vue.$router.replace("/e/admin");
         return;
       }
       vue.$router.replace("/e");

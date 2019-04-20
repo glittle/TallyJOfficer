@@ -34,9 +34,9 @@
         </tr>
         <tr v-if="shared.election.votingOpen">
           <td class="roundNum">{{ positionRounds.length + 1 }}</td>
-          <td :colspan="shared.members.length">
-            Voting is underway for round {{ positionRounds.length + 1 }}
-          </td>
+          <td
+            :colspan="shared.members.length"
+          >Voting in progress.<br>{{ numVoted }} of {{ numParticipating }} votes received.</td>
         </tr>
       </tfoot>
     </table>
@@ -64,6 +64,12 @@ export default {
   computed: {
     shared: function() {
       return _shared;
+    },
+    numVoted: function() {
+      return this.shared.members.filter(m => m.voted).length;
+    },
+    numParticipating: function() {
+      return this.shared.members.filter(m => m.participating).length;
     },
     position: function() {
       return (
