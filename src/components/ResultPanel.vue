@@ -34,10 +34,8 @@
         </tr>
         <tr v-if="shared.election.votingOpen">
           <td class="roundNum">{{ positionRounds.length + 1 }}</td>
-          <td
-            v-for="m in shared.members"
-            :key="m.id"
-          >
+          <td :colspan="shared.members.length">
+            Voting is underway for round {{ positionRounds.length + 1 }}
           </td>
         </tr>
       </tfoot>

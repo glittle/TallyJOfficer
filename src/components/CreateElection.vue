@@ -11,22 +11,25 @@
       </div>
       <div class="panel">
         <h1>Create an Election</h1>
+        <p>To get started, all we need is your first name.</p>
         <p>
-          To get started, we need your first name.
           Please enter the name that you want other
-          members to use when talking with you, usually just your first name. (You can change it later, if you want.)
+          members to use when talking with you, usually just your first name. (You can change it later, if needed.)
         </p>
-        <p>You will be the "administrator" of this election and able to manage it in this system.</p>
-        <p>When the election is created, you will be given a unique URL that you will need to share with the rest of the members.</p>
         <div class="nameInput">
-          Your name
+          Your name:
           <input v-model="name" v-on:keyup.enter="create">
         </div>
+        <p>You will be the "administrator" of this election and able to manage it in this system.</p>
+        <p>
+          When the election is created, you will be given a special private address that you will need to
+          share with the rest of the team members.
+        </p>
         <div>
           <button :disabled="!name" v-on:click="create">Create the Election</button>
         </div>
         <p class="leave">
-          <button v-on:click="leave">Cancel</button>
+          <button class="caution" v-on:click="leave">Cancel</button>
         </p>
       </div>
     </div>

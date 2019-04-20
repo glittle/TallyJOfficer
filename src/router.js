@@ -1,3 +1,5 @@
+/* eslint-disable space-in-parens */
+/* eslint-disable func-call-spacing */
 import Vue from 'vue'
 import Router from 'vue-router'
 import Public from './views/Public.vue'
@@ -14,66 +16,76 @@ var router = new Router({
         }, {
             path: '/guidance',
             name: 'guidance',
+            meta: {
+                tags: {
+                    description: 'Guidance regarding offices of a Bahá’í Assembly.'
+                }
+            },
             component: () =>
                 import ( /* webpackChunkName: "guidance" */ './views/Guidance.vue')
         }, {
             path: '/faq',
             name: 'faq',
+            meta: {
+                tags: {
+                    description: 'Questiions and Answers about TallyJ for Officers.'
+                }
+            },
             component: () =>
                 import ( /* webpackChunkName: "public2" */ './components/FAQ.vue')
         },
         {
             path: '/e',
-            name: 'electionRoot',
+            name: 'electionShell',
             component: () =>
-                import ( /* webpackChunkName: "main" */ './views/Election.vue'),
+                import ( /* webpackChunkName: "main" */ './views/ElectionShell.vue'),
             children: [{
                     path: '/j',
                     name: 'join',
                     component: () =>
-                        import ( /* webpackChunkName: "public2" */ './components/Join.vue')
+                        import ( /* webpackChunkName: "public3" */ './components/Join.vue')
                 }, {
-                    path: 'home',
-                    name: 'electionHome',
+                    path: '/e/home',
+                    name: 'overview',
                     component: () =>
-                        import ( /* webpackChunkName: "main" */ './components/ElectionHome.vue')
+                        import ( /* webpackChunkName: "main" */ './components/Overview.vue')
                 }, {
-                    path: 'claim',
+                    path: '/e/claim',
                     name: 'claim',
                     component: () =>
                         import ( /* webpackChunkName: "main" */ './components/ClaimName.vue')
                 }, {
-                    path: 'votingPanel',
-                    name: 'votingPanel',
-                    component: () =>
-                        import ( /* webpackChunkName: "main2" */ './components/VotingPanel.vue')
-                }, {
-                    path: 'resultPanel',
-                    name: 'resultPanel',
-                    component: () =>
-                        import ( /* webpackChunkName: "main2" */ './components/ResultPanel.vue')
-                }, {
-                    path: 'setupNames',
-                    name: 'setupNames',
-                    component: () =>
-                        import ( /* webpackChunkName: "admin" */ './components/SetupNames.vue')
-                }, {
-                    path: 'setupPositions',
-                    name: 'setupPositions',
-                    component: () =>
-                        import ( /* webpackChunkName: "admin" */ './components/SetupPositions.vue')
-                }, {
-                    path: 'create',
+                    //     path: '/e/votingPanel',
+                    //     name: 'votingPanel',
+                    //     component: () =>
+                    //         import ( /* webpackChunkName: "main2" */ './components/VotingPanel.vue')
+                    // }, {
+                    //     path: '/e/resultPanel',
+                    //     name: 'resultPanel',
+                    //     component: () =>
+                    //         import ( /* webpackChunkName: "main2" */ './components/ResultPanel.vue')
+                    // }, {
+                    //     path: '/e/setupNames',
+                    //     name: 'setupNames',
+                    //     component: () =>
+                    //         import ( /* webpackChunkName: "admin" */ './components/SetupNames.vue')
+                    // }, {
+                    //     path: '/e/setupPositions',
+                    //     name: 'setupPositions',
+                    //     component: () =>
+                    //         import ( /* webpackChunkName: "admin" */ './components/SetupPositions.vue')
+                    // }, {
+                    path: '/e/create',
                     name: 'createElection',
                     component: () =>
                         import ( /* webpackChunkName: "admin" */ './components/CreateElection.vue')
                 }, {
-                    path: 'admin',
+                    path: '/e/admin',
                     name: 'adminPanel',
                     component: () =>
                         import ( /* webpackChunkName: "admin" */ './components/AdminPanel.vue')
                 }, {
-                    path: 'share',
+                    path: '/e/share',
                     name: 'share',
                     component: () =>
                         import ( /* webpackChunkName: "main2" */ './components/Share.vue')
@@ -96,9 +108,31 @@ var router = new Router({
 });
 
 router.afterEach((to, from) => {
+    console.log('route to', to)
     gtag('event', 'screen_view', {
         screen_name: to.name,
-    })
+    });
+    setTimeout(function() {
+        var eb = window.document.getElementById('electionBody');
+        if (eb) {
+            eb.scrollTo(0, 0);
+        }
+    }, 0);
+})
+
+router.beforeEach((to, from, next) => {
+    var metaTags = to.meta.tags;
+    if (metaTags) {
+        var allMeta = Array.from(document.getElementsByTagName('meta'));
+        Object.keys(metaTags).forEach(key => {
+            var tag = document.createElement('meta');
+            tag.setAttribute('name', key);
+            tag.setAttribute('content', metaTags[key]);
+            var existing = allMeta.find(m => m.name === key);
+            document.head.insertBefore(tag, existing);
+        })
+    }
+    next();
 })
 
 export default router;

@@ -2,25 +2,27 @@
   <div class="public panel">
     <img alt="TallyJ logo" class="logo" src="../../public/img/LogoSq500.png">
     <h1>TallyJ for Officers</h1>
-    <p>
-      When a group of individuals form a team of peers, one of the first orders of business is to elect some of their members to positions of responsibility.
-      This website provides a way to vote online by secret ballot to choose who will serve in those positions.
-    </p>
+    <p>When a group of individuals form a team of peers, one of the first orders of business is to elect some of their members to positions of responsibility.</p>
+    <p>This website provides a way for your team to quickly and easily vote online by secret ballot to choose who will serve in those positions.</p>
     <p>To start, or return to, your team's election, click here:</p>
     <p>
       <button v-on:click="$router.push('/e')">My Election</button>
+    </p>
+    <p>
       <em>
-        <strong>March 2018</strong> This app is in beta... Contact
-        <a href="mailto:Glen.Little@gmail.com">Glen Little</a> for details.
+        <strong>April 2018</strong> This app is in beta but is fully functional. You are welcome to use it for
+        your election but if you encounter any issues, you should resort to using paper ballots or whatever you
+        would "normally" do.
       </em>
     </p>
+    <img class="team" src="../../public/img/team.png">
 
     <h1>Learn More</h1>
     <p>
-      Here are some
-      <a href="faq">Frequently Asked Questions (FAQ)</a> about how this website works.
+      Got questions? Here are some
+      <a href="faq">Technical Questions and Answers</a> about how this website works.
     </p>
-    <img src="../../public/img/team.png">
+    <h1>Sample Uses</h1>
     <p>Whenever responsibilities need to be assigned to team members, TallyJ for Officers can help!</p>
     <p>Samples of where this might be useful:</p>
     <ul class="samples">
@@ -65,7 +67,9 @@
         <p>Swimmer, Rope Puller, Puzzle Solver</p>
       </li>
     </ul>
-    <p>Share on Facebook, Twitter, Instagram...</p>
+    <h1>Spread the News!</h1>
+    <p>Help are some links to help you share the news about TallyJ for Officers with your friends...</p>
+    <div class="sharethis-inline-share-buttons"></div>
     <p>Version {{version}}</p>
   </div>
 </template>
@@ -103,7 +107,16 @@ export default {
     }
     &.logo {
       width: 100px;
-      height: 100px;
+      max-width: 25%;
+      float: right;
+      margin: 1em 0 1em 1em;
+    }
+    &.team {
+      display: block;
+      margin: 1em 0;
+      height: 300px;
+      border-radius: 5px;
+      box-shadow: 0 0 1px 0px black;
     }
   }
   blockquote {

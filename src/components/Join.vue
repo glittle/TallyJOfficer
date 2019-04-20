@@ -26,6 +26,7 @@ export default {
   },
   watch: {},
   mounted: function() {
+    console.log('mount Join')
   },
   beforeDestroy: function() {
   },
@@ -36,5 +37,6 @@ export default {
 
 <style lang="less">
 .Join {
+  //
 }
 </style>

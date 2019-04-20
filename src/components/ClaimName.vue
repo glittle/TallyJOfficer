@@ -34,7 +34,7 @@
     <div class="panel" v-if="!shared.me.id">
       <p>
         To leave this election entirely, click
-        <button class="caution" v-on:click="logout">Logout</button>
+        <button class="caution" v-on:click="logout">Leave Election</button>
       </p>
     </div>
   </div>
@@ -71,7 +71,7 @@ export default {
 
       this.shared.claimMember(member.id);
 
-      this.$router.replace("/e/home");
+      this.$router.replace("/e");
     },
     logout: function() {
       this.shared.logout();
@@ -79,7 +79,7 @@ export default {
     claimViewer: function() {
       this.shared.startMeAsViewer();
 
-      this.$router.replace("/e/home");
+      this.$router.replace("/e");
     }
   }
 };

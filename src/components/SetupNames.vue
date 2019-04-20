@@ -5,7 +5,7 @@
       <p>Use short names!</p>
 
       <div v-if="useQuickList" class="quickAdd">
-        <p>To quickly add members, enter their names in this box, one per line, then click "Add".</p>
+        <p>To quickly add the rest of the members, enter their names in this box, one per line, then click "Add Now".</p>
         <textarea ref="quickList" v-model="quickList"></textarea>
         <button v-on:click="processQuickList">Add Now</button>
         <button class="other" v-on:click="useQuickList = false, editing = true">Hide Quick Add</button>
@@ -45,9 +45,9 @@
           </div>
         </transition-group>
         <p v-if="warning" class="warning">{{warning}}</p>
-        <button v-on:click="add">Add Another Member</button>
+        <button v-on:click="add">Add Another</button>
         <button v-on:click="openQuickList" v-if="!useQuickList">Use Quick Add</button>
-        <p>If a member is not able to participate in this voting, uncheck their "Voting" mark.</p>
+        <p>If a member is not voting today, uncheck their "Voting" mark.</p>
         <p>Anyone marked as "Admin" is able to open and close voting and set up the names of members and positions. You must have at least one person marked as an admin.</p>
       </div>
     </div>
@@ -90,14 +90,17 @@ export default {
     }
   },
   mounted: function() {
-    this.updated();
-    this.shared.$on("election-loaded", this.useQuickOnOpen);
+    this.shared.$on("election-loaded", this.electionLoaded);
     this.useQuickOnOpen();
   },
   beforeDestroy: function() {
-    this.shared.$off("election-loaded", this.useQuickOnOpen);
+    this.shared.$off("election-loaded", this.electionLoaded);
   },
   methods: {
+    electionLoaded: function() {
+      this.updated();
+      this.useQuickOnOpen();
+    },
     useQuickOnOpen: function() {
       var vue = this;
       if (vue.shared.numNonBlankNames === 1 && vue.shared.me.isAdmin) {
@@ -173,7 +176,6 @@ export default {
       var dupFound = this.testForDuplicates();
 
       var adminFound = this.shared.members.filter(m => m.isAdmin).length > 0;
-
       if (!adminFound) {
         this.warning = "Please mark at least one Admin!";
         return;

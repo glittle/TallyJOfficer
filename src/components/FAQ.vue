@@ -1,8 +1,9 @@
 <template>
   <div class="FAQ">
     <div class="panel">
-    <button class="goBack" v-on:click="goBack">Go Back</button>
-      <h2>Frequently Asked Questions</h2>
+      <button class="goBack" v-on:click="goBack">Go Back</button>
+      <h1>TallyJ for Officers</h1>
+      <h2>Questions and Answers</h2>
       <ol>
         <li>
           <span>How much does it cost to use TallyJ for Officers?</span>
@@ -47,6 +48,10 @@
             They can be sitting in a room together, or they can be at home or any other location where they have an
             internet connection.
           </blockquote>
+          <blockquote>
+            If you are not all together, it is strongly recommended that everyone be connected by a conference call of some sort
+            so that you can discuss the election together.
+          </blockquote>
         </li>
         <li>
           <span>How do other members join the election I create?</span>
@@ -87,7 +92,9 @@
             There is no technical limit to how many members your team has, but the system was designed to support
             teams of less than twelve members. If you need to elect a group of individuals from a
             larger population, you should consider using the
-            <a href="https://tallyj.com">standard TallyJ</a>.
+            <a
+              href="https://tallyj.com"
+            >standard TallyJ</a>.
           </blockquote>
         </li>
         <li>
@@ -95,7 +102,7 @@
           <blockquote>
             Whoever creates the election is automatically made to be an administrator of the election. However, you can
             make any number of other members to also be administrators. There must always be at least one administrator.
-            The administrator is responsible to enter the member's names, enter the positions to be voted for, to open
+            The administrator is responsible to enter the member's names, set up the positions to be voted for, to open
             and close voting for each position, and finally, to erase the election when you are done.
           </blockquote>
         </li>
@@ -104,16 +111,16 @@
           <blockquote>
             No. The system does not have your email address and knows nothing about you. You are responsible to note
             who has been elected to each position. The results for each position are available to you until you
-            erase the election.
+            delete the election. The election will remain in the cloud (for days or months) until you delete it.
           </blockquote>
         </li>
         <li>
-          <span>How can I test the system?</span>
+          <span>How can I test the system by myself?</span>
           <blockquote>
             For initial testing, you can open a second "incognito" or "in private" tab in any computer or phone
-            browser and log into your test election as another person. If your computer or phone has multiple types of web browsers,
-            such as Chrome, Firefox, Safari and Edge, you can open windows in each of them to test multiple log-ins.
-            To make your testing easier, you may want to create a smaller team in your test election of, say, 5 members.
+            browser and connect into your test election using the private address. If your computer or phone has multiple types of web browsers,
+            such as Chrome, Firefox, Safari and/or Edge, you can open one or two tabs in each of them to test multiple log-ins.
+            To make your testing easier, you may want to create a smaller team in your test election of, say, 3 or 5 members.
           </blockquote>
           <blockquote>
             You can erase the election and make a new one as many times as you wish. When you are done testing, create
@@ -131,13 +138,19 @@
         <li>
           <span>How much time does it take to set up an election?</span>
           <blockquote>
-            Less time than reading these questions and answers!  From starting an election to having all members ready
-            to vote takes just a few minutes.  You just need to type (or copy and paste) the first names
+            Less time than reading these questions and answers! From starting an election to having all members ready
+            to vote takes just a few minutes. You just need to type (or copy and paste) the first names
             of the members, then name the positions that will be voted for, then share the election's private address with the rest of the team..
           </blockquote>
         </li>
         <li>
-          <span>What if it doesn't work?</span>
+          <span>Voting isn't working?</span>
+          <blockquote>If you start a round of voting and then add or remove members, the system may not close the Voting
+            when everyone has voted. After adding or removing members, cancel that round of voting and start a new one.
+          </blockquote>
+        </li>
+        <li>
+          <span>What if the system just doesn't work?</span>
           <blockquote>
             If, for any reason, you are unable to use TallyJ for Officers, you can revert at any time to whatever
             method of collecting and counting ballots you would have used previously.
@@ -189,10 +202,10 @@ export default {
       font-weight: bold;
     }
   }
-  button{
+  button {
     font-family: "Acme", sans-serif;
   }
-  .goBack{
+  .goBack {
     float: right;
   }
 }

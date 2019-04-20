@@ -1,13 +1,20 @@
 <template>
-  <div class="ElectionHome">
+  <div class="Overview">
     <div class="positionsToFill panel">
       <h1>Positions to Elect</h1>
       <table>
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Who is elected</th>
+            <th>Action</th>
+          </tr>
+        </thead>
         <tr
           class="positionHolder"
           v-for="p in shared.positions"
           :key="p.name"
-          :class="{ isActive: p.id === shared.election.positionIdToVoteFor }"
+          :class="{ isActive: p.id === viewedPositionId }"
         >
           <td>{{ p.name }}</td>
           <td>
@@ -51,7 +58,7 @@ import VotingPanel from "./VotingPanel.vue";
 import firebaseDb from "../firebaseInit";
 
 export default {
-  name: "ElectionHome",
+  name: "Overview",
   components: {
     ResultPanel,
     VotingPanel
@@ -64,14 +71,27 @@ export default {
   computed: {
     shared: function() {
       return _shared;
+    },
+    viewedPositionId: function() {
+      return (this.viewedPosition && this.viewedPosition.id) || 0;
     }
   },
-  watch: {},
+  watch: {
+    "shared.election.positionIdToVoteFor": function(a, b) {
+      this.syncToPosition();
+    }
+  },
   mounted: function() {
-     var vue = this;
-     vue.viewedPosition = vue.shared.positions.find(p => p.id === vue.shared.election.positionIdToVoteFor);
+    //  console.log('mounted overview');
+    this.syncToPosition();
   },
   methods: {
+    syncToPosition: function() {
+      var vue = this;
+      vue.viewedPosition = vue.shared.positions.find(
+        p => p.id === vue.shared.election.positionIdToVoteFor
+      );
+    },
     openVoting: function() {
       // change for everyone
       var positionIdToOpen = this.viewedPosition.id;
@@ -133,7 +153,7 @@ export default {
 </script>
 
 <style lang="less">
-.ElectionHome {
+.Overview {
   max-width: 700px;
   margin: 0 auto;
   padding: 0 10px;
@@ -141,6 +161,9 @@ export default {
     table {
       margin: 1em auto 0;
       border-collapse: collapse;
+      thead {
+        border-bottom: 1px solid gray;
+      }
       td {
         width: 200px;
         line-height: 2.3em;

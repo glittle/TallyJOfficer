@@ -2,12 +2,12 @@
 <template>
   <div class="MemberStatus">
     <div class="top">
-      <div>
+      <div class="blinker">
         <button class="blink" v-on:click="testNow" v-if="shared.me.connected">Blink Me</button>
       </div>
       <div class="members">
         <div
-          v-for="m in shared.members"
+          v-for="m in activeMembers"
           :key="m.id"
           class="member"
           :class="{connected: m.connected, highlight: m.highlight, voting: m.voting, votingOnViewer: shared.isViewer && m.voting, voted: m.voted, isAdmin: m.isAdmin, participating: m.participating}"
@@ -40,6 +40,9 @@ export default {
     },
     activeViewers: function() {
       return this.shared.viewers.filter(v => v.id);
+    },
+    activeMembers: function() {
+      return this.shared.members.filter(m => m.name);
     }
   },
   mounted: function() {},
@@ -88,6 +91,11 @@ export default {
     font-size: 75%;
   }
 
+  .blinker,
+  .viewers {
+    min-width: 80px;
+  }
+
   // .siteInfo {
   //   font-size: 80%;
   //   padding: 10px 0;
@@ -110,7 +118,8 @@ export default {
     padding: 1px 3px;
     border-radius: 1px;
 
-    &div.highlight { // include div to take priority
+    &.connected.highlight {
+      // include more selectors to take priority
       animation: pulse 0.3s infinite;
     }
   }
@@ -136,16 +145,15 @@ export default {
 
     &.voting {
       //border-color: #fff;
-      background-color: yellow;
+      background-color: #9fef93;
     }
 
-    &.votingOnViewer{
+    &.votingOnViewer {
       animation: voting 1s linear infinite;
     }
 
     &.voted {
-      border-color: #fff;
-      background-color: #6bff5d;
+      background-color: #ffb2ff;
     }
 
     &.isAdmin:after {
@@ -162,7 +170,7 @@ export default {
       background-color: #fff;
     }
     50% {
-      background-color: #ffba42;
+      background-color: #4a993e;
     }
   }
   @keyframes voting {

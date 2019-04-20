@@ -186,6 +186,7 @@ export default new Vue({
         connectToElection: function(electionRef) {
             // we know that ref refers to an actual db entry
             var vue = this;
+            console.log('connected to election', electionRef.key);
             vue.dbElectionRef = electionRef;
             vue.electionKey = electionRef.key;
             vue.dbUser.updateProfile({

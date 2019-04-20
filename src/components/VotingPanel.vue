@@ -1,6 +1,6 @@
 <template>
-  <div class="VotingPanel panel">
-    <div v-if="position && shared.election.votingOpen">
+  <div class="VotingPanel panel" v-if="position && (shared.election.votingOpen || confirmed)">
+    <div>
       <h2>Voting for {{positionName}}</h2>
       <div class="choosePreferNot" v-if="shared.isMember">
         <label>

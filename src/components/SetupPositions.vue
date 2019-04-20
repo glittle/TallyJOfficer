@@ -1,7 +1,7 @@
 <template>
   <div class="SetupPositions">
     <div class="panel">
-      <h1>Defined the positions to be voted for</h1>
+      <h1>Define the positions to be voted for</h1>
       <p>Add, edit and move positions as required by your team.</p>
       <p>A "Sample" position is included for your team to use to practice with.</p>
       <slick-list
@@ -30,7 +30,7 @@
         </slick-item>
       </slick-list>
 
-      <button v-on:click="add">Add Another Position</button>
+      <button v-on:click="add">Add Another</button>
     </div>
   </div>
 </template>

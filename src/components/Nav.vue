@@ -7,25 +7,25 @@
     </div>
     <div class="middle" v-if="$route.name !== 'createElection'">
       <span>
-        <router-link to="home">Home</router-link>
+        <router-link to="home">Overview</router-link>
       </span>
-      <span>
-        <router-link to="share">Share</router-link>
-      </span>
-      <span v-if="shared.me.isAdmin">
+      <!-- <span v-if="shared.me.isAdmin">
         <router-link to="setupNames">Members</router-link>
       </span>
       <span v-if="shared.me.isAdmin">
         <router-link to="setupPositions">Positions</router-link>
+      </span> -->
+      <span>
+        <router-link to="share">Share</router-link>
       </span>
       <span v-if="shared.me.isAdmin">
-        <router-link to="admin">Admin</router-link>
+        <router-link to="admin">Setup</router-link>
       </span>
       <span>
         <router-link to="/guidance">Guidance</router-link>
       </span>
       <span>
-        <router-link to="/faq">FAQ</router-link>
+        <router-link to="/faq">Help</router-link>
       </span>
     </div>
     <div
@@ -34,7 +34,7 @@
       :title="shared.electionKey.substring(1,5)"
     >
       <span>{{ shared.me.name }}</span>
-      <button v-if="shared.isMember || shared.isViewer" v-on:click="forgetMe">X</button>
+      <button v-if="shared.isMember || shared.isViewer" v-on:click="forgetMe">Log Out</button>
     </div>
   </div>
 </template>

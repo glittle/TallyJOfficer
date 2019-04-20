@@ -24,7 +24,7 @@ p {
 }
 input {
   font-size: inherit;
-  padding: 0 1px;
+  padding: 2px 2px 0;
   border: none;
   border-bottom: solid 1px lightgray;
   margin: 0 20px 20px 10px;
@@ -52,9 +52,9 @@ h2 {
   // border: 1px solid #eaeaea;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   border-radius: 5px;
-  padding: 10px 20px 20px;
-  margin: 10px auto;
-  max-width: 700px;
+  padding: 10px 2ch 20px;
+  margin: 10px auto 20px;
+  max-width: 70ch;
 }
 
 button {

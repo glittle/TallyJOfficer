@@ -5,23 +5,28 @@
       <div class="siteInfo">
         <p>Copy and share this link to your election with your team:</p>
         <p>
-          <a :href="shared.link">{{shared.link}}</a>.
+          <a :href="shared.link" onclick="return false">{{ shared.link }}</a>.
         </p>
         <p>Be sure to keep a copy of this URL - it is the only way to get to this election!</p>
-        <p>Here is the same secret link in a QR Code format if members of your team can use it:</p>
+
+        <p>Here is the same secret link in a QR Code format to show to other members of your team if they can use it:</p>
         <p>
           <qrcode :options="{ width: qrWidth }" :value="shared.link"></qrcode>
         </p>
       </div>
     </div>
-    <div class="panel">
+    <div v-else class="panel">
+      Oops! Looks like you are not in an election. Please
+      <a href="/">start at the beginning</a>!
+    </div>
+    <!-- <div class="panel">
       <h2 id="testHeader">Spread the news!</h2>
       <p>You can help! Please let other people know about this web application!</p>
       <p>Twitter</p>
       <p>Facebook</p>
       <p>Instagram</p>
       <p class="version">Version {{version}}</p>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -58,8 +63,12 @@ export default {
   },
   methods: {
     resize: function() {
-      var body = window.document.getElementById('electionBody');
-      var newSize = 0.9 * Math.min(window.document.getElementById('testHeader').clientWidth, body.clientWidth, body.clientHeight);
+      var body = window.document.getElementById("electionBody");
+      var header = window.document.getElementById("testHeader");
+      if (!header) return;
+
+      var newSize =
+        0.9 * Math.min(header.clientWidth, body.clientWidth, body.clientHeight);
       this.qrWidth = newSize;
     }
   }
@@ -68,7 +77,19 @@ export default {
 
 <style lang="less">
 .Share {
-  canvas {
-  }
+  // .st-custom-button[data-network] {
+  //   background-color: #0adeff;
+  //   display: inline-block;
+  //   padding: 5px 10px;
+  //   cursor: pointer;
+  //   font-weight: bold;
+  //   color: #fff;
+
+  //   &:hover,
+  //   &:focus {
+  //     text-decoration: underline;
+  //     background-color: #00c7ff;
+  //   }
+  // }
 }
 </style>

@@ -1,20 +1,32 @@
 <template>
-  <div class="Admin panel">
-    <h2>Administration</h2>
-    <p>
-      To delete this election, click
-      <button v-if="!pendingDelete" v-on:click="pendingDelete = true">Delete and Logout</button>
-      <button v-if="pendingDelete" v-on:click="deleteNow" class="caution">Are you sure? Click again to Delete Now!</button>
-    </p>
+  <div>
+    <setup-names></setup-names>
+    <setup-positions></setup-positions>
+    <div class="Admin panel">
+      <h2>All Done? Delete the election</h2>
+      <p>To delete this election, click:</p>
+      <button class="caution" v-if="!pendingDelete" v-on:click="pendingDelete = true">Delete...</button>
+      <button
+        v-if="pendingDelete"
+        v-on:click="deleteNow"
+        class="caution"
+      >Are you sure? Click again to Delete now! No Undo.</button>
+    </div>
   </div>
 </template>
 
 <script>
 import _shared from "@/shared.js";
 import firebaseDb from "../firebaseInit";
+import SetupNames from "./SetupNames.vue";
+import SetupPositions from "./SetupPositions.vue";
 
 export default {
   name: "Admin",
+  components: {
+    SetupNames,
+    SetupPositions
+  },
   data: function() {
     return {
       pendingDelete: false,
