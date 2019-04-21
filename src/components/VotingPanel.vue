@@ -1,15 +1,19 @@
 <template>
-  <div class="VotingPanel panel" v-if="position && (shared.election.votingOpen || confirmed)">
+  <div
+    class="VotingPanel panel"
+    v-if="position && (shared.election.votingOpen || shared.confirmedVote)"
+  >
+<div>{{ shared.me.id }} -- {{ shared.symbol }}</div>
     <div>
       <h2>Voting for {{positionName}}</h2>
-      <div class="choosePreferNot" v-if="shared.isMember">
+      <div class="choosePreferNot" v-if="shared.isMember && shared.election.votingOpen">
         <label>
           <input type="checkbox" v-model="preferNot">
-          I prefer to not be elected as {{positionName}}.
+          I have a good reason why I should not be elected as {{positionName}}.
         </label>
       </div>
 
-      <table v-if="!confirmed && shared.isMember">
+      <table v-if="!shared.confirmedVote && shared.isMember">
         <tr
           class="memberHolder"
           v-for="(m, i) in shared.members"
@@ -18,9 +22,13 @@
         >
           <td>
             <button
+              class="vote"
               :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
               v-on:click="voteFor(m)"
-            >{{m.name}}</button>
+            >
+              {{m.name}}
+              <span class="alreadyIn" v-if="alreadyIn(m)" v-text="alreadyIn(m)"></span>
+            </button>
             <div
               class="preferNot"
               v-if="m.preferNot"
@@ -28,9 +36,9 @@
           </td>
         </tr>
       </table>
-      <div v-if="!confirmed && shared.isMember">
+      <div v-if="!shared.confirmedVote && shared.isMember">
         <button
-          class="confirm primary"
+          class="confirm"
           v-on:click="confirm()"
           :class="{ready:selectedMember.name}"
           :disabled="!selectedMember.name"
@@ -45,7 +53,7 @@
     </div>
     <!-- <div v-else>Voting is nt open.</div> -->
     <div
-      v-if="confirmed || !shared.election.votingOpen && selectedMember.name"
+      v-if="shared.confirmedVote || !shared.election.votingOpen && selectedMember.name"
       class="confirmation"
     >
       <div class="voteInfo" :class="{revealVote: reveal}">
@@ -74,8 +82,6 @@ export default {
   data: function() {
     return {
       selectedMember: {},
-      positionName: '',
-      confirmed: false,
       reveal: false,
       preferNot: false
     };
@@ -93,6 +99,9 @@ export default {
     position: function() {
       var positionId = this.shared.election.positionIdToVoteFor;
       return this.shared.positions.find(p => p.id === positionId);
+    },
+    electedPositions: function() {
+      return this.shared.positions.filter(p => p.electedId);
     }
   },
   watch: {
@@ -105,6 +114,10 @@ export default {
       if (a) {
         this.startVote();
       }
+    },
+    positionName: function() {
+      this.shared.confirmedVote = false;
+      this.preferNot = false;
     },
     preferNot: function(a) {
       this.shared.dbMe.update({ preferNot: a });
@@ -123,8 +136,17 @@ export default {
         voting: true,
         voted: false
       });
-      this.confirmed = false;
+      this.shared.confirmedVote = false;
       this.selectedMember = {};
+    },
+    alreadyIn: function(member) {
+      var list = this.electedPositions
+        .filter(p => p.electedId === member.id)
+        .map(p => p.name);
+      if (list.length) {
+        return list.join(", ");
+      }
+      return null;
     },
     voteFor: function(member) {
       if (this.selectedMember.id === member.id) {
@@ -161,7 +183,7 @@ export default {
       });
 
       this.reveal = true;
-      this.confirmed = true;
+      this.shared.confirmedVote = true;
 
       setTimeout(function() {
         vue.reveal = false;
@@ -172,7 +194,7 @@ export default {
         voting: true,
         voted: false
       });
-      this.confirmed = false;
+      this.shared.confirmedVote = false;
     }
   }
 };
@@ -201,9 +223,16 @@ export default {
       padding: 10px 30px;
       font-size: 1em;
       height: auto;
+      background-color: #4f5aa2;
       &.selected {
         // want this to be subtle - to avoid shoulder surfing of neighbours
         box-shadow: 0 0 3px 1px #000;
+      }
+
+      .alreadyIn {
+        display: block;
+        font-size: 75%;
+        color: #66ec52;
       }
     }
 
@@ -237,7 +266,7 @@ export default {
     color: grey;
   }
   .voteInfo {
-    margin: 50px 0 20px 0;
+    // margin: 50px 0 20px 0;
     opacity: 0;
     transition: opacity 0.1s;
     &.revealVote {
@@ -252,7 +281,7 @@ export default {
       opacity: 0.8;
     }
     .symbol {
-      margin: 10px 0 50px;
+      margin: 10px 0 10px;
     }
   }
 }

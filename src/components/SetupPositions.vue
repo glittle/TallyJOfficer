@@ -74,7 +74,6 @@ export default {
     // },
     remove: function(i) {
       // var vue = this;
-      debugger;
       var toRemove = this.list[i];
       firebaseDb
         .ref(`positions/${this.shared.electionKey}/${toRemove.id}`)

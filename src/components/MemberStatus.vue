@@ -19,7 +19,7 @@
           v-for="v in activeViewers"
           :key="v.id"
           class="viewer"
-          :class="{highlight: v.highlight}"
+          :class="{connected: v.connected, highlight: v.highlight}"
         >{{ v.name }}</div>
       </div>
     </div>
@@ -87,6 +87,10 @@ export default {
     align-content: center;
   }
 
+  .viewers {
+    justify-content: flex-end;
+  }
+
   .blink {
     font-size: 75%;
   }
@@ -95,21 +99,6 @@ export default {
   .viewers {
     min-width: 80px;
   }
-
-  // .siteInfo {
-  //   font-size: 80%;
-  //   padding: 10px 0;
-  //   background: #9fa8a3;
-  //   color: #343c38;
-  //   position: relative;
-  //   .version {
-  //     position: absolute;
-  //     top: 0;
-  //     right: 0;
-  //     padding: 5px;
-  //     background: #9fa8a3; // if squished, will cover text beside it
-  //   }
-  // }
 
   .viewer,
   .member {
@@ -125,35 +114,37 @@ export default {
   }
 
   .viewer {
-    background-color: #3f52ff;
-    border: 1px solid #3f52ff;
-    color: white;
+    // background-color: #3f52ff;
+    // border: 1px solid #3f52ff;
+    color: #4a993e;
+    margin: 3px 5px;
+    font-weight: bold;
   }
 
   .member {
     position: relative;
-    border: 1px dashed #3f3fff;
+    border: 1px dashed #9a9a9a;
 
     &.participating {
-      border: 1px solid transparent;
+      border: none;
+      box-shadow: 0 0 2px 1px red;
     }
 
     &.connected {
-      background-color: #c8c8ff;
-      box-shadow: 0 0 2px 1px #6b5dff;
+      box-shadow: 0 0 2px 1px green;
     }
 
     &.voting {
       //border-color: #fff;
-      background-color: #9fef93;
+      background-color: #fdfd68;
     }
 
     &.votingOnViewer {
-      animation: voting 1s linear infinite;
+      // animation: voting 1s linear infinite;
     }
 
     &.voted {
-      background-color: #ffb2ff;
+      background-color: #9fef93;
     }
 
     &.isAdmin:after {
@@ -173,19 +164,19 @@ export default {
       background-color: #4a993e;
     }
   }
-  @keyframes voting {
-    0% {
-      background-color: #fff;
-    }
-    45% {
-      background-color: yellow;
-    }
-    55% {
-      background-color: yellow;
-    }
-    100% {
-      background-color: #fff;
-    }
-  }
+  // @keyframes voting {
+  //   0% {
+  //     background-color: #fff;
+  //   }
+  //   45% {
+  //     background-color: yellow;
+  //   }
+  //   55% {
+  //     background-color: yellow;
+  //   }
+  //   100% {
+  //     background-color: #fff;
+  //   }
+  // }
 }
 </style>

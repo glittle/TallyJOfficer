@@ -65,11 +65,11 @@ export default {
     }
 
     this.shared.$on("election-created", this.electionCreated);
-    this.shared.$on("election-loaded", this.goHome);
+    this.shared.$on("election-changed", this.goHome);
   },
   beforeDestroy: function() {
     this.shared.$off("election-created", this.electionCreated);
-    this.shared.$off("election-loaded", this.goHome);
+    this.shared.$off("election-changed", this.goHome);
   },
   methods: {
     goHome: function() {

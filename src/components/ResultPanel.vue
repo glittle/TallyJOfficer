@@ -24,19 +24,19 @@
             v-for="m in shared.members"
             :key="m.id"
           >
-            <div class="voteListTitle">{{ votesFor(lastRound, m.id) }}</div>
-            <div
-              class="voteDetail"
-              v-for="(v,i) in voteListFor(lastRound, m.id)"
-              :key="i"
-            >{{ v.symbol }}</div>
+            <div class="voteCount">{{ votesFor(lastRound, m.id) }}</div>
+            <div v-if="shared.confirmedVote" class="voteDetail">
+              <div v-for="(v,i) in voteListFor(lastRound, m.id)" :key="i">{{ v.symbol }}</div>
+            </div>
           </td>
         </tr>
-        <tr v-if="shared.election.votingOpen">
+        <tr v-if="shared.election.votingOpen && position.id === shared.election.positionIdToVoteFor">
           <td class="roundNum">{{ positionRounds.length + 1 }}</td>
-          <td
-            :colspan="shared.members.length"
-          >Voting in progress.<br>{{ numVoted }} of {{ numParticipating }} votes received.</td>
+          <td :colspan="shared.members.length" class="inProgress">
+            Voting in progress
+            <br>
+            {{ numVoted }} of {{ numParticipating }} votes submitted
+          </td>
         </tr>
       </tfoot>
     </table>
@@ -243,16 +243,22 @@ export default {
     }
     td {
       vertical-align: top;
+      &.inProgress {
+        background-color: #e8f4e8;
+      }
     }
 
     tbody {
       td {
         border-top: 1px solid #fff1dd;
+        border-left: 1px solid #eaeaea;
       }
     }
     tfoot {
       td {
-        border-top: 1px solid #333;
+        border-top: 1px solid #fff1dd;
+        border-left: 1px solid #eaeaea;
+        // border-top: 1px solid #333;
       }
     }
 
@@ -263,10 +269,10 @@ export default {
       font-size: 60%;
     }
   }
-  .voteListTitle {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    width: 75%;
-    margin: 2px auto 0;
+  .voteDetail {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    // width: 75%;
+    // margin: 2px auto 0;
   }
   .elected {
     font-size: 1.4em;

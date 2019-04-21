@@ -19,8 +19,7 @@
 
     <h1>Learn More</h1>
     <p>
-      Got questions? Here are some
-      <a href="faq">Technical Questions and Answers</a> about how this website works.
+      Got questions? Here are some <a href="faq">Questions and Answers</a> about how this website works.
     </p>
     <h1>Sample Uses</h1>
     <p>Whenever responsibilities need to be assigned to team members, TallyJ for Officers can help!</p>
@@ -35,7 +34,7 @@
         <p>Chairperson, Vice-Chairperson, Secretary, Treasurer</p>
         <p>
           The Bahá'í community has
-          <a href="guidance" target="guidance">guidance</a> regarding various aspects of electing officers.
+          <a href="guidance">guidance</a> regarding various aspects of electing officers.
         </p>
       </li>
       <li>

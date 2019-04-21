@@ -30,7 +30,13 @@
     <cite>(From a letter written on behalf of the Universal House of Justice to a National Spiritual Assembly, July 27, 1981)</cite>
 
     <h2>97. Assembly or Committee Members May Excuse Themselves from Being Elected as Officers</h2>
-    <p>We have also been asked to point out that although it is the obligation of a Bahá'í to serve on an Assembly, either Local or National, when elected, on several occasions the beloved Guardian pointed out that before the election of officers, if any member had a good reason in his own opinion why he should not be elected to one of the offices of the Assembly, he was free to suggest that he should not be so elected. The House of Justice also feels that as the work of the Faith expands and the duties of officers, particularly on National Spiritual Assemblies, acquire more importance, it is permissible and at times advisable to discuss the duties incumbent upon and required of each officer before ballots are cast.</p>
+    <p>We have also been asked to point out that although it is the obligation of a Bahá'í to serve on an Assembly,
+      either Local or National, when elected, on several occasions the beloved Guardian pointed out that before
+      the election of officers, if any member had a good reason in his own opinion why he should not be elected
+      to one of the offices of the Assembly, he was free to suggest that he should not be so elected.
+      The House of Justice also feels that as the work of the Faith expands and the duties of officers,
+      particularly on National Spiritual Assemblies, acquire more importance, it is permissible and at times
+      advisable to discuss the duties incumbent upon and required of each officer before ballots are cast.</p>
     <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, February 9, 1987)</cite>
     <h2>98. It is Preferable that a Person Hold No More Than One Office</h2>
     <p>...we are asked to say it is preferable that a person hold no more than one office, but it is within the discretion of your Assembly to permit a member to hold two offices.</p>

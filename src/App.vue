@@ -61,7 +61,7 @@ button {
   display: inline-block;
   // font-family: "Acme", sans-serif;
   font-family: "Open Sans", sans-serif;
-  white-space: nowrap;
+  //white-space: nowrap;
   text-align: center;
   vertical-align: baseline;
   font-size: 0.9em;

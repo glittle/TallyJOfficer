@@ -42,11 +42,11 @@ export default {
       // console.log("mounted join");
       this.$router.replace("/e/claim");
     }
-    this.shared.$on("election-loaded", this.electionLoaded);
+    this.shared.$on("election-changed", this.electionLoaded);
     this.goCurrentHome();
   },
   beforeDestroy: function() {
-    this.shared.$off("election-loaded", this.electionLoaded);
+    this.shared.$off("election-changed", this.electionLoaded);
   },
   methods: {
     electionLoaded: function() {

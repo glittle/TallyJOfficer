@@ -15,6 +15,7 @@ export default new Vue({
         viewers: [],
         rounds: [],
         dbUser: null,
+        confirmedVote: false,
         disconnecting: false,
         dbElectionRef: null,
         initialQuery: '',
@@ -256,8 +257,8 @@ export default new Vue({
                 vue.election = incomingElection;
 
                 vue.electionLoadAttempted = true;
-                console.log('election-loaded');
-                vue.$emit('election-loaded');
+                console.log('election-changed');
+                vue.$emit('election-changed');
             });
 
             // vue.firebaseDbMyStatus

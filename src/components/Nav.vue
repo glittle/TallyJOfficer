@@ -14,7 +14,7 @@
       </span>
       <span v-if="shared.me.isAdmin">
         <router-link to="setupPositions">Positions</router-link>
-      </span> -->
+      </span>-->
       <span>
         <router-link to="share">Share</router-link>
       </span>
@@ -34,7 +34,7 @@
       :title="shared.electionKey.substring(1,5)"
     >
       <span>{{ shared.me.name }}</span>
-      <button v-if="shared.isMember || shared.isViewer" v-on:click="forgetMe">Log Out</button>
+      <button v-if="shared.isMember || shared.isViewer" v-on:click="forgetMe">Change</button>
     </div>
   </div>
 </template>
@@ -98,8 +98,11 @@ export default {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 
   > div {
-    flex: 1 0 1px;
+    flex: 1 1 auto;
     white-space: nowrap;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   div.middle {
@@ -113,6 +116,7 @@ export default {
 
   .image {
     text-align: left;
+    justify-content: left;
     padding: 4px 0 0 5px;
     img {
       height: 1.5em;
@@ -143,8 +147,8 @@ export default {
   .myName {
     text-align: right;
     padding-right: 3px;
+    color: #4a993e;
     &.isViewer {
-      color: rgb(115, 255, 0);
       font-weight: bold;
     }
   }
