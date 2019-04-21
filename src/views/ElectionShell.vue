@@ -42,19 +42,19 @@ export default {
       // console.log("mounted join");
       this.$router.replace("/e/claim");
     }
-    this.shared.$on("election-changed", this.electionLoaded);
+    this.shared.$on("election-changed", this.electionChanged);
     this.goCurrentHome();
   },
   beforeDestroy: function() {
-    this.shared.$off("election-changed", this.electionLoaded);
+    this.shared.$off("election-changed", this.electionChanged);
   },
   methods: {
-    electionLoaded: function() {
+    electionChanged: function() {
       // console.log("loaded");
       var currentRoute = this.$route.name;
       console.log("already on", currentRoute);
       if (currentRoute !== "adminPanel") {
-        this.goCurrentHome();
+        // this.goCurrentHome();
       }
     },
     goCurrentHome: function() {

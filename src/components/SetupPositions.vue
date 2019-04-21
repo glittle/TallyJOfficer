@@ -25,7 +25,7 @@
 
           <button v-on:click="remove(i)" class="icon remove caution">
             <i class="material-icons">delete</i>
-            <span>Delete</span>
+            <span>Remove</span>
           </button>
         </slick-item>
       </slick-list>
@@ -158,7 +158,7 @@ export default {
   }
 
   .moveMe {
-    margin: 0 5px 0 40px;
+    margin: 0 5px 0 10px;
     cursor: ns-resize;
   }
 }

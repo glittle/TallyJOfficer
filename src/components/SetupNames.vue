@@ -1,7 +1,7 @@
 <template>
   <div class="SetupNames">
     <div class="panel">
-      <h1>Set the names of the members</h1>
+      <h1>Names of team members</h1>
       <p>Use short names!</p>
 
       <div v-if="useQuickList" class="quickAdd">
@@ -44,7 +44,7 @@
               </span>
               <button v-on:click="remove(i)" class="icon remove caution">
                 <i class="material-icons">delete</i>
-                <span>Delete</span>
+                <span>Remove</span>
               </button>
             </div>
           </div>

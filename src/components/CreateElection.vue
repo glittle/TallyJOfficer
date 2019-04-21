@@ -102,9 +102,10 @@ export default {
 <style lang="less">
 .CreateElection {
   text-align: left;
-  padding: 0 0 0 15px;
-  max-width: 700px;
-  margin: 0 auto;
+  // padding: 0 0 0 15px;
+  // max-width: 700px;
+  padding: 0 10px;
+  // margin: 0 auto;
 
   .nameInput {
     margin: 0 0 1em;
