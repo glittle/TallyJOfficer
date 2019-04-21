@@ -25,6 +25,10 @@
           When the election is created, you will be given a special private address that you will need to
           share with the rest of the team members.
         </p>
+        <p>
+          Here are the
+          <a href="/faq">Questions and Answers</a> (again) about how this website works.
+        </p>
         <div>
           <button :disabled="!name" v-on:click="create">Create the Election</button>
         </div>
