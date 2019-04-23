@@ -30,7 +30,9 @@
             </div>
           </td>
         </tr>
-        <tr v-if="shared.election.votingOpen && position.id === shared.election.positionIdToVoteFor">
+        <tr
+          v-if="shared.election.votingOpen && position.id === shared.election.positionIdToVoteFor"
+        >
           <td class="roundNum">{{ positionRounds.length + 1 }}</td>
           <td :colspan="shared.members.length" class="inProgress">
             Voting in progress
@@ -41,7 +43,6 @@
       </tfoot>
     </table>
     <div v-if="personElected" class="elected">
-      <p>Voting is Complete</p>
       <p>{{ personElected.name }} has been elected to serve as the {{ position.name }}.</p>
     </div>
 
@@ -110,6 +111,14 @@ export default {
     // position: function() {
     //  this.showResults();
     // }
+    personElected: function(a, b) {
+      if (a) {
+        var eb = window.document.getElementById("electionBody");
+        if (eb) {
+          eb.scrollTo(0, 9999);
+        }
+      }
+    }
   },
   mounted: function() {
     // this.showResults();
@@ -248,18 +257,9 @@ export default {
       }
     }
 
-    tbody {
-      td {
-        border-top: 1px solid #fff1dd;
-        border-left: 1px solid #eaeaea;
-      }
-    }
-    tfoot {
-      td {
-        border-top: 1px solid #fff1dd;
-        border-left: 1px solid #eaeaea;
-        // border-top: 1px solid #333;
-      }
+    td {
+      border-left: 1px solid #eaeaea;
+      border-top: 1px solid #666;
     }
 
     td.roundNum {

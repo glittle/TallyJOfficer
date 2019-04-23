@@ -128,6 +128,9 @@ export default {
     //   this.startVoting();
     // }
     // this.preferNot = false;
+    if(this.shared.election.votingOpen) {
+      this.startVote();
+    }
   },
   methods: {
     startVote: function() {
