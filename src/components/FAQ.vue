@@ -161,13 +161,6 @@
           </blockquote>
         </li>
         <li>
-          <span>What if voting isn't working?</span>
-          <blockquote>
-            If you start a round of voting and then add or remove members, the system may not close the Voting
-            when everyone has voted. After adding or removing members, cancel that round of voting and start a new one.
-          </blockquote>
-        </li>
-        <li>
           <span>What if the system just doesn't work?</span>
           <blockquote>
             First refresh your browser (press F5). If that doesn't fix the problem and
