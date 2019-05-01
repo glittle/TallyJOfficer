@@ -144,6 +144,23 @@
           </blockquote>
         </li>
         <li>
+          <span>Where did you get those icons?</span>
+          <blockquote>
+            The symbols used on the voting pages come from the Noun Project (<a href="https://thenounproject.com">thenounproject.com</a>)
+            courtesy of these talented artists:
+            Alex Strange,
+            angelina fara,
+            Eucalyp,
+            gufron m,
+            IconTreasure,
+            il Capitano,
+            Jardson Almeida,
+            shashank singh,
+            Søren Michelsen,
+            and Universal Icons.
+          </blockquote>
+        </li>
+        <li>
           <span>What if voting isn't working?</span>
           <blockquote>
             If you start a round of voting and then add or remove members, the system may not close the Voting
@@ -163,7 +180,8 @@
           <blockquote>
             The system was created by Glen Little. The final version was modified and improved from feedback
             received by early beta testers and by people like you! If you have suggestions for how to make it better,
-            please feel free to send them to Glen by email at <a href="mailto:glen.little@gmail.com">glen.little@gmail.com</a>.
+            please feel free to send them to Glen by email at
+            <a href="mailto:glen.little@gmail.com">glen.little@gmail.com</a>.
           </blockquote>
           <blockquote>If you have another question that has not been answered here, please send Glen an email!</blockquote>
         </li>
