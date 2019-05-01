@@ -6,39 +6,20 @@
       <h2>Questions and Answers</h2>
       <ol>
         <li>
-          <span>How much does it cost to use TallyJ for Officers?</span>
-          <blockquote>It is free to use. There are no paid options or ads.</blockquote>
-        </li>
-        <li>
-          <span>How secure is my data?</span>
-          <blockquote>
-            Completely secure. You provide the first names of your members and no other information.
-            This is stored securely "in the cloud". When you are done with your election, you will erase it and no record of
-            it will remain anywhere, not even a backup copy.
-          </blockquote>
-        </li>
-        <li>
           <span>Is voting anonymous?</span>
           <blockquote>
-            Who each person votes for is completely anonymous. While voting, all members can see which members have
+            Yes. Who each person votes for is completely anonymous. While voting, all members can see which members have
             voted, but they cannot see who they voted for.
           </blockquote>
         </li>
         <li>
           <span>Is the process transparent?</span>
           <blockquote>
-            During each round of voting, each voter is given a random letter privately on their own
+            Yes. During each round of voting, each voter is given a random letter privately on their own
             screen. The letters of all voters are displayed together when the results are shown.
             Once all members have submitted their vote, the results are immediately displayed to everyone.
             Each voter can verify that their vote was correctly counted and raise concerns if they see that
             it was not tallied correctly. In this way, every voter can be assured that their vote was accurately included.
-          </blockquote>
-        </li>
-        <li>
-          <span>What technology do we need to use it?</span>
-          <blockquote>
-            Every voter must have their own direct access to a web browser connected to the Internet.
-            This can be on an iPhone, iPad, Android phone or tablet, MacBook, Chromebook, Windows or Linux laptop or computer.
           </blockquote>
         </li>
         <li>
@@ -51,6 +32,25 @@
           <blockquote>
             If you are not all together, it is strongly recommended that everyone be connected by a conference call of some sort
             so that you can discuss the election together.
+          </blockquote>
+        </li>
+        <li>
+          <span>How much does it cost to use TallyJ for Officers?</span>
+          <blockquote>It is free to use. There are no paid options or ads.</blockquote>
+        </li>
+        <li>
+          <span>How secure is my data?</span>
+          <blockquote>
+            Completely secure. You provide the first names of your members and no other information.
+            This is stored securely "in the cloud". When you are done with your election, you will erase it and no record of
+            it will remain anywhere, not even a backup copy.
+          </blockquote>
+        </li>
+        <li>
+          <span>What technology do we need to use it?</span>
+          <blockquote>
+            Every voter must have their own direct access to a web browser connected to the Internet.
+            This can be on an iPhone, iPad, Android phone or tablet, MacBook, Chromebook, Windows or Linux laptop or computer.
           </blockquote>
         </li>
         <li>
@@ -100,7 +100,7 @@
         <li>
           <span>Can I let someone else be the administrator?</span>
           <blockquote>
-            Whoever creates the election is automatically made to be an administrator of the election. However, you can
+            Yes. Whoever creates the election is automatically made to be an administrator of the election. However, you can
             make any number of other members to also be administrators. There must always be at least one administrator.
             The administrator is responsible to enter the member's names, set up the positions to be voted for, to open
             and close voting for each position, and finally, to erase the election when you are done.
@@ -130,7 +130,7 @@
         <li>
           <span>Does my team need to test it?</span>
           <blockquote>
-            No, the system works well and is simple to use. To assist the team in learning how to use it, a "sample"
+            No. The system works well and is simple to use. To assist the team in learning how to use it, a "sample"
             position is included by default in the election. The team can practice voting with this position until
             each member feels comfortable with this method of voting.
           </blockquote>
@@ -138,21 +138,23 @@
         <li>
           <span>How much time does it take to set up an election?</span>
           <blockquote>
-            Less time than reading these questions and answers! From starting an election to having all members ready
-            to vote takes just a few minutes. You just need to type (or copy and paste) the first names
-            of the members, then name the positions that will be voted for, then share the election's private address with the rest of the team..
+            It takes a second or two to create. Then you just need to input the first names
+            of the members and the positions that will be voted for. Share the election's private address with the
+            rest of the team and you are ready to go!
           </blockquote>
         </li>
         <li>
-          <span>Voting isn't working?</span>
-          <blockquote>If you start a round of voting and then add or remove members, the system may not close the Voting
+          <span>What if voting isn't working?</span>
+          <blockquote>
+            If you start a round of voting and then add or remove members, the system may not close the Voting
             when everyone has voted. After adding or removing members, cancel that round of voting and start a new one.
           </blockquote>
         </li>
         <li>
           <span>What if the system just doesn't work?</span>
           <blockquote>
-            If, for any reason, you are unable to use TallyJ for Officers, you can revert at any time to whatever
+            First refresh your browser (press F5). If that doesn't fix the problem and
+            you are unable to use TallyJ for Officers, you can revert to whatever
             method of collecting and counting ballots you would have used previously.
           </blockquote>
         </li>
@@ -160,8 +162,8 @@
           <span>Who made TallyJ for Officers?</span>
           <blockquote>
             The system was created by Glen Little. The final version was modified and improved from feedback
-            received by early beta tester and by people like you! If you have suggestions for how to make it better,
-            please feel free to send Glen an email at glen.little@gmail.com.
+            received by early beta testers and by people like you! If you have suggestions for how to make it better,
+            please feel free to send them to Glen by email at <a href="mailto:glen.little@gmail.com">glen.little@gmail.com</a>.
           </blockquote>
           <blockquote>If you have another question that has not been answered here, please send Glen an email!</blockquote>
         </li>

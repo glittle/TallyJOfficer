@@ -93,6 +93,13 @@ export default new Vue({
         vue.initialQuery = window.location.search;
     },
     methods: {
+        symbolOffset: function(letter) {
+            if (!letter) {
+                return 0;
+            }
+            var num = letter.charCodeAt(0) - 65;
+            return num * 34; // offsets in sprite
+        },
         handleAuthChanges: function() {
             var vue = this;
             firebase.auth().onAuthStateChanged(function(user) {
@@ -187,7 +194,7 @@ export default new Vue({
         connectToElection: function(electionRef) {
             // we know that ref refers to an actual db entry
             var vue = this;
-            console.log('connected to election', electionRef.key);
+            // console.log('connected to election', electionRef.key);
             vue.dbElectionRef = electionRef;
             vue.electionKey = electionRef.key;
             vue.dbUser.updateProfile({
@@ -257,7 +264,7 @@ export default new Vue({
                 vue.election = incomingElection;
 
                 vue.electionLoadAttempted = true;
-                console.log('election-changed');
+                // console.log('election-changed');
                 vue.$emit('election-changed');
             });
 
@@ -287,6 +294,11 @@ export default new Vue({
             this.dbElectionRef = null;
             // this.$root.$router.replace("/");
             location.href = "../";
+        },
+        cancelVoting: function() {
+            firebaseDb.ref(`elections/${this.electionKey}`).update({
+                votingOpen: false
+            });
         },
         watchForListChanges: function(localList, listRef, onAddChange) {
             var i;
@@ -465,10 +477,10 @@ export default new Vue({
             // var vue = this;
             var list = [
                 'Sample',
-                'Chair',
                 'Secretary',
+                'Chair',
+                'Treasurer',
                 'Vice-Chair',
-                'Treasurer'
             ];
             var positions = [];
             list.forEach((n, i) => {

@@ -4,7 +4,8 @@
     v-if="position && (shared.election.votingOpen || shared.confirmedVote)"
   >
     <div>
-      <h2>Voting for {{positionName}}</h2>
+      <a name="voteTop"></a>
+      <h1>Voting for {{positionName}}</h1>
       <div class="choosePreferNot" v-if="shared.isMember && shared.election.votingOpen">
         <label>
           <input type="checkbox" v-model="preferNot">
@@ -55,16 +56,21 @@
       v-if="shared.confirmedVote || !shared.election.votingOpen && selectedMember.name"
       class="confirmation"
     >
+      <button v-on:click="reveal = !reveal" class="reveal">
+        <span v-text="reveal ? 'Hide my Vote' : 'Show my vote here'"></span>
+      </button>
+
       <div class="voteInfo" :class="{revealVote: reveal}">
         <p>You voted for {{selectedMember.name}} to be {{positionName}}.</p>
       </div>
       <div class="symbolInfo" :class="{revealVote: reveal}">
         Your symbol for this vote:
-        <div class="symbol">{{shared.symbol}}</div>
+        <div
+          class="symbol"
+          :style="{backgroundPosition: '0 -' + shared.symbolOffset(shared.symbol) + 'px'}"
+          :title="shared.symbol"
+        ></div>
       </div>
-      <button v-on:click="reveal = !reveal" class="reveal">
-        <span v-text="reveal ? 'Hide my Vote' : 'Reveal my Vote on my screen'"></span>
-      </button>
       <p v-if="shared.election.votingOpen">
         <button v-on:click="changeMyVote">Change my vote</button>
       </p>
@@ -75,6 +81,7 @@
 <script>
 import _shared from "@/shared.js";
 import firebaseDb from "../firebaseInit";
+import { debug } from "util";
 
 export default {
   name: "VotingPanel",
@@ -128,7 +135,7 @@ export default {
     //   this.startVoting();
     // }
     // this.preferNot = false;
-    if(this.shared.election.votingOpen) {
+    if (this.shared.election.votingOpen) {
       this.startVote();
     }
   },
@@ -159,6 +166,8 @@ export default {
     },
     confirm: function() {
       var vue = this;
+      window.location.hash = "";
+
       if (!this.selectedMember) {
         console.log("no one selected for vote");
         return;
@@ -187,6 +196,12 @@ export default {
       this.reveal = true;
       this.shared.confirmedVote = true;
 
+      var header = document.getElementById("positionsToFill");
+      document.getElementById("electionBody").scrollTop = header
+        ? header.clientHeight
+        : 0;
+      // console.log('scrollTop');
+
       setTimeout(function() {
         vue.reveal = false;
       }, 2500);
@@ -197,6 +212,7 @@ export default {
         voted: false
       });
       this.shared.confirmedVote = false;
+      this.selectedMember = {};
     }
   }
 };
@@ -212,6 +228,7 @@ export default {
 
   table {
     margin: 1em auto;
+    width: 90%;
   }
   .adminBtns {
     white-space: nowrap;
@@ -224,11 +241,12 @@ export default {
       margin: 0.25em 0;
       padding: 10px 30px;
       font-size: 1em;
-      height: auto;
+      min-width: 170px;
+      height: 4em;
       background-color: #4f5aa2;
       &.selected {
         // want this to be subtle - to avoid shoulder surfing of neighbours
-        box-shadow: 0 0 3px 1px #000;
+        box-shadow: 0 0 4px 2px #4a993e;
       }
 
       .alreadyIn {
@@ -246,7 +264,7 @@ export default {
     }
   }
   .confirm {
-    margin: 0 0 1em;
+    margin: 3em 0 1em;
     font-size: 1em;
     &.ready {
       //background-color: blue;
@@ -279,11 +297,15 @@ export default {
   .symbolInfo {
     margin: 5px;
     opacity: 0.1;
+    height: 70px;
+    .symbol {
+      opacity: 0.1;
+    }
     &.revealVote {
       opacity: 0.8;
-    }
-    .symbol {
-      margin: 10px 0 10px;
+      .symbol {
+        opacity: 0.6;
+      }
     }
   }
 }

@@ -2,12 +2,18 @@
   <div id="nav">
     <div class="image">
       <router-link to="../">
-        <img alt="TallyJ logo" src="../assets/logo.png">
+        <img alt="TallyJ logo" :title="version" src="../assets/logo.png">
       </router-link>
     </div>
     <div class="middle" v-if="$route.name !== 'createElection'">
+      <span v-if="shared.me.isAdmin">
+        <router-link to="admin">Setup</router-link>
+      </span>
       <span>
-        <router-link to="home">Overview</router-link>
+        <router-link to="share">Share</router-link>
+      </span>
+      <span>
+        <router-link to="home">Vote</router-link>
       </span>
       <!-- <span v-if="shared.me.isAdmin">
         <router-link to="setupNames">Members</router-link>
@@ -15,12 +21,6 @@
       <span v-if="shared.me.isAdmin">
         <router-link to="setupPositions">Positions</router-link>
       </span>-->
-      <span>
-        <router-link to="share">Share</router-link>
-      </span>
-      <span v-if="shared.me.isAdmin">
-        <router-link to="admin">Manage</router-link>
-      </span>
       <span>
         <router-link to="/guidance">Guidance</router-link>
       </span>
@@ -48,6 +48,9 @@ export default {
   computed: {
     shared: function() {
       return _shared;
+    },
+    version: function() {
+      return _version;
     }
   },
   methods: {

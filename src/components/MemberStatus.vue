@@ -105,7 +105,7 @@ export default {
     display: block;
     margin: 3px 10px;
     padding: 1px 3px;
-    border-radius: 1px;
+    border-radius: 2px;
 
     &.connected.highlight {
       // include more selectors to take priority
@@ -123,15 +123,18 @@ export default {
 
   .member {
     position: relative;
-    border: 1px dashed #9a9a9a;
+    //border: 1px dashed #9a9a9a;
+    background-color: rgba(100, 100, 100, 0.1);
 
     &.participating {
-      border: none;
-      box-shadow: 0 0 2px 1px red;
+      //border: none;
+      background-color: #ef9393;
+      // box-shadow: 0 0 2px 1px red;
     }
 
     &.connected {
-      box-shadow: 0 0 2px 1px green;
+      background-color: #9fef93;
+      // box-shadow: 0 0 2px 1px green;
     }
 
     &.voting {

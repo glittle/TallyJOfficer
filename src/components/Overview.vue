@@ -1,6 +1,6 @@
 <template>
   <div class="Overview">
-    <div class="positionsToFill panel">
+    <div id="positionsToFill" class="positionsToFill panel" v-if="shared.me.isAdmin || shared.isViewer || !shared.election.votingOpen">
       <h1>Positions to Elect</h1>
       <table>
         <thead>
@@ -131,9 +131,7 @@ export default {
     },
     resetVoting: function() {
       // turn off voting
-      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
-        votingOpen: false
-      });
+      this.shared.cancelVoting();
     },
     view: function(position) {
       this.viewedPosition = position;
@@ -193,6 +191,14 @@ export default {
     button {
       margin: 0 10px;
     }
+  }
+
+  .symbol{
+    background-image: url('../../public/img/symbols40.png');
+    width: 40px;
+    height: 34px;
+    margin: 3px auto;
+    opacity: 0.5;
   }
 }
 </style>

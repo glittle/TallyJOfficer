@@ -1,7 +1,7 @@
 <template>
   <div class="SetupNames">
     <div class="panel">
-      <h1>Names of team members</h1>
+      <h1>1. Names of team members</h1>
       <p>Use short names!</p>
 
       <div v-if="useQuickList" class="quickAdd">
@@ -156,6 +156,7 @@ export default {
         .ref(path)
         .remove()
         .then(() => this.testForDuplicates());
+      this.shared.cancelVoting();
 
       // var removed = this.shared.members.splice(i, 1)[0];
       // var ref = this.shared.dbElectionRef;
@@ -172,6 +173,7 @@ export default {
       var path = `members/${this.shared.electionKey}/${newMember.id}`;
       console.log("add", path);
       firebaseDb.ref(path).set(newMember);
+      this.shared.cancelVoting();
     },
     updated: function(wasUpdated) {
       this.shared.members.sort((a, b) =>
@@ -198,6 +200,7 @@ export default {
           //   dbList.doc(item.id).set(item);
           // });
           // this.editsMade = false;
+          this.shared.cancelVoting();
         }
       }
     },

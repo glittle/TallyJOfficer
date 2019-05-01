@@ -2,9 +2,16 @@
   <div>
     <setup-names></setup-names>
     <setup-positions></setup-positions>
+    <div class="panel">
+      <h1>3. Election is ready</h1>
+      <p>Now that the team members and the positions are set up, you are ready to Share your election and then open Voting.</p>
+    </div>
+
+
     <div class="Admin panel">
-      <h2>All Done? Delete the election</h2>
-      <p>To delete this election, click:</p>
+      <h2>All Done?</h2>
+      <p>You are welcome to leave this election on the server to review later.</p>
+      <p>However, if you want to delete this election, click:</p>
       <button class="caution" v-if="!pendingDelete" v-on:click="pendingDelete = true">Delete...</button>
       <button
         v-if="pendingDelete"

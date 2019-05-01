@@ -26,7 +26,7 @@ export default {
   },
   watch: {
     $route: function(a, b) {
-      console.log("from", b && b.name, "to", a.name);
+      // console.log("from", b && b.name, "to", a.name);
       // console.log(this.shared.me);
       if (!this.shared.me.id && a.name !== "createElection") {
         // console.log("go claim 1");
@@ -44,6 +44,11 @@ export default {
     }
     this.shared.$on("election-changed", this.electionChanged);
     this.goCurrentHome();
+
+    var scrollingDiv = document.getElementById("electionBody");
+    scrollingDiv.addEventListener("touchmove", function(event) {
+      event.stopPropagation();
+    });
   },
   beforeDestroy: function() {
     this.shared.$off("election-changed", this.electionChanged);
@@ -52,7 +57,7 @@ export default {
     electionChanged: function() {
       // console.log("loaded");
       var currentRoute = this.$route.name;
-      console.log("already on", currentRoute);
+      // console.log("already on", currentRoute);
       if (currentRoute !== "adminPanel") {
         // this.goCurrentHome();
       }

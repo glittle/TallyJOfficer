@@ -1,6 +1,6 @@
 <template>
   <div class="ResultPanel panel" v-if="position.name">
-    <h2>Votes for {{position.name}}</h2>
+    <h2>Voting rounds for {{position.name}}</h2>
     <table class="results">
       <thead>
         <tr>
@@ -25,8 +25,14 @@
             :key="m.id"
           >
             <div class="voteCount">{{ votesFor(lastRound, m.id) }}</div>
-            <div v-if="shared.confirmedVote" class="voteDetail">
-              <div v-for="(v,i) in voteListFor(lastRound, m.id)" :key="i">{{ v.symbol }}</div>
+            <div class="voteDetail">
+              <div
+                class="symbol"
+                v-for="(v,i) in voteListFor(lastRound, m.id)"
+                :key="i"
+                :style="{backgroundPosition: `0 -${shared.symbolOffset(v.symbol)}px`}"
+                :title="v.symbol"
+              ></div>
             </div>
           </td>
         </tr>
@@ -35,7 +41,7 @@
         >
           <td class="roundNum">{{ positionRounds.length + 1 }}</td>
           <td :colspan="shared.members.length" class="inProgress">
-            Voting in progress
+            Round {{ positionRounds.length + 1 }} - Voting in Progress
             <br>
             {{ numVoted }} of {{ numParticipating }} votes submitted
           </td>
@@ -111,10 +117,18 @@ export default {
     // position: function() {
     //  this.showResults();
     // }
+    "positionRounds.length": function(a, b) {
+      var eb = window.document.getElementById("electionBody");
+      if (eb) {
+        // console.log("scroll 9999");
+        eb.scrollTo(0, 9999);
+      }
+    },
     personElected: function(a, b) {
       if (a) {
         var eb = window.document.getElementById("electionBody");
         if (eb) {
+          // console.log("scroll 9999 B");
           eb.scrollTo(0, 9999);
         }
       }
@@ -140,7 +154,10 @@ export default {
     resultClass: function(round, id) {
       if (!round) return null;
       if (round.electedId) {
-        return "Done";
+        if (round.electedId === id) {
+          return "Done";
+        }
+        return "";
       }
       var votes = round.votes.filter(v => v.voteId === id).length;
       if (votes === 0) {
@@ -254,6 +271,7 @@ export default {
       vertical-align: top;
       &.inProgress {
         background-color: #e8f4e8;
+        padding: 1em 0;
       }
     }
 

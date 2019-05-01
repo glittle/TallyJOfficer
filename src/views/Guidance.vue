@@ -20,16 +20,17 @@
       </li>
     </ul>
     <h1>General Guidance</h1>
-    <p>Q. In voting for officers is it permissible to read the names of those persons who have tied?</p>
-    <p>A. When voting for officers of an Assembly a result is only reached when one member receives five or more votes. Until that result is reached all members are eligible for the office in question and the results of all inconclusive ballots should be made known to the meeting."</p>
-    <cite>(From a letter of the Universal House of Justice to the National Spiritual Assembly of Jamaica, July 29, 1971)</cite>
 
-    <h2>96. If All Members Present, Permanent Officers Should Be Elected Immediately</h2>
+    <em>If All Members Present, Permanent Officers Should Be Elected Immediately</em>
     <p>While it is certainly true that the permanent officers of an Assembly should be elected immediately following the election of that Assembly, it is equally important, as stated in Article IV of the By-laws of the National Assembly, that 'The officers shall be elected by a majority vote of the entire membership of the Assembly taken by secret ballot.' That is all members of the Assembly must be properly notified and given an opportunity to vote, and in cases of unavoidable absence it does not contravene the spirit of the By-laws if the absent member should cast his ballot by mail or even by telephone.</p>
     <p>Temporary officers may be elected until all nine are properly notified of the election.</p>
     <cite>(From a letter written on behalf of the Universal House of Justice to a National Spiritual Assembly, July 27, 1981)</cite>
 
-    <h2>97. Assembly or Committee Members May Excuse Themselves from Being Elected as Officers</h2>
+    <p>Q. In voting for officers is it permissible to read the names of those persons who have tied?</p>
+    <p>A. When voting for officers of an Assembly a result is only reached when one member receives five or more votes. Until that result is reached all members are eligible for the office in question and the results of all inconclusive ballots should be made known to the meeting."</p>
+    <cite>(From a letter of the Universal House of Justice to the National Spiritual Assembly of Jamaica, July 29, 1971)</cite>
+
+    <em>Assembly or Committee Members May Excuse Themselves from Being Elected as Officers</em>
     <p>
       We have also been asked to point out that although it is the obligation of a Bahá'í to serve on an Assembly,
       either Local or National, when elected, on several occasions the beloved Guardian pointed out that before
@@ -40,17 +41,15 @@
       advisable to discuss the duties incumbent upon and required of each officer before ballots are cast.
     </p>
     <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, February 9, 1987)</cite>
-    <h2>98. It is Preferable that a Person Hold No More Than One Office</h2>
+    <em>It is Preferable that a Person Hold No More Than One Office</em>
     <p>...we are asked to say it is preferable that a person hold no more than one office, but it is within the discretion of your Assembly to permit a member to hold two offices.</p>
     <p>Regarding the specific instance you have cited, you should consider carefully whether one person can effectively perform as both Chairman and Secretary, given the requirements of each office.</p>
     <cite>(From a letter written on behalf of the Universal House of Justice to the National Spiritual Assembly of Togo, July 4, 1984)</cite>
-    <h2>99. Complete Results of Each Vote Must Be Known to All Members of the Assembly Present</h2>
     <p>The complete results of each vote should be known to all members of the Assembly. Therefore, the names and tally should be given by the tellers, and if no member has received the required majority, the members should proceed to vote again. Voting should not be confined to those receiving the highest number of votes.</p>
     <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, August 4, 1981: cited in a letter to the National Spiritual Assembly of Mexico, September 2, 1981)</cite>
-    <h2>100. The Integrity of the Elector Must Be Relied Upon</h2>
+    <em>The Integrity of the Elector Must Be Relied Upon</em>
     <p>You will note in the above extract that the tellers should report both names and tally. The House of Justice suggests that we must rely on the integrity of the elector to consider dispassionately those names he lists on his ballot, irrespective of the results of the previous balloting.</p>
     <cite>(From a letter written on behalf of the Universal House of Justice to the National Spiritual Assembly of Mexico, September 2, 1981)</cite>
-    <h2>101. Any Officer Elected Must Have Received at Least Five Votes</h2>
     <p>Any officer elected must have received at least five votes, even if only five members are present. The ballots of any absentee members cannot be counted if re-voting is necessary. If for any reason no member receives five votes, then the Assembly must in consultation appoint one or more temporary officers to function until the next meeting, and must call another meeting as soon as possible to elect permanent officers.</p>
     <cite>(From a letter dated 26 September 1983 written on behalf of the Universal House of Justice to a Local Spiritual Assembly)</cite>
     <h2>General Functioning</h2>
@@ -102,7 +101,7 @@
     <cite>(From a letter dated 21 September 1983 written on behalf of the Universal House of Justice to a National Spiritual Assembly)</cite>
     <p>Whatever the personal circumstances of the believer employed, the National Assembly should realize that its Secretary is its chief executive officer, and as such acts not only as liaison with the national committees, the Local Spiritual Assemblies and all the friends, but generally represents the National Spiritual Assembly and the Faith itself to the non-Bahá'í world, a duty becoming ever more important as the Cause becomes more widely known.</p>
     <cite>(From a letter dated 23 January 1981 written on behalf of the Universal House of Justice to a National Spiritual Assembly)</cite>
-    <p>106. Full-Time Services of Secretary May Require Remuneration, about which the Agreement Should Be Duly Recorded</p>
+    <em>Full-Time Services of Secretary May Require Remuneration, about which the Agreement Should Be Duly Recorded</em>
     <p>A national Bahá'í community which reaches that stage of development where the work of its National Spiritual Assembly requires the full-time services of its Secretary, faces many difficult, and sometimes delicate, considerations. It is generally a thought-provoking occasion to the community itself, which has become used to the work of the Cause being discharged by voluntary, dedicated, part-time and often amateur service; and the realization that the Cause has reached the point where its work and public image--so important to future progress--can no longer be maintained in the old way, may be disturbing at first. The friends, however, quickly respond to the new capacity for leadership and guidance and the increased status which its National Assembly acquires by establishing a sounder foundation for its operations, and are encouraged by the advancement of the Cause.</p>
     <p>The specific remuneration and conditions of service of the national Secretary must obviously be the result of consultation, and when agreement has been reached the result should be recorded, not necessarily in a contract, but certainly in a Minute of the Assembly and/or an exchange of letters.</p>
     <cite>(From a letter dated 23 January 1981 written on behalf of the Universal House of Justice to a National Spiritual Assembly)</cite>
@@ -156,7 +155,7 @@
       (From a letter of the Universal House of Justice to the National Spiritual Assembly of
       Canada, 27 April 1989)
     </cite>
-    <p>107. Secretary's Helper Can Be Non-Member of Assembly</p>
+    <em>Secretary's Helper Can Be Non-Member of Assembly</em>
     <p>In reply to your letter of November 7th, 1973 there is no objection whatsoever to a non-member of the National Spiritual Assembly typing your Minutes or such other confidential reports. Many National Spiritual Assemblies employ typists in their national offices who are intimately connected with all the work of the National Spiritual Assembly. Of course, the person so employed should enjoy the confidence of the National Spiritual Assembly.</p>
     <cite>(From a letter of the Universal House of Justice to the National Spiritual Assembly of the Gilbert and Ellice Islands, November 20, 1973)</cite>
     <a name="treasurer">&nbsp;</a>
@@ -191,7 +190,7 @@
     <p>The Treasurer performs these duties on behalf of the Assembly. To be effective, the Treasurer must understand that the Bahá’í Fund and, indeed, the functions of the Treasurer, are the responsibility of the entire Assembly and not just of the Treasurer alone. The Local Spiritual Assembly as a body should be concerned about the condition of the local Bahá’í Fund and consult on ways to make the community aware of the critical importance of the Fund. The Treasurer implements the decisions and policies of the Institution.</p>
     <p>The Treasurer also has a responsibility to educate the community about the role the Fund must play in attaining the primary objective of the Faith—the establishment of the Kingdom of God on Earth. In this regard, the functions of the office transcend material considerations. The Treasurer, as the representative of the Assembly, has the responsibility to educate and inspire the friends and emphasize the spiritual importance of the institution of the Bahá’í Fund. The friends should understand that their acts of material giving are transformed into the means of spiritual progress, not only for themselves as individuals but also for the community as a whole.</p>
     <cite>(From Developing Distinctive Bahá’í Communities: Guidelines for Spiritual Assemblies, 1998)</cite>
-    <p>863. The Treasurer is Officer in Charge, but All National Spiritual Assembly Members Are Responsible</p>
+    <em>The Treasurer is Officer in Charge, but All National Spiritual Assembly Members Are Responsible</em>
     <p>The National Spiritual Assembly has the responsibility to ensure that contributions received are properly receipted, and satisfactory accounts kept of all receipts and disbursements. While the Treasurer normally is the officer in charge of such a sacred obligation, this does not mean that other members are thereby relieved of all responsibility, or are deprived of their right of access to details related to the current operation of the Assembly, in all its aspects.</p>
     <p>Such right and responsibility vested in the individual members of the Assembly do not vitiate the confidentiality of Bahá'í contributions, since the information made available to the Treasurer or other members of the Assembly is to be treated in strict confidence.</p>
     <cite>(From a letter written on behalf of the Universal House of Justice to a National Spiritual Assembly, January 11, 1977: Compilation of Extracts..., op. cit. No. 858)</cite>
@@ -214,7 +213,7 @@
     <p>Generally the membership of small local communities includes some believers who are new in the Faith and need to be lovingly nurtured in the responsibilities of being a Bahá'í, and others who are overburdened by a multitude of cares. How often one finds in small Assemblies members who, although devoted believers, have non-Bahá'í spouses and families to care for and are very limited in the time they can spend in Bahá'í administrative activities. Such believers should be encouraged, and loving appreciation should be shown for whatever services they can render, and nothing should be done, however unintentionally, to make them feel that they are living under a threat of administrative expulsion if they do not attend every Assembly meeting or decline a request to serve on a committee.</p>
     <p>There may, of course, be cases of believers who, without any good reason, refuse to shoulder the responsibilities of membership in the Bahá'í community. It is to such extreme cases that you would be justified in applying sanctions if, after "repeated exhortations, pleas and warnings" they persist in their attitude.</p>
     <cite>(Letter written on behalf of the Universal House of Justice, dated July 8, 1980, to a National Spiritual Assembly)</cite>
-    <p>114. Obligation of a Bahá'í Who is Elected to an Office which Requires Full-Time Service</p>
+    <em>Obligation of a Bahá'í Who is Elected to an Office which Requires Full-Time Service</em>
     <p>The Universal House of Justice has received your letter mailed 23rd January, 1987 concerning the obligation of a Bahá'í who is elected to an office which requires full-time service. We are asked to share with you an excerpt of a letter dated 7th August 1980 written on behalf of the House of Justice addressed to an individual believer facing a problem similar to the one you pose.</p>
     <p class="quote">
       The delicate balance between the claims of the Cause of God and the claims of one's profession is an intensely personal matter which can only be resolved eventually in the heart and soul of each individual. Many Bahá'ís have become, and are, distinguished in their professions and at the same time have rendered and are rendering great services to the Cause and it is obviously possible to
@@ -238,16 +237,19 @@ export default {
 </script>
 
 <style lang="less">
-body,
-p {
-  font-family: sans-serif;
-  line-height: 125%;
-  &.quote {
-    margin: 0.5em 2em 1em 2em;
-  }
-}
 .guidance {
   padding: 1em;
+  font-family: sans-serif;
+  line-height: 125%;
+
+  p {
+    font-family: sans-serif;
+    line-height: 125%;
+    &.quote {
+      margin: 0.5em 2em 1em 2em;
+    }
+  }
+
   h1,
   h2 {
     font-family: "Acme", sans-serif;

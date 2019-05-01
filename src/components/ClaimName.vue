@@ -36,7 +36,7 @@
         To forget about this election, click
         <button class="caution" v-on:click="logout">Forget Election</button>
       </p>
-      <p>An administrator can delete this election on the Manage page.</p>
+      <p>An administrator can delete this election on the Setup page.</p>
     </div>
   </div>
 </template>

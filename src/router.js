@@ -108,13 +108,14 @@ var router = new Router({
 });
 
 router.afterEach((to, from) => {
-    console.log('route to', to)
+    // console.log('route to', to)
     gtag('event', 'screen_view', {
         screen_name: to.name,
     });
     setTimeout(function() {
         var eb = window.document.getElementById('electionBody');
         if (eb) {
+            // console.log('scrollTo 0');
             eb.scrollTo(0, 0);
         }
     }, 0);

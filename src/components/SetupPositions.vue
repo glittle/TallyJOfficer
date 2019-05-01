@@ -1,8 +1,8 @@
 <template>
   <div class="SetupPositions">
     <div class="panel">
-      <h1>Define the positions to be voted for</h1>
-      <p>Add, edit and move positions as required by your team.</p>
+      <h1>2. Define the positions to be voted for</h1>
+      <p>Add, edit and sort positions as desired by your team.</p>
       <p>A "Sample" position is included for your team to use to practice with.</p>
       <slick-list
         class="list"
@@ -102,6 +102,8 @@ export default {
       this.list.forEach(m =>
         firebaseDb.ref(`positions/${this.shared.electionKey}/${m.id}`).set(m)
       );
+
+      this.shared.cancelVoting();
 
       // var ref = this.shared.dbElectionRef;
       // if (ref) {

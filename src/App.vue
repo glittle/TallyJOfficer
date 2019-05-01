@@ -4,6 +4,16 @@
   </div>
 </template>
 
+<script>
+export default {
+  mounted: function() {
+    document.addEventListener("touchmove", function(event) {
+      event.preventDefault();
+    });
+  }
+};
+</script>
+
 <style lang="less">
 html {
   height: 100%;
