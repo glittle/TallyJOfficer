@@ -10,4 +10,4 @@ their own phone / computer and the combined results are visible to everyone.
 No login is required!
 
 ## Status
-February 2019 - 80% ready
+May 2019 - ready for use
