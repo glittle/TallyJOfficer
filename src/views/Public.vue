@@ -8,13 +8,6 @@
     <p>
       <button v-on:click="$router.push('/e')">My Election</button>
     </p>
-    <p>
-      <em>
-        <strong>April 2019</strong> This app is in beta but is fully functional. You are welcome to use it for
-        your election but if you encounter any issues, you should resort to using paper ballots or whatever you
-        would "normally" do.
-      </em>
-    </p>
     <img class="team" src="../../public/img/team.png">
 
     <h1>Learn More</h1>
