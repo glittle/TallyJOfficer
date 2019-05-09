@@ -4,7 +4,7 @@
     <setup-positions></setup-positions>
     <div class="panel">
       <h1>3. Election is ready</h1>
-      <p>Now that the team members and the positions are set up, you are ready to Share your election and then open Voting.</p>
+      <p>When the team members and the positions are set up, you are ready to <router-link to="share">Share</router-link> your election and then open <router-link to="home">Voting</router-link>.</p>
     </div>
 
 

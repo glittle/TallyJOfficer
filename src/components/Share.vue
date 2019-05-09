@@ -15,6 +15,9 @@
         </p>
       </div>
     </div>
+    <div v-if="shared.link" class="panel">
+      <p>Go to the main <router-link to="home">Voting</router-link> page.</p>
+    </div>
     <div v-else class="panel">
       Oops! Looks like you are not in an election. Please
       <a href="/">start at the beginning</a>!

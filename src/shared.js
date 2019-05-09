@@ -438,6 +438,8 @@ export default new Vue({
 
                     gtag('event', 'createElection');
 
+                    vue.claimMember(vue.me.id);
+
                     vue.$emit('election-created');
                 })
                 .catch(function(err) {
@@ -453,8 +455,8 @@ export default new Vue({
 
             var me = vue.makeMember(nameOfAdmin, members);
             me.isAdmin = true;
-            me.connected = this.dbUser.uid;
-            me.connectedTime = firebase.database.ServerValue.TIMESTAMP;
+            // me.connected = this.dbUser.uid;
+            // me.connectedTime = firebase.database.ServerValue.TIMESTAMP;
             members.push(me);
 
             vue.dbUser.updateProfile({

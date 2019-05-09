@@ -30,6 +30,16 @@
     <p>A. When voting for officers of an Assembly a result is only reached when one member receives five or more votes. Until that result is reached all members are eligible for the office in question and the results of all inconclusive ballots should be made known to the meeting."</p>
     <cite>(From a letter of the Universal House of Justice to the National Spiritual Assembly of Jamaica, July 29, 1971)</cite>
 
+    <p>The complete results of each vote should be known to all members of the Assembly. Therefore, the names and tally should be given by the tellers, and if no member has received the required majority, the members should proceed to vote again. Voting should not be confined to those receiving the highest number of votes.</p>
+    <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, August 4, 1981: cited in a letter to the National Spiritual Assembly of Mexico, September 2, 1981)</cite>
+    
+    <em>The Integrity of the Elector Must Be Relied Upon</em>
+    <p>You will note in the above extract that the tellers should report both names and tally. The House of Justice suggests that we must rely on the integrity of the elector to consider dispassionately those names he lists on his ballot, irrespective of the results of the previous balloting.</p>
+    <cite>(From a letter written on behalf of the Universal House of Justice to the National Spiritual Assembly of Mexico, September 2, 1981)</cite>
+    
+    <p>Any officer elected must have received at least five votes, even if only five members are present. The ballots of any absentee members cannot be counted if re-voting is necessary. If for any reason no member receives five votes, then the Assembly must in consultation appoint one or more temporary officers to function until the next meeting, and must call another meeting as soon as possible to elect permanent officers.</p>
+    <cite>(From a letter dated 26 September 1983 written on behalf of the Universal House of Justice to a Local Spiritual Assembly)</cite>
+
     <em>Assembly or Committee Members May Excuse Themselves from Being Elected as Officers</em>
     <p>
       We have also been asked to point out that although it is the obligation of a Bahá'í to serve on an Assembly,
@@ -41,39 +51,12 @@
       advisable to discuss the duties incumbent upon and required of each officer before ballots are cast.
     </p>
     <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, February 9, 1987)</cite>
+    
     <em>It is Preferable that a Person Hold No More Than One Office</em>
     <p>...we are asked to say it is preferable that a person hold no more than one office, but it is within the discretion of your Assembly to permit a member to hold two offices.</p>
     <p>Regarding the specific instance you have cited, you should consider carefully whether one person can effectively perform as both Chairman and Secretary, given the requirements of each office.</p>
     <cite>(From a letter written on behalf of the Universal House of Justice to the National Spiritual Assembly of Togo, July 4, 1984)</cite>
-    <p>The complete results of each vote should be known to all members of the Assembly. Therefore, the names and tally should be given by the tellers, and if no member has received the required majority, the members should proceed to vote again. Voting should not be confined to those receiving the highest number of votes.</p>
-    <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, August 4, 1981: cited in a letter to the National Spiritual Assembly of Mexico, September 2, 1981)</cite>
-    <em>The Integrity of the Elector Must Be Relied Upon</em>
-    <p>You will note in the above extract that the tellers should report both names and tally. The House of Justice suggests that we must rely on the integrity of the elector to consider dispassionately those names he lists on his ballot, irrespective of the results of the previous balloting.</p>
-    <cite>(From a letter written on behalf of the Universal House of Justice to the National Spiritual Assembly of Mexico, September 2, 1981)</cite>
-    <p>Any officer elected must have received at least five votes, even if only five members are present. The ballots of any absentee members cannot be counted if re-voting is necessary. If for any reason no member receives five votes, then the Assembly must in consultation appoint one or more temporary officers to function until the next meeting, and must call another meeting as soon as possible to elect permanent officers.</p>
-    <cite>(From a letter dated 26 September 1983 written on behalf of the Universal House of Justice to a Local Spiritual Assembly)</cite>
-    <h2>General Functioning</h2>
-    <p>
-      We assume ... that all actions of Assembly officers, taken routinely without Assembly
-      consultation, will be based upon clearly stated National Assembly policies and precedents and that
-      the letters will, where necessary, reflect those Assembly decisions and the authority delegated to its
-      officers for such specific correspondence.
-    </p>
-    <cite>
-      (From a letter of the Universal House of Justice to the National Spiritual Assembly of Canada,
-      12 October 1971)
-    </cite>
-    <p>
-      The Guardian welcomes the step taken by your Assembly to increasingly devote its meetings
-      to the consideration of major policies and plans, and to dwell less on matters of detail and of mere
-      secondary character. He would, however, urge that all decisions, unless of a trivial and insignificant
-      nature dealing purely with routine work, should be reached after careful and conscientious
-      deliberation by all nine members.
-    </p>
-    <cite>
-      (From a letter written on behalf of Shoghi Effendi to a National Spiritual Assembly,
-      28 January 1939)
-    </cite>
+
 
     <h1>Officers of an Assembly</h1>
     <a name="chair">&nbsp;</a>
@@ -161,9 +144,7 @@
     <a name="treasurer">&nbsp;</a>
 
     <h2>The Treasurer</h2>
-    <p>The National Spiritual Assembly has the responsibility to ensure that contributions received are properly receipted, and satisfactory accounts kept of all receipts and disbursements. While the Treasurer normally is the officer in charge of such a sacred obligation, this does not mean that other members are thereby relieved of all responsibility, or are deprived of their right of access to details related to the current operation of the Assembly, in all its aspects.</p>
-    <p>Such right and responsibility vested in the individual members of the Assembly do not vitiate the confidentiality of Bahá’í contributions, since the information made available to the Treasurer or other members of the Assembly is to be treated in strict confidence.</p>
-    <cite>(From a letter dated 11 January 1977 written on behalf of the Universal House of Justice)</cite>
+     
     <p>The House of Justice has not established any uniform procedure for Bahá’í treasurers, since methods of accounting and the laws governing such matters vary considerably from country to country and from one situation to another. It advises that on such technical questions the National Assembly’s Treasurer can seek the advice of a professional. The National Spiritual Assembly should, of course, ensure that its books of account are audited annually and for this there is no objection to utilizing the services of a non–Bahá’í firm.</p>
     <p>In general terms, however, the House of Justice feels that there are certain matters to which National Treasurers should give particular attention.</p>
     <ol>
@@ -190,29 +171,62 @@
     <p>The Treasurer performs these duties on behalf of the Assembly. To be effective, the Treasurer must understand that the Bahá’í Fund and, indeed, the functions of the Treasurer, are the responsibility of the entire Assembly and not just of the Treasurer alone. The Local Spiritual Assembly as a body should be concerned about the condition of the local Bahá’í Fund and consult on ways to make the community aware of the critical importance of the Fund. The Treasurer implements the decisions and policies of the Institution.</p>
     <p>The Treasurer also has a responsibility to educate the community about the role the Fund must play in attaining the primary objective of the Faith—the establishment of the Kingdom of God on Earth. In this regard, the functions of the office transcend material considerations. The Treasurer, as the representative of the Assembly, has the responsibility to educate and inspire the friends and emphasize the spiritual importance of the institution of the Bahá’í Fund. The friends should understand that their acts of material giving are transformed into the means of spiritual progress, not only for themselves as individuals but also for the community as a whole.</p>
     <cite>(From Developing Distinctive Bahá’í Communities: Guidelines for Spiritual Assemblies, 1998)</cite>
+    
     <em>The Treasurer is Officer in Charge, but All National Spiritual Assembly Members Are Responsible</em>
     <p>The National Spiritual Assembly has the responsibility to ensure that contributions received are properly receipted, and satisfactory accounts kept of all receipts and disbursements. While the Treasurer normally is the officer in charge of such a sacred obligation, this does not mean that other members are thereby relieved of all responsibility, or are deprived of their right of access to details related to the current operation of the Assembly, in all its aspects.</p>
     <p>Such right and responsibility vested in the individual members of the Assembly do not vitiate the confidentiality of Bahá'í contributions, since the information made available to the Treasurer or other members of the Assembly is to be treated in strict confidence.</p>
     <cite>(From a letter written on behalf of the Universal House of Justice to a National Spiritual Assembly, January 11, 1977: Compilation of Extracts..., op. cit. No. 858)</cite>
 
     <h1>Other Matters</h1>
+
+    
+    <p>
+      We assume ... that all actions of Assembly officers, taken routinely without Assembly
+      consultation, will be based upon clearly stated National Assembly policies and precedents and that
+      the letters will, where necessary, reflect those Assembly decisions and the authority delegated to its
+      officers for such specific correspondence.
+    </p>
+    <cite>
+      (From a letter of the Universal House of Justice to the National Spiritual Assembly of Canada,
+      12 October 1971)
+    </cite>
+
+    <p>
+      The Guardian welcomes the step taken by your Assembly to increasingly devote its meetings
+      to the consideration of major policies and plans, and to dwell less on matters of detail and of mere
+      secondary character. He would, however, urge that all decisions, unless of a trivial and insignificant
+      nature dealing purely with routine work, should be reached after careful and conscientious
+      deliberation by all nine members.
+    </p>
+    <cite>
+      (From a letter written on behalf of Shoghi Effendi to a National Spiritual Assembly,
+      28 January 1939)
+    </cite>
+
+    <h2>Importance of Regular Attendance</h2>
+
+    <p>It is only too obvious that unless a member can attend regularly the meetings of his local assembly, it would be impossible for him to discharge the duties incumbent upon him, and to fulfill his responsibilities, as a representative of the community. Membership in a Local Spiritual Assembly carries with it, indeed, the obligation and capacity to remain in close touch with local Bahá'í activities, and ability to attend regularly the sessions of the assembly.</p>
+    <cite>(Letter written on behalf of Shoghi Effendi, dated February 16, 1935, to an individual believer)</cite>
+    
+    <p>Membership in a Bahá'í Assembly or Committee is a sacred obligation which should be gladly and confidently accepted by every loyal and conscientious member of the Community, no matter how humble and inexperienced. Once elected to serve in a given Assembly a believer's duty is to do his utmost to attend all Assembly meetings, and cooperate with his fellow-members, unless, however, he is prevented from doing so by some major reason such as illness, and even then he should notify the Assembly to this effect.</p>
+    <cite>(Written on behalf of Shoghi Effendi, in Dawn of a New Day, p. 79)</cite>
+    
+    <p>In the course of reading the Minutes of National Spiritual Assemblies throughout the world, the members of the Universal House of Justice have noted that in many instances Assembly meetings are attended by less than nine members. In some few cases Assemblies have difficulty in even maintaining a quorum. The House of Justice recognizes that at times a member may have a valid reason for not attending a particular meeting. However, a serious problem arises if absence is due to neglect or lack of appreciation of the sanctity of membership in an institution which is the hub and heart of Bahá'í activities in the country.</p>
+    <cite>(Letter written on behalf of the Universal House of Justice, dated October 26, 1980, to all National Spiritual Assemblies)</cite>
+    
     <h2>Dissatisfaction with Officers</h2>
     <p>As regards the question of what procedure the Bahá'í Assemblies should adopt when dissatisfied with the services of any of their officers, should such dissatisfaction involve the loyalty of an Assembly officer to the Faith, he should, following a majority vote, be dismissed. But in case the dissatisfaction is due to the incompetence of a member, or simply to a neglect on his part to discharge his duties, this does not constitute sufficient justification to force his resignation or dismissal from the Assembly. He should be kept in office until new elections are held.</p>
     <cite>(Written on behalf of Shoghi Effendi, in Principles of Bahá'í Administration, p. 50)</cite>
-    <h2>Importance of Regular Attendance</h2>
-    <p>It is only too obvious that unless a member can attend regularly the meetings of his local assembly, it would be impossible for him to discharge the duties incumbent upon him, and to fulfill his responsibilities, as a representative of the community. Membership in a Local Spiritual Assembly carries with it, indeed, the obligation and capacity to remain in close touch with local Bahá'í activities, and ability to attend regularly the sessions of the assembly.</p>
-    <cite>(Letter written on behalf of Shoghi Effendi, dated February 16, 1935, to an individual believer)</cite>
-    <p>Membership in a Bahá'í Assembly or Committee is a sacred obligation which should be gladly and confidently accepted by every loyal and conscientious member of the Community, no matter how humble and inexperienced. Once elected to serve in a given Assembly a believer's duty is to do his utmost to attend all Assembly meetings, and cooperate with his fellow-members, unless, however, he is prevented from doing so by some major reason such as illness, and even then he should notify the Assembly to this effect.</p>
-    <cite>(Written on behalf of Shoghi Effendi, in Dawn of a New Day, p. 79)</cite>
-    <p>In the course of reading the Minutes of National Spiritual Assemblies throughout the world, the members of the Universal House of Justice have noted that in many instances Assembly meetings are attended by less than nine members. In some few cases Assemblies have difficulty in even maintaining a quorum. The House of Justice recognizes that at times a member may have a valid reason for not attending a particular meeting. However, a serious problem arises if absence is due to neglect or lack of appreciation of the sanctity of membership in an institution which is the hub and heart of Bahá'í activities in the country.</p>
-    <cite>(Letter written on behalf of the Universal House of Justice, dated October 26, 1980, to all National Spiritual Assemblies)</cite>
+    
     <h2>Refusal to Serve</h2>
     <p>Concerning the question of refusal by certain believers to accept election to an administrative post: The Guardian strongly feels that criticism, opposition, or confusion do not provide sufficient grounds for either refusal or resignation. Only cases of physical or mental incapacity, which, by their very nature, are extremely rare, constitute valid reasons for such an act. The difficulties and tests involved in the acceptance of administrative posts, far from inducing the believers to dissociate themselves from the work of the Cause, should spur them on to greater exertions and to a more active participation in the privileged task of resolving the problems that confront the Bahá'í community. . . . The believers, for the sake of the Cause, now in the period of its infancy, should accept their duties in a spirit of self-sacrifice, and should be animated by the desire to uphold the verdict of the electorate, and to lend their share of assistance, however difficult the circumstances, to the effective administration of the affairs of the Faith.</p>
     <cite>(Written on behalf of Shoghi Effendi, in Bahá'í News, #152, April 1942, p. 2)</cite>
+    
     <p>While it is true that refusal to serve can ultimately incur the forfeiture of administrative rights, the House of Justice feels that your Assembly should bear in mind the caution voiced on behalf of the Guardian in the letter published on pages 86 and 87 of Principles of Bahá'í Administration: "Only in cases where individual believers, without any valid reason, deliberately refuse the repeated exhortations, pleas, and warnings addressed to them by their Assemblies, should action be taken in removing them from the voting list." At the present stage . . . far more beneficial results are likely to be achieved by encouragement of the believers and by their education in the principles and significance of Bahá'í administration than by the threat or imposition of sanctions. Indeed the latter, if applied unwisely, could achieve the very opposite of what your Assembly is hoping to accomplish.</p>
     <p>Generally the membership of small local communities includes some believers who are new in the Faith and need to be lovingly nurtured in the responsibilities of being a Bahá'í, and others who are overburdened by a multitude of cares. How often one finds in small Assemblies members who, although devoted believers, have non-Bahá'í spouses and families to care for and are very limited in the time they can spend in Bahá'í administrative activities. Such believers should be encouraged, and loving appreciation should be shown for whatever services they can render, and nothing should be done, however unintentionally, to make them feel that they are living under a threat of administrative expulsion if they do not attend every Assembly meeting or decline a request to serve on a committee.</p>
     <p>There may, of course, be cases of believers who, without any good reason, refuse to shoulder the responsibilities of membership in the Bahá'í community. It is to such extreme cases that you would be justified in applying sanctions if, after "repeated exhortations, pleas and warnings" they persist in their attitude.</p>
     <cite>(Letter written on behalf of the Universal House of Justice, dated July 8, 1980, to a National Spiritual Assembly)</cite>
+    
     <em>Obligation of a Bahá'í Who is Elected to an Office which Requires Full-Time Service</em>
     <p>The Universal House of Justice has received your letter mailed 23rd January, 1987 concerning the obligation of a Bahá'í who is elected to an office which requires full-time service. We are asked to share with you an excerpt of a letter dated 7th August 1980 written on behalf of the House of Justice addressed to an individual believer facing a problem similar to the one you pose.</p>
     <p class="quote">
@@ -220,6 +234,7 @@
       achieve distinction in one's profession and calling and to serve the Cause of God at the same time. The House of Justice realizes, however, that circumstances can conspire, at critical times in the fortunes of the Faith, to require individuals to make the heart-searching decision of sacrificing one's own prospects for the apparent good of the Cause. Here again, the history of the Cause provides many examples of believers who have willingly foregone promotion in, or even the continued practice of, their professions in order to meet the needs of the Faith. As in all difficult decisions facing individual believers, the God-given process of consultation is available to them, and every individual may consult either one of the institutions of the Faith or an individual officer, such as a Counsellor or Board member, or even one or two friends of his own choosing. Even then, however, the eventual decisions rests with the individual himself.
     </p>
     <cite>(From a letter written on behalf of the Universal House of Justice to an individual believer, February 9, 1987)</cite>
+
   </div>
 </template>
 
