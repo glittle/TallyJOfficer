@@ -17,8 +17,11 @@
           members to use when talking with you, usually just your first name. (You can change it later, if needed.)
         </p>
         <div class="nameInput">
-          Your name:
-          <input v-model="name" v-on:keyup.enter="create">
+          Your first name:
+          <input
+            v-model="name"
+            v-on:keyup.enter="create"
+          >
         </div>
         <p>You will be the "administrator" of this election and able to manage it in this system.</p>
         <p>
@@ -30,14 +33,29 @@
           <a href="/faq">Questions and Answers</a> (again) about how this website works.
         </p>
         <div>
-          <button :disabled="!name" v-on:click="create">Create the Election</button>
+          <button
+            :disabled="!name"
+            v-on:click="create"
+          >
+            Create the Election
+          </button>
         </div>
         <p class="leave">
-          <button class="caution" v-on:click="leave">Cancel</button>
+          <button
+            class="caution"
+            v-on:click="leave"
+          >
+            Cancel
+          </button>
         </p>
       </div>
     </div>
-    <div v-else class="loading">Loading...</div>
+    <div
+      v-else
+      class="loading"
+    >
+      Loading...
+    </div>
   </div>
 </template>
 
@@ -47,22 +65,22 @@ import _shared from "@/shared.js";
 export default {
   name: "CreateElection",
   components: {},
-  data: function() {
+  data: function () {
     return {
       name: ""
     };
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     }
   },
-  beforeUpdate: function() {
+  beforeUpdate: function () {
     if (this.shared.election.created) {
       this.$router.replace("/e");
     }
   },
-  mounted: function() {
+  mounted: function () {
     if (this.shared.election.created) {
       this.$router.replace("/e");
       return;
@@ -71,15 +89,15 @@ export default {
     this.shared.$on("election-created", this.electionCreated);
     this.shared.$on("election-changed", this.goHome);
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     this.shared.$off("election-created", this.electionCreated);
     this.shared.$off("election-changed", this.goHome);
   },
   methods: {
-    goHome: function() {
+    goHome: function () {
       this.$router.replace("/e");
     },
-    electionCreated: function() {
+    electionCreated: function () {
       var vue = this;
       if (vue.shared.members.filter(m => m.name).length < 2) {
         vue.$router.replace("/e/admin");
@@ -87,12 +105,12 @@ export default {
       }
       vue.$router.replace("/e");
     },
-    create: function() {
+    create: function () {
       if (this.name) {
         this.shared.createElection(this.name);
       }
     },
-    leave: function() {
+    leave: function () {
       this.$router.replace("/");
     }
   }
@@ -110,7 +128,7 @@ export default {
   .nameInput {
     margin: 0 0 1em;
     input {
-      width: 100px;
+      width: 60px;
     }
   }
   .loading {

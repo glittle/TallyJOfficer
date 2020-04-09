@@ -1,57 +1,110 @@
 <template>
   <div class="SetupNames">
-    <div class="panel">
-      <h1>1. Names of team members</h1>
+    <div
+      v-if="shared.election.votingOpen"
+      class="panel"
+    >
+      <p class="isVoting">Voting is in progress.</p>
+      <p>Modifying team members and positions cannot be done while a position is being voted on.</p>
+    </div>
+    <div
+      v-if="!shared.election.votingOpen"
+      class="panel"
+    >
+      <h1>1. Members</h1>
       <p>Use short names!</p>
 
-      <div v-if="useQuickList" class="quickAdd">
-        <p>To quickly add the rest of the members, enter their names in this box, one per line, then click "Add Now".</p>
-        <textarea ref="quickList" v-model="quickList"></textarea>
-        <button v-on:click="processQuickList">Add Now</button>
-        <button class="other" v-on:click="useQuickList = false, editing = true">Hide Quick Add</button>
+      <div
+        v-if="useQuickList"
+        class="quickAdd"
+      >
+        <p>To quickly add members, enter or paste their names into this box, one per line, then click "Add Now".</p>
+        <textarea
+          ref="quickList"
+          v-model="quickList"
+        ></textarea>
+        <button
+          :disabled="quickListNames.length===0"
+          v-on:click="processQuickList"
+        >Add
+          <span
+            v-if="quickListNames.length > 1"
+            v-text="quickListNames.length + ' names'"
+          ></span> Now</button>
+        <br>
+        <button
+          class="other"
+          v-on:click="useQuickList = false, editing = true, quickList = ''"
+        >Cancel Adding Multiple</button>
       </div>
       <div v-if="editing">
-        <transition-group name="list" tag="div" class="list">
+        <transition-group
+          name="list"
+          tag="div"
+          class="list"
+        >
           <div
-            class="itemHolder"
             v-for="(item,i) in shared.members"
             :key="item.id"
+            class="itemHolder"
             :class="{claimed: item.connected}"
           >
             <div>
-              <span class="num">{{i+1}}</span>
+              <span class="num">{{ i+1 }}</span>
 
               <input
+                v-model="item.name"
                 type="text"
                 :class="{missing: !item.name}"
                 v-on:change="updated"
-                v-model="item.name"
               >
 
               <label>
-                <input type="checkbox" v-model="item.participating" v-on:change="updated">
+                <input
+                  v-model="item.participating"
+                  type="checkbox"
+                  v-on:change="updated"
+                >
                 Voting
               </label>
 
               <label>
-                <input type="checkbox" v-model="item.isAdmin" v-on:change="updated">
+                <input
+                  v-model="item.isAdmin"
+                  type="checkbox"
+                  v-on:change="updated"
+                >
                 Admin
               </label>
             </div>
             <div class="part2">
-              <span class="isDup" v-if="duplicatedNames[item.name]">
+              <span
+                v-if="duplicatedNames[item.name.toLocaleLowerCase()]"
+                class="isDup"
+              >
                 <span>Duplicate!</span>
               </span>
-              <button v-on:click="remove(i)" class="icon remove caution">
+              <button
+                class="icon remove caution"
+                v-on:click="remove(i)"
+              >
                 <i class="material-icons">delete</i>
                 <span>Remove</span>
               </button>
             </div>
           </div>
         </transition-group>
-        <p v-if="warning" class="warning">{{warning}}</p>
-        <button v-on:click="add">Add Another</button>
-        <button v-on:click="openQuickList" v-if="!useQuickList">Use Quick Add</button>
+        <p
+          v-if="warning"
+          class="warning"
+        >{{ warning }}</p>
+        <button v-on:click="add">
+          Add One
+        </button>
+        <button
+          v-if="!useQuickList"
+          v-on:click="openQuickList"
+        >Add Multiple</button>
         <p>If a member is not voting today, uncheck their "Voting" mark.</p>
         <p>Anyone marked as "Admin" is able to open and close voting and set up the names of members and positions. You must have at least one person marked as an admin.</p>
       </div>
@@ -65,7 +118,7 @@ import firebaseDb from "../firebaseInit";
 
 export default {
   name: "SetupNames",
-  data: function() {
+  data: function () {
     return {
       duplicatedNames: {},
       quickList: "",
@@ -76,8 +129,11 @@ export default {
     };
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
+    },
+    quickListNames: function () {
+      return this.quickList.split(/\n/g).filter(s => s);
     }
   },
   watch: {
@@ -87,41 +143,47 @@ export default {
     //   },
     //   deep: true
     // }
-    quickList: function(a, b) {
+    quickList: function (a, b) {
       var byComma = a.split(/,/g);
       if (byComma.length > 1) {
-        this.quickList = byComma.join("/r");
+        this.quickList = byComma.join("\n");
       }
     }
   },
-  mounted: function() {
+  mounted: function () {
     this.shared.$on("election-changed", this.electionLoaded);
     this.useQuickOnOpen();
+    this.testForDuplicates();
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     this.shared.$off("election-changed", this.electionLoaded);
   },
   methods: {
-    electionLoaded: function() {
+    electionLoaded: function () {
       this.updated();
       this.useQuickOnOpen();
     },
-    useQuickOnOpen: function() {
+    useQuickOnOpen: function () {
       var vue = this;
       if (vue.shared.numNonBlankNames === 1 && vue.shared.me.isAdmin) {
         vue.useQuickList = true;
         vue.editing = false;
       }
     },
-    openQuickList: function() {
+    openQuickList: function () {
       this.useQuickList = true;
       this.$nextTick(() => this.$refs.quickList.focus());
     },
-    processQuickList: function() {
-      var names = this.quickList.split(/\n/);
+    processQuickList: function () {
+      var names = this.quickListNames;
       names.forEach(n => {
         n = n.trim();
         if (!n) return;
+
+        if (this.shared.members.find(item => item.name.toLocaleLowerCase() === n.toLocaleLowerCase())) {
+          // skip duplicates
+          return;
+        }
 
         var nextEmpty = this.shared.members.find(item => !item.name);
         if (nextEmpty) {
@@ -137,8 +199,8 @@ export default {
       this.quickList = "";
       this.updated(true);
     },
-    remove: function(i) {
-      // var vue = this;
+    remove: function (i) {
+      var vue = this;
       var toRemove = this.shared.members[i];
 
       var adminFound =
@@ -150,12 +212,39 @@ export default {
       }
       this.warning = "";
 
-      var path = `members/${this.shared.electionKey}/${toRemove.id}`;
-      console.log("remove", path);
+      var path1 = `voterSymbols/${this.shared.electionKey}/${toRemove.id}`;
+
       firebaseDb
-        .ref(path)
+        .ref(path1)
+        .on('value', function (snapshot) {
+          var info = snapshot.val();
+          var symbol = null;
+          if (info) {
+            symbol = info.symbol;
+          }
+          if (symbol) {
+            // remove the current vote for this removed account
+            var path2 = `voting/${vue.shared.electionKey}/votes/${symbol}`;
+            console.log("remove", path2);
+            firebaseDb
+              .ref(path2)
+              .remove();
+          }
+
+          console.log("remove", path1);
+          firebaseDb
+            .ref(path1)
+            .remove();
+        })
+
+      var path3 = `members/${this.shared.electionKey}/${toRemove.id}`;
+      console.log("remove", path3);
+      firebaseDb
+        .ref(path3)
         .remove()
         .then(() => this.testForDuplicates());
+
+      // may be redundant... not allowed to delete a person if voting is active
       this.shared.cancelVoting();
 
       // var removed = this.shared.members.splice(i, 1)[0];
@@ -168,14 +257,14 @@ export default {
       //     vue.updated(true);
       //   });
     },
-    add: function(i) {
+    add: function (i) {
       var newMember = this.shared.makeMember("", this.shared.members);
       var path = `members/${this.shared.electionKey}/${newMember.id}`;
       console.log("add", path);
       firebaseDb.ref(path).set(newMember);
       this.shared.cancelVoting();
     },
-    updated: function(wasUpdated) {
+    updated: function (wasUpdated) {
       this.shared.members.sort((a, b) =>
         (a.name || "Z") < (b.name || "Z") ? -1 : 1
       );
@@ -204,10 +293,10 @@ export default {
         }
       }
     },
-    testForDuplicates: function() {
+    testForDuplicates: function () {
       var nameCount = {};
       this.shared.members.forEach(item => {
-        var name = item.name;
+        var name = item.name.toLocaleLowerCase();
         if (!nameCount[name]) {
           nameCount[name] = 1;
         } else {
@@ -218,6 +307,7 @@ export default {
       var vue = this;
       vue.duplicatedNames = {};
       Object.keys(nameCount).forEach(name => {
+        name = name.toLocaleLowerCase();
         if (name && nameCount[name] > 1) {
           vue.duplicatedNames[name] = true;
         }
@@ -251,9 +341,6 @@ export default {
       > div {
         white-space: nowrap;
         margin: 2px;
-        &.part2 {
-          // text-align: right;
-        }
       }
     }
     .isDup {
@@ -283,6 +370,11 @@ export default {
     .remove {
       margin: 0 0 0 20px;
     }
+  }
+  .isVoting {
+    color: red;
+    font-weight: bold;
+    font-size: 1.1em;
   }
   .quickAdd {
     margin: 0 auto 20px;

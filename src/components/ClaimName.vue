@@ -4,17 +4,17 @@
       <p>Welcome to our officer election! Please claim your name...</p>
       <table>
         <tr
-          class="memberHolder"
           v-for="m in shared.members"
           :key="m.id"
+          class="memberHolder"
           :class="{claimed: m.connected}"
         >
           <th>{{ m.name }}</th>
           <td>
             <button
               v-if="m.participating && !m.connected"
-              v-on:click="claim(m)"
               :disabled="claimMade"
+              v-on:click="claim(m)"
             >This is me!</button>
             <span v-if="m.connected">Claimed</span>
             <span v-if="!m.participating">Not Voting</span>
@@ -31,10 +31,18 @@
       </p>
       <p>To use this computer as a voter <strong>and</strong> as a viewer, use an "In Private"/"Incognito" window for one of the sessions!</p>
     </div>
-    <div class="panel" v-if="!shared.me.id">
+    <div
+      v-if="!shared.me.id"
+      class="panel"
+    >
       <p>
         To forget about this election, click
-        <button class="caution" v-on:click="logout">Forget Election</button>
+        <button
+          class="caution"
+          v-on:click="logout"
+        >
+          Forget Election
+        </button>
       </p>
       <p>An administrator can delete this election on the Setup page.</p>
     </div>

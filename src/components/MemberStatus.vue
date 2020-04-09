@@ -2,26 +2,31 @@
 <template>
   <div class="MemberStatus">
     <div class="top">
-      <div class="blinker">
-        <button class="blink" v-on:click="testNow" v-if="shared.me.connected">Blink Me</button>
-      </div>
-      <div class="members">
-        <div
-          v-for="m in activeMembers"
-          :key="m.id"
-          class="member"
-          :class="{connected: m.connected, highlight: m.highlight, voting: m.voting, votingOnViewer: shared.isViewer && m.voting, voted: m.voted, isAdmin: m.isAdmin, participating: m.participating}"
-        >{{ m.name }}</div>
-      </div>
+      <div
+        v-for="m in activeMembers"
+        :key="m.id"
+        class="member"
+        :title="(m.isAdmin ? 'Administrator. ' : '') + (m.id === shared.me.id ? 'Make my name blink on all screens' : '')"
+        :class="{connected: m.connected, 
+                 highlight: m.highlight, 
+                 voting: m.voting, 
+                 votingOnViewer: shared.isViewer && m.voting, 
+                 voted: m.voted, 
+                 isAdmin: m.isAdmin, 
+                 isMe: m.id === shared.me.id,
+                 participating: m.participating}"
+        v-on:click="clicked(m)"
+      >{{ m.name }}</div>
 
-      <div class="viewers">
-        <div
-          v-for="v in activeViewers"
-          :key="v.id"
-          class="viewer"
-          :class="{connected: v.connected, highlight: v.highlight}"
-        >{{ v.name }}</div>
-      </div>
+      <div
+        v-for="v in activeViewers"
+        :key="v.id"
+        class="viewer"
+        :class="{connected: v.connected, 
+                 isMe: m.id === shared.me.id,
+                 highlight: v.highlight}"
+        v-on:click="clicked(m)"
+      >{{ v.name }}</div>
     </div>
   </div>
 </template>
@@ -31,33 +36,39 @@ import _shared from "@/shared.js";
 
 export default {
   name: "MemberStatus",
-  data: function() {
+  data: function () {
     return {};
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     },
-    activeViewers: function() {
+    activeViewers: function () {
       return this.shared.viewers.filter(v => v.id);
     },
-    activeMembers: function() {
+    activeMembers: function () {
       return this.shared.members.filter(m => m.name);
     }
   },
-  mounted: function() {},
+  mounted: function () { },
   methods: {
-    testNow: function() {
+    testNow: function () {
       var vue = this;
       vue.shared.dbMe.update({
         highlight: true
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         vue.shared.dbMe.update({
           highlight: false
         });
       }, 2000);
+    },
+    clicked: function (member) {
+      if (this.shared.me.id !== member.id) {
+        return;
+      }
+      this.testNow();
     }
   }
 };
@@ -70,12 +81,14 @@ export default {
 
   .top {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
     min-height: 2em;
     border-top: 1px solid #5d6560;
     border-bottom: 1px solid #5d6560;
     background: #e3e0cf;
+    padding: 5px;
   }
 
   .members,
@@ -87,18 +100,13 @@ export default {
     align-content: center;
   }
 
-  .viewers {
-    justify-content: flex-end;
-  }
+  // .viewers {
+  //   justify-content: flex-end;
+  // }
 
-  .blink {
-    font-size: 75%;
-  }
-
-  .blinker,
-  .viewers {
-    min-width: 80px;
-  }
+  // .viewers {
+  //   min-width: 80px;
+  // }
 
   .viewer,
   .member {
@@ -106,10 +114,18 @@ export default {
     margin: 3px 10px;
     padding: 1px 3px;
     border-radius: 2px;
+    user-select: all;
 
     &.connected.highlight {
       // include more selectors to take priority
       animation: pulse 0.3s infinite;
+      //user-select: unset;
+    }
+
+    &.isMe {
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      user-select: none;
     }
   }
 
@@ -127,27 +143,23 @@ export default {
     background-color: rgba(100, 100, 100, 0.1);
 
     &.participating {
-      //border: none;
-      background-color: #ef9393;
-      // box-shadow: 0 0 2px 1px red;
+      background-color: #efc3c3; // participating, but not connected!
     }
 
     &.connected {
       background-color: #9fef93;
-      // box-shadow: 0 0 2px 1px green;
     }
 
     &.voting {
-      //border-color: #fff;
-      background-color: #fdfd68;
+      background-color: #4f5aa240; // waiting for their vote
     }
 
-    &.votingOnViewer {
-      // animation: voting 1s linear infinite;
-    }
+    //&.votingOnViewer {
+    // animation: voting 1s linear infinite;
+    //}
 
     &.voted {
-      background-color: #9fef93;
+      background-color: #9fef93b0;
     }
 
     &.isAdmin:after {
@@ -167,19 +179,5 @@ export default {
       background-color: #4a993e;
     }
   }
-  // @keyframes voting {
-  //   0% {
-  //     background-color: #fff;
-  //   }
-  //   45% {
-  //     background-color: yellow;
-  //   }
-  //   55% {
-  //     background-color: yellow;
-  //   }
-  //   100% {
-  //     background-color: #fff;
-  //   }
-  // }
 }
 </style>

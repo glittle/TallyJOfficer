@@ -1,36 +1,56 @@
 <template>
   <div class="SetupPositions">
-    <div class="panel">
+    <div
+      v-if="!shared.election.votingOpen"
+      class="panel"
+    >
       <h1>2. Define the positions to be voted for</h1>
       <p>Add, edit and sort positions as desired by your team.</p>
       <p>A "Sample" position is included for your team to use to practice with.</p>
       <slick-list
+        v-model="list"
         class="list"
         helper-class="moving"
         lock-axis="y"
-        :useDragHandle="true"
+        :use-drag-handle="true"
         v-on:input="listSorted"
-        v-model="list"
       >
-        <slick-item class="positionItemHolder" v-for="(item,i) in list" :key="item.id" :index="i">
-          <span class="num">{{i+1}}</span>
+        <slick-item
+          v-for="(item,i) in list"
+          :key="item.id"
+          class="positionItemHolder"
+          :index="i"
+        >
+          <span class="num">{{ i+1 }}</span>
 
-          <input type="text" v-on:change="updated" v-model="item.name">
+          <input
+            v-model="item.name"
+            type="text"
+            v-on:change="updated"
+          >
 
-          <button class="moveMe icon" v-handle>
+          <button
+            v-handle
+            class="moveMe icon"
+          >
             <i class="material-icons">arrow_upward</i>
             <i class="material-icons">arrow_downward</i>
             <span>Move</span>
           </button>
 
-          <button v-on:click="remove(i)" class="icon remove caution">
+          <button
+            class="icon remove caution"
+            v-on:click="remove(i)"
+          >
             <i class="material-icons">delete</i>
             <span>Remove</span>
           </button>
         </slick-item>
       </slick-list>
 
-      <button v-on:click="add">Add Another</button>
+      <button v-on:click="add">
+        Add Another
+      </button>
     </div>
   </div>
 </template>
@@ -47,24 +67,24 @@ export default {
     SlickItem
   },
   directives: { handle: HandleDirective },
-  data: function() {
+  data: function () {
     return {};
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     },
     list: {
-      get: function() {
+      get: function () {
         return this.shared.positions;
       },
-      set: function(a) {
+      set: function (a) {
         this.shared.positions = a;
       }
     }
   },
   watch: {},
-  mounted: function() {},
+  mounted: function () { },
   methods: {
     // remove: function(i) {
     //   this.shared.positions.splice(i, 1);
@@ -72,7 +92,7 @@ export default {
     // add: function(i) {
     //   this.shared.positions.push(this.shared.makePosition(""));
     // },
-    remove: function(i) {
+    remove: function (i) {
       // var vue = this;
       var toRemove = this.list[i];
       firebaseDb
@@ -90,15 +110,15 @@ export default {
       //     vue.updated();
       //   });
     },
-    add: function() {
+    add: function () {
       this.list.push(this.shared.makePosition("", this.list));
       this.listSorted(this.list);
     },
-    listSorted: function(list) {
+    listSorted: function (list) {
       list.forEach((p, i) => (p.sortOrder = i));
       this.updated();
     },
-    updated: function() {
+    updated: function () {
       this.list.forEach(m =>
         firebaseDb.ref(`positions/${this.shared.electionKey}/${m.id}`).set(m)
       );
@@ -162,6 +182,7 @@ export default {
   .moveMe {
     margin: 0 5px 0 10px;
     cursor: ns-resize;
+    box-shadow: none;
   }
 }
 </style>

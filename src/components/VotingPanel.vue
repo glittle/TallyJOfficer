@@ -1,79 +1,107 @@
 <template>
   <div
-    class="VotingPanel panel"
     v-if="position && (shared.election.votingOpen || shared.confirmedVote)"
+    class="VotingPanel panel"
   >
-    <div>
-      <a name="voteTop"></a>
-      <h1>Voting for {{positionName}}</h1>
-      <div class="choosePreferNot" v-if="shared.isMember && shared.election.votingOpen">
-        <label>
-          <input type="checkbox" v-model="preferNot">
-          I have a good reason why I should not be elected as {{positionName}}.
-        </label>
-      </div>
+    <a name="voteTop"></a>
+    <h1>Voting for {{ positionName }}</h1>
 
-      <table v-if="!shared.confirmedVote && shared.isMember">
-        <tr
-          class="memberHolder"
-          v-for="(m, i) in shared.members"
-          :key="m.id"
-          :class="{preferNot: m.preferNot}"
-        >
-          <td>
-            <button
-              class="vote"
-              :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
-              v-on:click="voteFor(m)"
-            >
-              {{m.name}}
-              <span class="alreadyIn" v-if="alreadyIn(m)" v-text="alreadyIn(m)"></span>
-            </button>
-            <div
-              class="preferNot"
-              v-if="m.preferNot"
-            >({{m.name}} prefers not be elected as {{positionName}})</div>
-          </td>
-        </tr>
-      </table>
-      <div v-if="!shared.confirmedVote && shared.isMember">
-        <button
-          class="confirm"
-          v-on:click="confirm()"
-          :class="{ready:selectedMember.name}"
-          :disabled="!selectedMember.name"
-        >
-          Submit my vote
-          <span
-            v-if="selectedMember"
-          >for {{selectedMember.name || '___'}} to be {{positionName}}</span>
-          <span v-else>(pending)</span>
-        </button>
-      </div>
-    </div>
-    <!-- <div v-else>Voting is nt open.</div> -->
     <div
-      v-if="shared.confirmedVote || !shared.election.votingOpen && selectedMember.name"
-      class="confirmation"
+      v-if="!shared.symbol"
+      class="pending"
     >
-      <button v-on:click="reveal = !reveal" class="reveal">
-        <span v-text="reveal ? 'Hide my Vote' : 'Show my vote here'"></span>
-      </button>
-
-      <div class="voteInfo" :class="{revealVote: reveal}">
-        <p>You voted for {{selectedMember.name}} to be {{positionName}}.</p>
-      </div>
-      <div class="symbolInfo" :class="{revealVote: reveal}">
-        Your symbol for this vote:
+      Pending...
+    </div>
+    <div v-else>
+      <div>
         <div
-          class="symbol"
-          :style="{backgroundPosition: '0 -' + shared.symbolOffset(shared.symbol) + 'px'}"
-          :title="shared.symbol"
-        ></div>
+          v-if="shared.isMember && shared.election.votingOpen"
+          class="choosePreferNot"
+        >
+          <label>
+            <input
+              v-model="preferNot"
+              type="checkbox"
+            >
+            I have a good reason why I should not be elected as {{ positionName }}.
+          </label>
+        </div>
+
+        <table v-if="!shared.confirmedVote && shared.isMember">
+          <tr
+            v-for="m in shared.members"
+            :key="m.id"
+            class="memberHolder"
+            :class="{preferNot: m.preferNot}"
+          >
+            <td>
+              <button
+                class="vote"
+                :class="{selected: selectedMember.name === m.name, selectionMade: selectedMember}"
+                v-on:click="voteFor(m)"
+              >
+                {{ m.name }}
+                <span
+                  v-if="alreadyIn(m)"
+                  class="alreadyIn"
+                  v-text="alreadyIn(m)"
+                ></span>
+              </button>
+              <div
+                v-if="m.preferNot"
+                class="preferNot"
+              >({{ m.name }} prefers not be elected as {{ positionName }})</div>
+            </td>
+          </tr>
+        </table>
+        <div v-if="!shared.confirmedVote && shared.isMember">
+          <button
+            class="confirm"
+            :class="{ready:selectedMember.name}"
+            :disabled="!selectedMember.name"
+            v-on:click="confirm()"
+          >
+            Submit my vote
+            <span v-if="selectedMember">for {{ selectedMember.name || '___' }} to be {{ positionName }}</span>
+            <span v-else>(pending)</span>
+          </button>
+        </div>
       </div>
-      <p v-if="shared.election.votingOpen">
-        <button v-on:click="changeMyVote">Change my vote</button>
-      </p>
+      <!-- <div v-else>Voting is nt open.</div> -->
+      <div
+        v-if="shared.confirmedVote || !shared.election.votingOpen && selectedMember.name"
+        class="confirmation"
+      >
+        <button
+          class="reveal"
+          v-on:click="reveal = !reveal"
+        >
+          <span v-text="reveal ? 'Hide my Vote' : 'Show my vote here'"></span>
+        </button>
+
+        <div
+          class="voteInfo"
+          :class="{revealVote: reveal}"
+        >
+          <p>You voted for {{ selectedMember.name }} to be {{ positionName }}.</p>
+        </div>
+        <div
+          class="symbolInfo"
+          :class="{revealVote: reveal}"
+        >
+          Your symbol for this vote:
+          <div
+            class="symbol"
+            :style="{backgroundPosition: '0 -' + shared.symbolOffset(shared.symbol) + 'px'}"
+            :title="shared.symbol"
+          ></div>
+        </div>
+        <p v-if="shared.election.votingOpen">
+          <button v-on:click="changeMyVote">
+            Change my vote
+          </button>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -85,7 +113,7 @@ import { debug } from "util";
 
 export default {
   name: "VotingPanel",
-  data: function() {
+  data: function () {
     return {
       selectedMember: {},
       reveal: false,
@@ -93,20 +121,20 @@ export default {
     };
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     },
-    me: function() {
+    me: function () {
       return this.shared.me;
     },
-    positionName: function() {
+    positionName: function () {
       return this.position ? this.position.name : "";
     },
-    position: function() {
+    position: function () {
       var positionId = this.shared.election.positionIdToVoteFor;
       return this.shared.positions.find(p => p.id === positionId);
     },
-    electedPositions: function() {
+    electedPositions: function () {
       return this.shared.positions.filter(p => p.electedId);
     }
   },
@@ -116,20 +144,20 @@ export default {
     //     this.startVote();
     //   }
     // },
-    "shared.election.votingOpen": function(a) {
+    "shared.election.votingOpen": function (a) {
       if (a) {
         this.startVote();
       }
     },
-    positionName: function() {
+    positionName: function () {
       this.shared.confirmedVote = false;
       this.preferNot = false;
     },
-    preferNot: function(a) {
+    preferNot: function (a) {
       this.shared.dbMe.update({ preferNot: a });
     }
   },
-  mounted: function() {
+  mounted: function () {
     // var vue = this;
     // if (this.shared.dbElectionRef) {
     //   this.startVoting();
@@ -140,7 +168,7 @@ export default {
     }
   },
   methods: {
-    startVote: function() {
+    startVote: function () {
       this.shared.dbMe.update({
         voting: true,
         voted: false
@@ -148,7 +176,7 @@ export default {
       this.shared.confirmedVote = false;
       this.selectedMember = {};
     },
-    alreadyIn: function(member) {
+    alreadyIn: function (member) {
       var list = this.electedPositions
         .filter(p => p.electedId === member.id)
         .map(p => p.name);
@@ -157,14 +185,14 @@ export default {
       }
       return null;
     },
-    voteFor: function(member) {
+    voteFor: function (member) {
       if (this.selectedMember.id === member.id) {
         this.selectedMember = {};
         return;
       }
       this.selectedMember = member;
     },
-    confirm: function() {
+    confirm: function () {
       var vue = this;
       window.location.hash = "";
 
@@ -183,7 +211,7 @@ export default {
 
       var path = `voting/${this.shared.electionKey}/votes/${
         this.shared.symbol
-      }`;
+        }`;
 
       // cast my vote
       firebaseDb.ref(path).set(this.selectedMember.id);
@@ -202,11 +230,11 @@ export default {
         : 0;
       // console.log('scrollTop');
 
-      setTimeout(function() {
+      setTimeout(function () {
         vue.reveal = false;
-      }, 2500);
+      }, 1250);
     },
-    changeMyVote: function() {
+    changeMyVote: function () {
       this.shared.dbMe.update({
         voting: true,
         voted: false
@@ -266,10 +294,10 @@ export default {
   .confirm {
     margin: 3em 0 1em;
     font-size: 1em;
-    &.ready {
-      //background-color: blue;
-      //color: white;
-    }
+    //&.ready {
+    //background-color: blue;
+    //color: white;
+    //}
   }
   div.preferNot {
     margin: -5px 0 5px 0;

@@ -4,19 +4,26 @@
     <setup-positions></setup-positions>
     <div class="panel">
       <h1>3. Election is ready</h1>
-      <p>When the team members and the positions are set up, you are ready to <router-link to="share">Share</router-link> your election and then open <router-link to="home">Voting</router-link>.</p>
+      <p>When the team members and the positions are set up, you are ready to
+        <router-link to="share">Share</router-link> your election and then open
+        <router-link to="home">Voting</router-link>.</p>
     </div>
-
 
     <div class="Admin panel">
       <h2>All Done?</h2>
       <p>You are welcome to leave this election on the server to review later.</p>
       <p>However, if you want to delete this election, click:</p>
-      <button class="caution" v-if="!pendingDelete" v-on:click="pendingDelete = true">Delete...</button>
+      <button
+        v-if="!pendingDelete"
+        class="caution"
+        v-on:click="pendingDelete = true"
+      >
+        Delete...
+      </button>
       <button
         v-if="pendingDelete"
-        v-on:click="deleteNow"
         class="caution"
+        v-on:click="deleteNow"
       >Are you sure? Click again to Delete now! No Undo.</button>
     </div>
   </div>
@@ -34,19 +41,19 @@ export default {
     SetupNames,
     SetupPositions
   },
-  data: function() {
+  data: function () {
     return {
       pendingDelete: false,
       pendingTimer: null
     };
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     }
   },
   watch: {
-    pendingDelete: function(a) {
+    pendingDelete: function (a) {
       if (a) {
         var vue = this;
         clearTimeout(this.pendingTimer);
@@ -57,7 +64,7 @@ export default {
     }
   },
   methods: {
-    deleteNow: function() {
+    deleteNow: function () {
       if (!this.shared.me.isAdmin) {
         return;
       }
@@ -91,6 +98,6 @@ export default {
 </script>
 
 <style lang="less">
-.Admin {
-}
+//.Admin {
+//}
 </style>

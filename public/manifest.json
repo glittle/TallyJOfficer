@@ -2,10 +2,15 @@
     "name": "TallyJ for Officers",
     "short_name": "TallyJ Officer",
     "icons": [{
-        "src": "./img/icons/android-chrome-95x96.png",
+        "src": "./img/icons/android-chrome-96x96.png",
         "sizes": "96x96",
         "type": "image/png"
-    }],
+    },{
+        "src": "./img/icons/icon-144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+    }
+    ],
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#000000",

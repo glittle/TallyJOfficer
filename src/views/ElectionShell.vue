@@ -1,10 +1,13 @@
 <template>
   <div class="electionShell">
-    <Nav/>
-    <div class="electionBody" id="electionBody">
-      <router-view/>
+    <Nav />
+    <div
+      id="electionBody"
+      class="electionBody"
+    >
+      <router-view />
     </div>
-    <MemberStatus v-if="$route.name !== 'createElection'"/>
+    <MemberStatus v-if="$route.name !== 'createElection'" />
   </div>
 </template>
 
@@ -20,41 +23,41 @@ export default {
     Nav
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     }
   },
   watch: {
-    $route: function(a, b) {
+    $route: function (a, b) {
       // console.log("from", b && b.name, "to", a.name);
       // console.log(this.shared.me);
       if (!this.shared.me.id && a.name !== "createElection") {
         // console.log("go claim 1");
-        this.$router.replace("/e/claim");
+        this.$router.replace("/e/claim").catch(err => { });
       } else if (a.name === "electionShell") {
         this.goCurrentHome();
       }
     }
   },
-  mounted: function() {
+  mounted: function () {
     // console.log("mounted");
     if (this.$route.name === "join") {
       // console.log("mounted join");
-      this.$router.replace("/e/claim");
+      this.$router.replace("/e/claim").catch(err => { });
     }
     this.shared.$on("election-changed", this.electionChanged);
     this.goCurrentHome();
 
     var scrollingDiv = document.getElementById("electionBody");
-    scrollingDiv.addEventListener("touchmove", function(event) {
+    scrollingDiv.addEventListener("touchmove", function (event) {
       event.stopPropagation();
     });
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     this.shared.$off("election-changed", this.electionChanged);
   },
   methods: {
-    electionChanged: function() {
+    electionChanged: function () {
       // console.log("loaded");
       var currentRoute = this.$route.name;
       // console.log("already on", currentRoute);
@@ -62,7 +65,7 @@ export default {
         // this.goCurrentHome();
       }
     },
-    goCurrentHome: function() {
+    goCurrentHome: function () {
       // console.log(
       //   "go home",
       //   this.$route.name,
@@ -71,32 +74,32 @@ export default {
       // );
       if (!this.shared.electionKey) {
         // console.log("go create");
-        this.$router.replace("/e/create");
+        this.$router.replace("/e/create").catch(err => { });
         return;
       }
 
       if (this.shared.electionLoadAttempted) {
         if (!this.shared.me.id) {
           // console.log("go claim");
-          this.$router.replace("/e/claim");
+          this.$router.replace("/e/claim").catch(err => { });
           return;
         }
       }
 
       if (this.$route.name === "overview") {
-        console.log(
-          "overview",
-          this.shared.numBlankNames,
-          this.shared.me.isAdmin
-        );
+        // console.log(
+        //   "overview",
+        //   this.shared.numBlankNames,
+        //   this.shared.me.isAdmin
+        // );
         if (this.shared.numBlankNames && this.shared.me.isAdmin) {
           // console.log("setup");
-          this.$router.replace("/e/admin");
+          this.$router.replace("/e/admin").catch(err => { });
           return;
         }
       }
 
-      this.$router.replace("/e/home");
+      this.$router.replace("/e/home").catch(err => { });
     }
   }
 };

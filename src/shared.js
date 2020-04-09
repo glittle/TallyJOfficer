@@ -1,5 +1,7 @@
 import Vue from 'vue';
-import firebase from 'firebase'
+import firebase from 'firebase/app';
+import 'firebase/auth'
+import 'firebase/database'
 import firebaseDb from './firebaseInit'
 
 export default new Vue({
@@ -21,7 +23,7 @@ export default new Vue({
         initialQuery: '',
         symbol: '',
         justClaimed: '',
-        electionKey: '',
+        electionKey: ''
     },
     computed: {
         myIdFromProfile: function() {
@@ -74,19 +76,7 @@ export default new Vue({
             return {};
         }
     },
-    watch: {
-        // 'election.positionIdToVoteFor': function () {
-        //     this.me.voted = false;
-        //     this.me.voting = false;
-        // },
-        // 'election.votingOpen': function(a, b) {
-        //     // when opened or closed, clear my settings
-        //     firebaseDb.ref(`members/${this.electionKey}/${this.me.id}`).update({
-        //         voting: false,
-        //         voted: false
-        //     });
-        // }
-    },
+    watch: {},
     created: function() {
         var vue = this;
         vue.handleAuthChanges();
@@ -208,7 +198,7 @@ export default new Vue({
                     memberId: vue.myIdFromProfile
                 });
 
-            vue.watchForListChanges(vue.members, firebaseDb.ref('members/' + vue.electionKey).orderByChild('name'), member => {
+            vue.watchForListChanges(vue.members, firebaseDb.ref('members/' + vue.electionKey).orderByChild('name'), (member, rawData) => {
                 if (member.id === vue.myIdFromProfile || member.id === vue.justClaimed) {
                     vue.justClaimed = null;
 
@@ -220,7 +210,20 @@ export default new Vue({
                     } else {
                         vue.claimMember(member.id);
                     }
+                }
 
+                if (!member.id && member.connected === false) {
+                    // an orphaned member that is recreated by the functions... need to clean this up
+                    rawData.ref.remove();
+                }
+            }, (deletedMember, rawData) => {
+                if (deletedMember.id === vue.myIdFromProfile || (vue.dbUser && deletedMember.id === vue.dbUser.displayName) || deletedMember.id === vue.justClaimed) {
+                    // my member info has been removed
+                    vue.logout();
+                }
+                if (!deletedMember.id && deletedMember.connected === false) {
+                    // an orphaned member that is recreated by the functions... need to clean this up
+                    rawData.ref.remove();
                 }
             });
 
@@ -246,19 +249,23 @@ export default new Vue({
             electionRef.on('value', function(snapshot) {
                 var incomingElection = snapshot.val() || {};
 
-                //                console.log('election changed', incomingElection);
+                // console.log('election changed', incomingElection);
                 if (!incomingElection || !incomingElection.createdBy) {
                     // deleted!
                     vue.logout();
                     return;
                 }
 
-                if (!incomingElection.votingOpen && vue.dbMe.update) { // vue.election.votingOpen && 
+                if (!incomingElection.votingOpen && vue.dbMe.update) { // vue.election.votingOpen &&
                     // voting in this round just closed
                     vue.dbMe.update({
                         voting: false,
                         voted: false
                     });
+                }
+
+                if (incomingElection.votingOpen && !vue.election.votingOpen) {
+                    vue.symbol = '';
                 }
 
                 vue.election = incomingElection;
@@ -300,7 +307,7 @@ export default new Vue({
                 votingOpen: false
             });
         },
-        watchForListChanges: function(localList, listRef, onAddChange) {
+        watchForListChanges: function(localList, listRef, onAddChange, onRemove) {
             var i;
             listRef.on('child_added', data => {
                 // we may have loaded it locally already, so may need to replace it
@@ -312,7 +319,7 @@ export default new Vue({
                     localList.push(item);
                 }
                 if (onAddChange) {
-                    onAddChange(item);
+                    onAddChange(item, data);
                 }
             });
 
@@ -327,7 +334,7 @@ export default new Vue({
                     localList.push(item);
                 }
                 if (onAddChange) {
-                    onAddChange(item);
+                    onAddChange(item, data);
                 }
             });
 
@@ -336,6 +343,9 @@ export default new Vue({
                 i = localList.findIndex(x => x.id === item.id);
                 if (i !== -1) {
                     localList.splice(i, 1);
+                    if (onRemove) {
+                        onRemove(item, data);
+                    }
                 } else {
                     // missing??
                     console.log('cannot delete', item);
@@ -373,9 +383,8 @@ export default new Vue({
                     var info = snapshot.val();
                     if (info) {
                         vue.symbol = info.symbol;
-                        // console.log('incoming symbol 2', vue.symbol || 'n/a');
                     } else {
-                        // console.log('no symbol info');
+                        vue.symbol = '';
                     }
                 })
         },
@@ -394,7 +403,6 @@ export default new Vue({
             } else {
                 console.log('Did not find viewer', viewerId);
             }
-
         },
         startMeAsViewer: function() {
             var id = this.getRandomId('v', this.viewers);
@@ -449,7 +457,6 @@ export default new Vue({
         },
         createMembers: function(nameOfAdmin) {
             var vue = this;
-            // vue.members.splice(0, vue.members.length);
 
             var members = [];
 
@@ -471,9 +478,6 @@ export default new Vue({
                 // dbMembers.doc(member.id).set(member);
             }
             members.forEach(m => firebaseDb.ref(`members/${this.electionKey}/${m.id}`).set(m));
-
-            // const dbMembers = vue.dbElectionRef.collection('members');
-            // members.forEach(m => firebaseDb.ref('members/' +  dbMembers.doc(m.id).set(m));
         },
         createPositions: function() {
             // var vue = this;
@@ -482,7 +486,7 @@ export default new Vue({
                 'Secretary',
                 'Chair',
                 'Treasurer',
-                'Vice-Chair',
+                'Vice-Chair'
             ];
             var positions = [];
             list.forEach((n, i) => {
@@ -492,60 +496,8 @@ export default new Vue({
             });
 
             positions.forEach(p => firebaseDb.ref(`positions/${this.electionKey}/${p.id}`).set(p));
-
-            // const dbPositions = vue.dbElectionRef.collection('positions');
-            // positions.forEach(p => dbPositions.doc(p.id).set(p));
         },
-        // clearStorage: function() {
-        //     localStorage.removeItem('members');
-        //     localStorage.removeItem('positions');
-        //     localStorage.removeItem('viewers');
-        //     localStorage.removeItem('name');
-        //     localStorage.removeItem('isViewer');
-        //     localStorage.removeItem('isAdmin');
-        //     this.myName = '';
-        //     this.isViewer = false;
-        //     this.isAdmin = false;
-        //     this.fillData();
-        // },
-        fillData: function() {
-            // var stored = localStorage['members'];
-            // if (stored) {
-            //     this.members = JSON.parse(stored);
-            // } else {
-            //     // temp
-            //     this.members = [];
-            //     this.members.push(this.makeMember("Glen"));
-            //     this.members.push(this.makeMember("Joe"));
-            //     this.members.push(this.makeMember("Mary", true, true));
-            //     this.members.push(this.makeMember("Alexander"));
-            //     this.members.push(this.makeMember("Sebastian"));
-            //     this.members.push(this.makeMember("John"));
-            //     this.members.push(this.makeMember("Sandy", true, false, true));
-            //     this.members.push(this.makeMember("Marjorei"));
-            //     this.members.push(this.makeMember("Natalie"));
-            //     this.members.sort((a, b) => a.name < b.name ? -1 : 1);
-            // }
-
-            // stored = localStorage['positions'];
-            // if (stored) {
-            //     this.positions = JSON.parse(stored);
-            // } else {
-            //     this.positions = [];
-            //     this.positions.push(this.makePosition('Practice Vote'));
-            //     this.positions.push(this.makePosition('Chair'));
-            //     this.positions.push(this.makePosition('Secretary'));
-            //     this.positions.push(this.makePosition('Vice-Chair'));
-            //     this.positions.push(this.makePosition('Treasurer'));
-            // }
-
-            // stored = localStorage['viewers'];
-            // if (stored) {
-            //     this.viewers = JSON.parse(stored);
-            // } else {
-            //     this.viewers = [];
-            // }
-        },
+        fillData: function() {},
         makePosition: function(name, list) {
             var id = this.getRandomId('p', list);
             return {

@@ -1,46 +1,74 @@
 <template>
-  <div class="ResultPanel panel" v-if="position.name">
-    <h2>Voting rounds for {{position.name}}</h2>
+  <div
+    v-if="position.name"
+    class="ResultPanel panel"
+  >
+    <h2>Voting rounds for {{ position.name }}</h2>
     <table class="results">
       <thead>
         <tr>
-          <td class="roundNum">#</td>
-          <td v-for="m in shared.members" :key="m.id">{{ m.name }}</td>
+          <td class="roundNum">
+            #
+          </td>
+          <td
+            v-for="m in shared.members"
+            :key="m.id"
+          >
+            {{ m.name }}
+          </td>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(round,i) in oldRounds" :key="i">
-          <td class="roundNum">{{ i+1 }}</td>
-          <td :class="['vote' + resultClass(round, m.id)]" v-for="m in shared.members" :key="m.id">
-            <div class="voteCount">{{ votesFor(round, m.id) }}</div>
+        <tr
+          v-for="(round,i) in oldRounds"
+          :key="i"
+        >
+          <td class="roundNum">
+            {{ i+1 }}
+          </td>
+          <td
+            v-for="m in shared.members"
+            :key="m.id"
+            :class="['vote' + resultClass(round, m.id)]"
+          >
+            <div class="voteCount">
+              {{ votesFor(round, m.id) }}
+            </div>
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr v-if="positionRounds.length && !shared.election.votingOpen">
-          <td class="roundNum">{{ positionRounds.length }}</td>
+          <td class="roundNum">
+            {{ positionRounds.length }}
+          </td>
           <td
-            :class="['vote' + resultClass(lastRound, m.id)]"
             v-for="m in shared.members"
             :key="m.id"
+            :class="['vote' + resultClass(lastRound, m.id)]"
           >
-            <div class="voteCount">{{ votesFor(lastRound, m.id) }}</div>
+            <div class="voteCount">
+              {{ votesFor(lastRound, m.id) }}
+            </div>
             <div class="voteDetail">
               <div
-                class="symbol"
                 v-for="(v,i) in voteListFor(lastRound, m.id)"
                 :key="i"
+                class="symbol"
                 :style="{backgroundPosition: `0 -${shared.symbolOffset(v.symbol)}px`}"
                 :title="v.symbol"
               ></div>
             </div>
           </td>
         </tr>
-        <tr
-          v-if="shared.election.votingOpen && position.id === shared.election.positionIdToVoteFor"
-        >
-          <td class="roundNum">{{ positionRounds.length + 1 }}</td>
-          <td :colspan="shared.members.length" class="inProgress">
+        <tr v-if="shared.election.votingOpen && position.id === shared.election.positionIdToVoteFor">
+          <td class="roundNum">
+            {{ positionRounds.length + 1 }}
+          </td>
+          <td
+            :colspan="shared.members.length"
+            class="inProgress"
+          >
             Round {{ positionRounds.length + 1 }} - Voting in Progress
             <br>
             {{ numVoted }} of {{ numParticipating }} votes submitted
@@ -48,8 +76,11 @@
         </tr>
       </tfoot>
     </table>
-    <div v-if="personElected" class="elected">
-      <p>{{ personElected.name }} has been elected to serve as the {{ position.name }}.</p>
+    <div
+      v-if="personElected"
+      class="elected"
+    >
+      <p>{{ personElected.name }}<br>has been elected to serve as the {{ position.name }}.</p>
     </div>
 
     <!-- <button class="addTemp" v-on:click="tempMakeResult">Add Fake Results</button>
@@ -62,42 +93,42 @@ import _shared from "@/shared.js";
 
 export default {
   name: "ResultPanel",
-  data: function() {
+  data: function () {
     return {
       // namesWithVotes: [],
       fakeAddTimer: null
     };
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     },
-    numVoted: function() {
+    numVoted: function () {
       return this.shared.members.filter(m => m.voted).length;
     },
-    numParticipating: function() {
+    numParticipating: function () {
       return this.shared.members.filter(m => m.participating).length;
     },
-    position: function() {
+    position: function () {
       return (
         this.shared.positions.find(
           p => p.id === this.shared.election.positionIdToVoteFor
         ) || {}
       );
     },
-    positionRounds: function() {
+    positionRounds: function () {
       return this.shared.rounds.filter(
         r => r.id.substr(0, 4) === this.position.id
       );
     },
-    oldRounds: function() {
+    oldRounds: function () {
       var lastIndex = this.positionRounds.length - 1;
       if (this.shared.election.votingOpen) {
         lastIndex++;
       }
       return this.positionRounds.filter((r, i) => i < lastIndex);
     },
-    lastRound: function() {
+    lastRound: function () {
       var list = this.positionRounds;
       if (this.shared.election.votingOpen) {
         // when voting is open, don't show previous round's symbols
@@ -105,7 +136,7 @@ export default {
       }
       return list.length ? list[list.length - 1] : null;
     },
-    personElected: function() {
+    personElected: function () {
       var last = this.lastRound;
       if (!last) return null;
       var id = last.electedId;
@@ -117,14 +148,14 @@ export default {
     // position: function() {
     //  this.showResults();
     // }
-    "positionRounds.length": function(a, b) {
+    "positionRounds.length": function (a, b) {
       var eb = window.document.getElementById("electionBody");
       if (eb) {
         // console.log("scroll 9999");
         eb.scrollTo(0, 9999);
       }
     },
-    personElected: function(a, b) {
+    personElected: function (a, b) {
       if (a) {
         var eb = window.document.getElementById("electionBody");
         if (eb) {
@@ -134,7 +165,7 @@ export default {
       }
     }
   },
-  mounted: function() {
+  mounted: function () {
     // this.showResults();
   },
   methods: {
@@ -151,7 +182,7 @@ export default {
     //     // this.namesWithVotes = this.shared.members.map(m => m.name);
     //   },
 
-    resultClass: function(round, id) {
+    resultClass: function (round, id) {
       if (!round) return null;
       if (round.electedId) {
         if (round.electedId === id) {
@@ -169,12 +200,12 @@ export default {
       }
       return 1 + Math.floor(scale / 3); // 1,2,3,4
     },
-    votesFor: function(round, id) {
+    votesFor: function (round, id) {
       if (!round) return null;
       var votes = round.votes.filter(v => v.voteId === id);
       return votes.length || "-";
     },
-    voteListFor: function(round, id) {
+    voteListFor: function (round, id) {
       if (!round) return null;
       var list = round.votes.filter(v => v.voteId === id);
       list.sort((a, b) => (a.symbol < b.symbol ? -1 : 1));
@@ -230,7 +261,7 @@ export default {
     //   }
     //   // this.showResults();
     // },
-    stopAdding: function() {
+    stopAdding: function () {
       clearTimeout(this.fakeAddTimer);
     }
   }

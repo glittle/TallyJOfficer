@@ -1,6 +1,10 @@
 <template>
   <div class="Overview">
-    <div id="positionsToFill" class="positionsToFill panel" v-if="shared.me.isAdmin || shared.isViewer || !shared.election.votingOpen">
+    <div
+      v-if="shared.me.isAdmin || shared.isViewer || !shared.election.votingOpen"
+      id="positionsToFill"
+      class="positionsToFill panel"
+    >
       <h1>Positions to Elect</h1>
       <table>
         <thead>
@@ -11,9 +15,9 @@
           </tr>
         </thead>
         <tr
-          class="positionHolder"
           v-for="p in shared.positions"
           :key="p.name"
+          class="positionHolder"
           :class="{ isActive: p.id === viewedPositionId }"
         >
           <td>{{ p.name }}</td>
@@ -26,16 +30,24 @@
               v-if="shared.me.isAdmin"
               v-on:click="select(p)"
             >Select for Voting</button>-->
-            <button v-if="!shared.election.votingOpen || shared.isViewer" v-on:click="view(p)">View</button>
+            <button
+              v-if="!shared.election.votingOpen || shared.isViewer"
+              v-on:click="view(p)"
+            >
+              View
+            </button>
           </td>
         </tr>
       </table>
-      <p v-if="shared.me.isAdmin" class="adminBtns">
+      <p
+        v-if="shared.me.isAdmin"
+        class="adminBtns"
+      >
         <button
           v-if="viewedPosition && !shared.election.votingOpen"
-          v-on:click="openVoting"
           class="primary"
-        >Admin: Start a round of voting for {{viewedPosition.name}}</button>
+          v-on:click="openVoting"
+        >Admin: Start a round of voting for {{ viewedPosition.name }}</button>
         <button
           v-if="shared.election.votingOpen"
           class="caution"
@@ -45,9 +57,9 @@
     </div>
 
     <!-- <button v-on:click="gotoVotePanel">Cast my Vote</button> -->
-    <voting-panel v-if="shared.isMember"/>
+    <voting-panel v-if="shared.isMember" />
 
-    <result-panel/>
+    <result-panel />
   </div>
 </template>
 
@@ -63,36 +75,36 @@ export default {
     ResultPanel,
     VotingPanel
   },
-  data: function() {
+  data: function () {
     return {
       viewedPosition: null
     };
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     },
-    viewedPositionId: function() {
+    viewedPositionId: function () {
       return (this.viewedPosition && this.viewedPosition.id) || 0;
     }
   },
   watch: {
-    "shared.election.positionIdToVoteFor": function(a, b) {
+    "shared.election.positionIdToVoteFor": function (a, b) {
       this.syncToPosition();
     }
   },
-  mounted: function() {
+  mounted: function () {
     //  console.log('mounted overview');
     this.syncToPosition();
   },
   methods: {
-    syncToPosition: function() {
+    syncToPosition: function () {
       var vue = this;
       vue.viewedPosition = vue.shared.positions.find(
         p => p.id === vue.shared.election.positionIdToVoteFor
       );
     },
-    openVoting: function() {
+    openVoting: function () {
       // change for everyone
       var positionIdToOpen = this.viewedPosition.id;
 
@@ -129,18 +141,18 @@ export default {
         votingOpen: true
       });
     },
-    resetVoting: function() {
+    resetVoting: function () {
       // turn off voting
       this.shared.cancelVoting();
     },
-    view: function(position) {
+    view: function (position) {
       this.viewedPosition = position;
       this.shared.election.positionIdToVoteFor = position.id;
     },
-    gotoVotePanel: function() {
+    gotoVotePanel: function () {
       this.$router.replace("/e/votingPanel");
     },
-    nameOf: function(id) {
+    nameOf: function (id) {
       if (!id) return "";
       var member = this.shared.members.find(m => m.id === id);
       if (!member) return "";
@@ -193,8 +205,8 @@ export default {
     }
   }
 
-  .symbol{
-    background-image: url('../../public/img/symbols40.png');
+  .symbol {
+    background-image: url("../../public/img/symbols40.png");
     width: 40px;
     height: 34px;
     margin: 3px auto;

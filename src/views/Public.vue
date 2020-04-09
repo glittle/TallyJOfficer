@@ -1,14 +1,23 @@
 <template>
   <div class="public panel">
-    <img alt="TallyJ logo" class="logo" src="../../public/img/LogoSq500.png">
+    <img
+      alt="TallyJ logo"
+      class="logo"
+      src="../../public/img/LogoSq500.png"
+    >
     <h1>TallyJ for Officers</h1>
     <p>When a group of individuals form a team of peers, one of the first orders of business is to elect some of their members to positions of responsibility.</p>
     <p>This website provides a way for your team to quickly and easily vote online by secret ballot to choose who will serve in those positions.</p>
     <p>To start, or return to, your team's election, click here:</p>
     <p>
-      <button v-on:click="$router.push('/e')">My Election</button>
+      <button v-on:click="$router.push('/e')">
+        My Election
+      </button>
     </p>
-    <img class="team" src="../../public/img/team.png">
+    <img
+      class="team"
+      src="../../public/img/team.png"
+    >
 
     <h1>Learn More</h1>
     <p>
@@ -62,7 +71,7 @@
     <h1>Spread the News!</h1>
     <p>Help are some links to help you share the news about TallyJ for Officers with your friends...</p>
     <div class="sharethis-inline-share-buttons"></div>
-    <p>Version {{version}}</p>
+    <p>Version {{ version }}</p>
   </div>
 </template>
 
@@ -72,7 +81,7 @@
 export default {
   name: "Public",
   computed: {
-    version: function() {
+    version: function () {
       return _version;
     }
   }

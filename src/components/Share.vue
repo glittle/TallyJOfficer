@@ -1,24 +1,36 @@
 <template>
   <div class="Share">
-    <div v-if="shared.link" class="panel">
+    <div
+      v-if="shared.link"
+      class="panel"
+    >
       <h2>This Election's Secret Link</h2>
       <div class="siteInfo">
         <p>Copy and share this link to your election with your team:</p>
         <p>
-          <a :href="shared.link" onclick="return false">{{ shared.link }}</a>.
+          <span class="forCopy">{{ shared.link }}</span>
         </p>
         <p>Be sure to keep a copy of this URL - it is the only way to get to this election!</p>
 
         <p>Here is the same secret link in a QR Code format to show to other members of your team if they can use it:</p>
         <p>
-          <qrcode :options="{ width: qrWidth }" :value="shared.link"></qrcode>
+          <qrcode
+            :options="{ width: qrWidth }"
+            :value="shared.link"
+          ></qrcode>
         </p>
       </div>
     </div>
-    <div v-if="shared.link" class="panel">
+    <div
+      v-if="shared.link"
+      class="panel"
+    >
       <p>Go to the main <router-link to="home">Voting</router-link> page.</p>
     </div>
-    <div v-else class="panel">
+    <div
+      v-else
+      class="panel"
+    >
       Oops! Looks like you are not in an election. Please
       <a href="/">start at the beginning</a>!
     </div>
@@ -43,29 +55,29 @@ Vue.component(VueQrcode.name, VueQrcode);
 
 export default {
   name: "Share",
-  data: function() {
+  data: function () {
     return {
       qrWidth: 200
     };
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     },
-    version: function() {
+    version: function () {
       return _version;
     }
   },
   watch: {},
-  mounted: function() {
+  mounted: function () {
     window.addEventListener("resize", this.resize);
     this.resize();
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     window.removeEventListener("resize", this.resize);
   },
   methods: {
-    resize: function() {
+    resize: function () {
       var body = window.document.getElementById("electionBody");
       var header = window.document.getElementById("testHeader");
       if (!header) return;
@@ -80,6 +92,12 @@ export default {
 
 <style lang="less">
 .Share {
+  .forCopy {
+    user-select: all;
+    cursor: pointer;
+    color: green;
+    font-weight: bold;
+  }
   // .st-custom-button[data-network] {
   //   background-color: #0adeff;
   //   display: inline-block;

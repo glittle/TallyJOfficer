@@ -1,7 +1,9 @@
 <template>
   <div class="guidance panel">
     <div class="goBack">
-      <button v-on:click="goBack">Go Back</button>
+      <button v-on:click="goBack">
+        Go Back
+      </button>
     </div>
     <p>
       Guidance regarding the election of officers in a local or national Bahá’í Assembly. An Assembly consists of

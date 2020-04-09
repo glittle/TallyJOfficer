@@ -1,7 +1,6 @@
 module.exports = {
     css: {
-        sourceMap: true,
-        extract: true
+      sourceMap: true
     },
 
     pwa: {
@@ -22,5 +21,11 @@ module.exports = {
         assetsVersion: '2'
     },
 
-    lintOnSave: undefined
+    lintOnSave: undefined,
+    publicPath: undefined,
+    outputDir: undefined,
+    assetsDir: undefined,
+    runtimeCompiler: undefined,
+    productionSourceMap: undefined,
+    parallel: undefined
 }

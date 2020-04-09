@@ -2,10 +2,17 @@
   <div id="nav">
     <div class="image">
       <router-link to="../">
-        <img alt="TallyJ logo" :title="version" src="../assets/logo.png">
+        <img
+          alt="TallyJ logo"
+          :title="version"
+          src="../assets/logo.png"
+        >
       </router-link>
     </div>
-    <div class="middle" v-if="$route.name !== 'createElection'">
+    <div
+      v-if="$route.name !== 'createElection'"
+      class="middle"
+    >
       <span v-if="shared.me.isAdmin">
         <router-link to="admin">Setup</router-link>
       </span>
@@ -13,7 +20,7 @@
         <router-link to="share">Share</router-link>
       </span>
       <span>
-        <router-link to="home">Vote</router-link>
+        <router-link to="home">Voting</router-link>
       </span>
       <!-- <span v-if="shared.me.isAdmin">
         <router-link to="setupNames">Members</router-link>
@@ -34,7 +41,12 @@
       :title="shared.electionKey.substring(1,5)"
     >
       <span>{{ shared.me.name }}</span>
-      <button v-if="shared.isMember || shared.isViewer" v-on:click="forgetMe">Change</button>
+      <button
+        v-if="shared.isMember || shared.isViewer"
+        v-on:click="forgetMe"
+      >
+        Change
+      </button>
     </div>
   </div>
 </template>
@@ -46,15 +58,15 @@ import firebaseDb from "../firebaseInit";
 export default {
   name: "Nav",
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     },
-    version: function() {
+    version: function () {
       return _version;
     }
   },
   methods: {
-    forgetMe: function() {
+    forgetMe: function () {
       if (this.shared.me) {
         var id = this.shared.me.id;
         // disconnect from the member/viewer

@@ -1,7 +1,12 @@
 <template>
   <div class="FAQ">
     <div class="panel">
-      <button class="goBack" v-on:click="goBack">Go Back</button>
+      <button
+        class="goBack"
+        v-on:click="goBack"
+      >
+        Go Back
+      </button>
       <h1>TallyJ for Officers</h1>
       <h2>Questions and Answers</h2>
       <ol>
@@ -92,9 +97,7 @@
             There is no technical limit to how many members your team has, but the system was designed to support
             teams of less than twelve members. If you need to elect a group of individuals from a
             larger population, you should consider using the
-            <a
-              href="https://tallyj.com"
-            >standard TallyJ</a>.
+            <a href="https://tallyj.com">standard TallyJ</a>.
           </blockquote>
         </li>
         <li>
@@ -161,6 +164,14 @@
           </blockquote>
         </li>
         <li>
+          <span>We made a mistake when we were voting for position. Can we redo it?</span>
+          <blockquote>
+            Yes. The administrator can simply start new round of voting for that position.
+            The new results will replace the previous result (though everyone may need to reload the
+            web page to see that).
+          </blockquote>
+        </li>
+        <li>
           <span>What if the system just doesn't work?</span>
           <blockquote>
             First refresh your browser (press F5). If that doesn't fix the problem and
@@ -188,20 +199,20 @@ import _shared from "@/shared.js";
 
 export default {
   name: "FAQ",
-  data: function() {
+  data: function () {
     return {};
   },
   computed: {
-    shared: function() {
+    shared: function () {
       return _shared;
     },
-    version: function() {
+    version: function () {
       return _version;
     }
   },
   watch: {},
   methods: {
-    goBack: function() {
+    goBack: function () {
       history.go(-1); // not sure why -1 doesn't work
     }
   }

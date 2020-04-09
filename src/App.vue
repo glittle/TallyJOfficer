@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  mounted: function() {
-    document.addEventListener("touchmove", function(event) {
+  mounted: function () {
+    document.addEventListener("touchmove", function (event) {
       event.preventDefault();
     });
   }
@@ -35,8 +35,8 @@ p {
 input {
   font-size: inherit;
   padding: 2px 2px 0;
-  border: none;
-  border-bottom: solid 1px lightgray;
+  //border: none;
+  //border-bottom: solid 1px lightgray;
   margin: 0 20px 20px 10px;
 
   &[type="checkbox"] {
