@@ -227,7 +227,9 @@ export default new Vue({
                 }
             });
 
-            vue.watchForListChanges(vue.positions, firebaseDb.ref('positions/' + vue.electionKey).orderByChild('sortOrder'));
+            vue.watchForListChanges(vue.positions, firebaseDb.ref('positions/' + vue.electionKey).orderByChild('sortOrder'), position => {
+                vue.positions.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
+            });
             vue.watchForListChanges(vue.viewers, firebaseDb.ref('viewers/' + vue.electionKey).orderByChild('id'), viewer => {
                 // console.log('my id', vue.myIdFromProfile, ' test viewer id', viewer.id);
                 if (viewer.id === vue.myIdFromProfile) {
