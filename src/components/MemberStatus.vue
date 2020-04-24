@@ -23,9 +23,9 @@
         :key="v.id"
         class="viewer"
         :class="{connected: v.connected, 
-                 isMe: m.id === shared.me.id,
+                 isMe: v.id === shared.me.id,
                  highlight: v.highlight}"
-        v-on:click="clicked(m)"
+        v-on:click="clicked(v)"
       >{{ v.name }}</div>
     </div>
   </div>
