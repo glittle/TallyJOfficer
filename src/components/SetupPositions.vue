@@ -51,6 +51,32 @@
       <button v-on:click="add">
         Add Another
       </button>
+
+    </div>
+
+    <div class="panel">
+      <h3>"I have a good reason..."</h3>
+      <p>
+        As quoted on the Guidance page, the "<em>Guardian pointed out that before
+          the election of officers, if any member had a good reason in his own opinion why he should not be elected
+          to one of the offices of the Assembly, he was free to suggest that he should not be so elected.</em>"
+      </p>
+      <p>If the following box is checked, TallyJ for Officers will show a check box during voting for each position
+        to allow members to indicate whether this applies to them.
+        If you have already discussed whether anyone has reasons to not be elected to one of the offices,
+        you may want to leave this turned off.
+      </p>
+      <div>
+        <label>
+          <input
+            v-model="shared.election.showPreferNot"
+            type="checkbox"
+            v-on:change="changedPreferNot"
+          >
+          Show the "I have a good reason..." checkbox when voting.
+        </label>
+      </div>
+
     </div>
   </div>
 </template>
@@ -68,7 +94,9 @@ export default {
   },
   directives: { handle: HandleDirective },
   data: function () {
-    return {};
+    return {
+      preferNot: false
+    };
   },
   computed: {
     shared: function () {
@@ -96,7 +124,7 @@ export default {
       // var vue = this;
       var toRemove = this.list[i];
       firebaseDb
-        .ref(`positions/${this.shared.electionKey}/${toRemove.id}`)
+        .ref(`/positions/${this.shared.electionKey}/${toRemove.id}`)
         .remove();
 
       // var removed = this.list.splice(i, 1)[0];
@@ -110,6 +138,11 @@ export default {
       //     vue.updated();
       //   });
     },
+    changedPreferNot() {
+      firebaseDb.ref(`/elections/${this.shared.electionKey}`).update({
+        showPreferNot: this.shared.election.showPreferNot
+      });
+    },
     add: function () {
       this.list.push(this.shared.makePosition("", this.list));
       this.listSorted(this.list);
@@ -120,7 +153,7 @@ export default {
     },
     updated: function () {
       this.list.forEach(m =>
-        firebaseDb.ref(`positions/${this.shared.electionKey}/${m.id}`).set(m)
+        firebaseDb.ref(`/positions/${this.shared.electionKey}/${m.id}`).set(m)
       );
 
       this.shared.cancelVoting();

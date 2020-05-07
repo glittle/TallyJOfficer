@@ -8,7 +8,12 @@
       <div class="siteInfo">
         <p>Copy and share this link to your election with your team:</p>
         <p>
-          <span class="forCopy">{{ shared.link }}</span>
+          <a
+            class="forCopy"
+            target="_self"
+            :href="shared.link"
+            onclick="return false"
+          >{{ shared.link }}</a>
         </p>
         <p>Be sure to keep a copy of this URL - it is the only way to get to this election!</p>
 
@@ -85,7 +90,7 @@ export default {
       var newSize =
         0.9 * Math.min(header.clientWidth, body.clientWidth, body.clientHeight);
       this.qrWidth = newSize;
-    }
+    },
   }
 };
 </script>

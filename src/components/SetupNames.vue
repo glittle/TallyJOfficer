@@ -76,14 +76,15 @@
                 >
                 Admin
               </label>
-            </div>
-            <div class="part2">
-              <span
+              <div
                 v-if="duplicatedNames[item.name.toLocaleLowerCase()]"
                 class="isDup"
               >
                 <span>Duplicate!</span>
-              </span>
+              </div>
+
+            </div>
+            <div class="part2">
               <button
                 class="icon remove caution"
                 v-on:click="remove(i)"
@@ -212,7 +213,7 @@ export default {
       }
       this.warning = "";
 
-      var path1 = `voterSymbols/${this.shared.electionKey}/${toRemove.id}`;
+      var path1 = `/voterSymbols/${this.shared.electionKey}/${toRemove.id}`;
 
       firebaseDb
         .ref(path1)
@@ -224,7 +225,7 @@ export default {
           }
           if (symbol) {
             // remove the current vote for this removed account
-            var path2 = `voting/${vue.shared.electionKey}/votes/${symbol}`;
+            var path2 = `/voting/${vue.shared.electionKey}/votes/${symbol}`;
             console.log("remove", path2);
             firebaseDb
               .ref(path2)
@@ -237,7 +238,7 @@ export default {
             .remove();
         })
 
-      var path3 = `members/${this.shared.electionKey}/${toRemove.id}`;
+      var path3 = `/members/${this.shared.electionKey}/${toRemove.id}`;
       console.log("remove", path3);
       firebaseDb
         .ref(path3)
@@ -259,7 +260,7 @@ export default {
     },
     add: function (i) {
       var newMember = this.shared.makeMember("", this.shared.members);
-      var path = `members/${this.shared.electionKey}/${newMember.id}`;
+      var path = `/members/${this.shared.electionKey}/${newMember.id}`;
       console.log("add", path);
       firebaseDb.ref(path).set(newMember);
       this.shared.cancelVoting();
@@ -283,7 +284,7 @@ export default {
         if (ref) {
           // const dbList = ref.collection("members");
           this.shared.members.forEach(m =>
-            firebaseDb.ref(`members/${this.shared.electionKey}/${m.id}`).set(m)
+            firebaseDb.ref(`/members/${this.shared.electionKey}/${m.id}`).set(m)
           );
           // this.shared.members.forEach(item => {
           //   dbList.doc(item.id).set(item);
@@ -344,9 +345,9 @@ export default {
       }
     }
     .isDup {
-      display: inline-block;
-      width: 100px;
       color: red;
+      margin-left: 6em;
+      text-align: left;
     }
     input[type="text"] {
       width: 5em;

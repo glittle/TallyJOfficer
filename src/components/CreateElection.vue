@@ -95,7 +95,9 @@ export default {
   },
   methods: {
     goHome: function () {
-      this.$router.replace("/e");
+      if (this.$route.path !== '/e') {
+        this.$router.replace("/e");
+      }
     },
     electionCreated: function () {
       var vue = this;
@@ -132,8 +134,9 @@ export default {
     }
   }
   .loading {
-    margin: 100px auto;
-    font-size: 1.3em;
+    margin: 50px auto;
+    text-align: center;
+    font-size: 1.1em;
   }
   .leave {
     margin-top: 50px;

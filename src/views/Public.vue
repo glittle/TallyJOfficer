@@ -68,9 +68,9 @@
         <p>Swimmer, Rope Puller, Puzzle Solver</p>
       </li>
     </ul>
-    <h1>Spread the News!</h1>
+    <!-- <h1>Spread the News!</h1>
     <p>Help are some links to help you share the news about TallyJ for Officers with your friends...</p>
-    <div class="sharethis-inline-share-buttons"></div>
+    <div class="sharethis-inline-share-buttons"></div> -->
     <p>Version {{ version }}</p>
   </div>
 </template>

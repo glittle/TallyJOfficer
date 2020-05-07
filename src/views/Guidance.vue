@@ -27,6 +27,10 @@
     <h1>Election Procedures</h1>
 
     <div class="quote">
+      <p>The officers of the Spiritual Assembly shall consist of a Chairman, Vice-Chairman, Secretary, Treasurer and such other officers as may be found necessary for the proper conduct of its affairs. The officers shall be elected by a majority vote of the entire membership of the Assembly taken by secret ballot.</p>
+      <cite>(Article VII, By-laws of a Local Spiritual Assembly, by the National Spiritual Assembly of the Bahá'ís of the United States)</cite>
+    </div>
+    <div class="quote">
       <em>If All Members Present, Permanent Officers Should Be Elected Immediately</em>
       <p>While it is certainly true that the permanent officers of an Assembly should be elected immediately following the election of that Assembly, it is equally important, as stated in Article IV of the By-laws of the National Assembly, that 'The officers shall be elected by a majority vote of the entire membership of the Assembly taken by secret ballot.' That is all members of the Assembly must be properly notified and given an opportunity to vote, and in cases of unavoidable absence it does not contravene the spirit of the By-laws if the absent member should cast his ballot by mail or even by telephone.</p>
       <p>Temporary officers may be elected until all nine are properly notified of the election.</p>
@@ -289,7 +293,7 @@
 export default {
   name: "Guidance",
   methods: {
-    goBack: function() {
+    goBack: function () {
       history.go(-1); // not sure why -1 doesn't work
     }
   }

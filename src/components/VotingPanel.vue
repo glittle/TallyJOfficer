@@ -10,12 +10,12 @@
       v-if="!shared.symbol"
       class="pending"
     >
-      Pending...
+      Preparing ballots...
     </div>
     <div v-else>
       <div>
         <div
-          v-if="shared.isMember && shared.election.votingOpen"
+          v-if="shared.isMember && shared.election.votingOpen && shared.election.showPreferNot"
           class="choosePreferNot"
         >
           <label>
@@ -48,9 +48,9 @@
                 ></span>
               </button>
               <div
-                v-if="m.preferNot"
+                v-if="m.preferNot && shared.election.showPreferNot"
                 class="preferNot"
-              >({{ m.name }} prefers not be elected as {{ positionName }})</div>
+              >({{ m.name }} would prefer to not be elected as {{ positionName }}.)</div>
             </td>
           </tr>
         </table>
@@ -80,6 +80,7 @@
         </button>
 
         <div
+          v-if="selectedMember.name"
           class="voteInfo"
           :class="{revealVote: reveal}"
         >
@@ -163,12 +164,13 @@ export default {
     //   this.startVoting();
     // }
     // this.preferNot = false;
-    if (this.shared.election.votingOpen) {
+    if (this.shared.election.votingOpen && !this.shared.me.voted) {
       this.startVote();
     }
   },
   methods: {
     startVote: function () {
+      debugger
       this.shared.dbMe.update({
         voting: true,
         voted: false
@@ -209,9 +211,7 @@ export default {
         return;
       }
 
-      var path = `voting/${this.shared.electionKey}/votes/${
-        this.shared.symbol
-        }`;
+      var path = `/voting/${this.shared.electionKey}/votes/${this.shared.symbol}`;
 
       // cast my vote
       firebaseDb.ref(path).set(this.selectedMember.id);
@@ -235,6 +235,11 @@ export default {
       }, 1250);
     },
     changeMyVote: function () {
+      var path = `/voting/${this.shared.electionKey}/votes/${this.shared.symbol}`;
+
+      // clear my vote
+      firebaseDb.ref(path).set('');
+
       this.shared.dbMe.update({
         voting: true,
         voted: false

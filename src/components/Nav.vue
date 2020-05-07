@@ -1,13 +1,11 @@
 <template>
   <div id="nav">
     <div class="image">
-      <router-link to="../">
-        <img
-          alt="TallyJ logo"
-          :title="version"
-          src="../assets/logo.png"
-        >
-      </router-link>
+      <img
+        alt="TallyJ logo"
+        :title="version"
+        src="../assets/logo.png"
+      >
     </div>
     <div
       v-if="$route.name !== 'createElection'"
@@ -16,10 +14,10 @@
       <span v-if="shared.me.isAdmin">
         <router-link to="admin">Setup</router-link>
       </span>
-      <span>
+      <span v-if="shared.me.id">
         <router-link to="share">Share</router-link>
       </span>
-      <span>
+      <span v-if="shared.me.id">
         <router-link to="home">Voting</router-link>
       </span>
       <!-- <span v-if="shared.me.isAdmin">
@@ -43,7 +41,7 @@
       <span>{{ shared.me.name }}</span>
       <button
         v-if="shared.isMember || shared.isViewer"
-        v-on:click="forgetMe"
+        v-on:click="shared.forgetMe"
       >
         Change
       </button>
@@ -62,41 +60,17 @@ export default {
       return _shared;
     },
     version: function () {
-      return _version;
+      var lines = [
+        'Version ' + _version,
+        'uid ' + (this.shared.firebaseRawAuthUser ? this.shared.firebaseRawAuthUser.uid.substr(0, 3) : '?'),
+        'election ' + this.shared.electionKeyAbbrev(this.shared.electionKey),
+        'id ' + (this.shared.myId || '(not connected)'),
+      ];
+
+      return lines.join('\n')
     }
   },
   methods: {
-    forgetMe: function () {
-      if (this.shared.me) {
-        var id = this.shared.me.id;
-        // disconnect from the member/viewer
-        this.shared.disconnecting = true;
-        this.shared.dbUser.updateProfile({
-          displayName: ""
-        });
-
-        this.shared.me = {};
-        switch (id[0]) {
-          case "m":
-            firebaseDb.ref(`members/${this.shared.electionKey}/${id}`).update({
-              connected: false,
-              voted: false,
-              voting: false
-            });
-            break;
-
-          case "v":
-            firebaseDb.ref(`viewers/${this.shared.electionKey}/${id}`).remove();
-            break;
-
-          default:
-            console.log("unexpected", id);
-            break;
-        }
-
-        this.$router.replace("/e");
-      }
-    }
   }
 };
 </script>

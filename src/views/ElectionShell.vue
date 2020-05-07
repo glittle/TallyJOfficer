@@ -46,6 +46,8 @@ export default {
       this.$router.replace("/e/claim").catch(err => { });
     }
     this.shared.$on("election-changed", this.electionChanged);
+    this.shared.$on("goto", this.goto);
+
     this.goCurrentHome();
 
     var scrollingDiv = document.getElementById("electionBody");
@@ -55,8 +57,12 @@ export default {
   },
   beforeDestroy: function () {
     this.shared.$off("election-changed", this.electionChanged);
+    this.shared.$off("goto", this.goto);
   },
   methods: {
+    goto(path) {
+      this.$router.replace(path).catch(err => { });
+    },
     electionChanged: function () {
       // console.log("loaded");
       var currentRoute = this.$route.name;

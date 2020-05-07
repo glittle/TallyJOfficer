@@ -3,12 +3,12 @@ import firebase from 'firebase/app';
 import 'firebase/auth'
 import 'firebase/database'
 import firebaseDb from './firebaseInit'
+import * as moment from "moment/moment";
 
 export default new Vue({
     data: {
         election: {},
         electionLoadAttempted: false,
-        me: {},
         // currentVoting: {},
         // isViewer: false,
         // isAdmin: false,
@@ -16,18 +16,25 @@ export default new Vue({
         positions: [],
         viewers: [],
         rounds: [],
-        dbUser: null,
+        firebaseRawAuthUser: null,
         confirmedVote: false,
         disconnecting: false,
         dbElectionRef: null,
         initialQuery: '',
         symbol: '',
+        myId: '',
         justClaimed: '',
         electionKey: ''
     },
     computed: {
-        myIdFromProfile: function() {
-            return this.dbUser && this.dbUser.displayName;
+        me() {
+            switch (this.myId[0]) {
+                case 'm':
+                    return this.members.find(m => m.id === this.myId) || {};
+                case 'v':
+                    return this.viewers.find(v => v.id === this.myId) || {};
+            }
+            return {};
         },
         numBlankNames: function() {
             return this.members.filter(m => !m.name).length;
@@ -50,14 +57,8 @@ export default new Vue({
             return id && id.startsWith('v');
         },
         link: function() {
-            if (this.dbUser && this.electionKey) {
+            if (this.firebaseRawAuthUser && this.electionKey) {
                 return `${location.origin}/j?${this.electionKey}`;
-            }
-            return null;
-        },
-        firebaseDbMyStatus: function() {
-            if (this.dbUser) {
-                return firebaseDb.ref('/users/' + this.dbUser.uid);
             }
             return null;
         },
@@ -67,10 +68,10 @@ export default new Vue({
 
             switch (id[0]) {
                 case 'm':
-                    return firebaseDb.ref(`members/${this.electionKey}/${this.me.id}`);
+                    return firebaseDb.ref(`/members/${this.electionKey}/${this.me.id}`);
 
                 case 'v':
-                    return firebaseDb.ref(`viewers/${this.electionKey}/${this.me.id}`);
+                    return firebaseDb.ref(`/viewers/${this.electionKey}/${this.me.id}`);
             }
 
             return {};
@@ -79,10 +80,28 @@ export default new Vue({
     watch: {},
     created: function() {
         var vue = this;
+        vue.resetLocalElectionInfo();
         vue.handleAuthChanges();
         vue.initialQuery = window.location.search;
     },
     methods: {
+        resetLocalElectionInfo() {
+            this.election = {};
+            this.electionLoadAttempted = false;
+            this.members = [];
+            this.positions = [];
+            this.viewers = [];
+            this.rounds = [];
+            // this.firebaseRawAuthUser = null;
+            this.confirmedVote = false;
+            // this.disconnecting = false;
+            this.dbElectionRef = null;
+            this.initialQuery = '';
+            this.symbol = '';
+            this.myId = '';
+            // this.justClaimed = '';
+            this.electionKey = ''
+        },
         symbolOffset: function(letter) {
             if (!letter) {
                 return 0;
@@ -90,31 +109,81 @@ export default new Vue({
             var num = letter.charCodeAt(0) - 65;
             return num * 34; // offsets in sprite
         },
+        electionKeyAbbrev(key) {
+            return key ? `${key.substr(1, 3)}.${key.slice(-2)}` : '(no election)';
+        },
+        processAuthUser(user) {
+            var vue = this;
+
+            if (user) {
+                // User is signed in.
+                vue.firebaseRawAuthUser = user;
+
+                firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                    .on("value", snapshot => {
+                        var userInfo = snapshot.val();
+
+                        if (vue.initialQuery) {
+                            var key = vue.initialQuery.substring(1);
+                            vue.initialQuery = '';
+                            vue.loadElection(key);
+                        } else if (userInfo.electionKey) {
+                            vue.justClaimed = userInfo.memberId;
+                            if (userInfo.electionKey !== vue.electionKey) {
+                                vue.resetLocalElectionInfo();
+                                vue.loadElection(userInfo.electionKey)
+                            }
+                        } else {
+                            vue.resetLocalElectionInfo();
+                            vue.electionLoadAttempted = true;
+                        }
+
+                        if (user.photoURL) {
+                            vue.loadElection(user.photoURL);
+                        } else {
+                            // not linked to an election already
+
+                            // see if there is a query string that works
+
+                        }
+
+                        // debugger;
+                        if (vue.initialQuery) {
+                            var electionKey = vue.initialQuery.substring(1);
+                            vue.initialQuery = '';
+                            vue.loadElection(electionKey);
+                        } else if (userInfo.electionKey) {
+                            vue.justClaimed = userInfo.memberId;
+
+                            if (userInfo.electionKey !== vue.electionKey) {
+                                vue.resetLocalElectionInfo();
+                                vue.loadElection(userInfo.electionKey);
+                            }
+                        } else {
+                            vue.resetLocalElectionInfo();
+                            vue.electionLoadAttempted = true;
+                        }
+                    });
+
+                firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                    .update({
+                        status: 'online',
+                    });
+
+
+
+            } else {
+                // User is signed out.
+                vue.firebaseRawAuthUser = null;
+                // vue.dbElectionRef = null;
+            }
+            // ...
+
+        },
         handleAuthChanges: function() {
             var vue = this;
             firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    // User is signed in.
-                    vue.dbUser = user;
-
-                    if (user.photoURL) {
-                        vue.loadElection(user.photoURL);
-                    } else {
-                        // not linked to an election already
-
-                        // see if there is a query string that works
-                        if (vue.initialQuery) {
-                            vue.loadElection(vue.initialQuery.substring(1));
-                        } else {
-                            vue.electionLoadAttempted = true;
-                        }
-                    }
-                } else {
-                    // User is signed out.
-                    vue.dbUser = null;
-                    // vue.dbElectionRef = null;
-                }
-                // ...
+                vue.processAuthUser(user);
             });
 
             firebase.auth().signInAnonymously().catch(function(error) {
@@ -127,16 +196,17 @@ export default new Vue({
             firebaseDb.ref('.info/connected')
                 .on('value', function(snapshot) {
                     if (!snapshot.val()) {
-                        return; // we are not connected yet
-                    };
+                        // we are not connected
+                        return;
+                    }
 
                     var updates = {};
-                    updates['status'] = 'offline';
+                    updates.status = 'offline';
 
                     // gtag('event', 'login')
 
-                    if (vue.firebaseDbMyStatus) {
-                        vue.firebaseDbMyStatus
+                    if (vue.firebaseRawAuthUser) {
+                        firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
                             .onDisconnect()
                             .update(updates);
                     }
@@ -145,40 +215,21 @@ export default new Vue({
         loadElection: function(electionKey) {
             var vue = this;
             if (electionKey) {
-                var electionRef = firebaseDb.ref('elections/' + electionKey);
+                var electionRef = firebaseDb.ref('/elections/' + electionKey);
                 electionRef.once('value')
                     .then(snapshot => {
                         if (snapshot.exists()) {
-                            // only connect if we know it exists
+                            var election = snapshot.val();
+                            if (election.deleteMe) {
+                                // election is being deleted
+                                return;
+                            }
+
                             vue.connectToElection(electionRef);
                         } else {
-                            vue.dbUser.updateProfile({
-                                photoURL: null
-                            });
                             vue.electionLoadAttempted = true;
                         }
                     });
-                // .once('value').then(snapshot => {
-                //         var election = snapshot.val();
-                //         // } else {
-                //         //     // invalid, so forget about it
-                //         //     vue.dbUser.updateProfile({
-                //         //         photoURL: '',
-                //         //         displayName: ''
-                //         //     });
-
-                //         vue.electionLoadAttempted = true;
-                //     })
-                // vue.dbElectionRef = null;
-                // }
-                // }).catch(function(err) {
-                //     vue.dbUser.updateProfile({
-                //         photoURL: '',
-                //         displayName: ''
-                //     });
-                //     vue.electionLoadAttempted = true;
-                //     console.log(err);
-                // });
             }
         },
         connectToElection: function(electionRef) {
@@ -187,24 +238,27 @@ export default new Vue({
             // console.log('connected to election', electionRef.key);
             vue.dbElectionRef = electionRef;
             vue.electionKey = electionRef.key;
-            vue.dbUser.updateProfile({
-                photoURL: electionRef.key
-            });
 
-            vue.firebaseDbMyStatus
-                .set({
-                    status: 'online',
+            firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                .update({
                     electionKey: vue.electionKey,
-                    memberId: vue.myIdFromProfile
                 });
 
-            vue.watchForListChanges(vue.members, firebaseDb.ref('members/' + vue.electionKey).orderByChild('name'), (member, rawData) => {
-                if (member.id === vue.myIdFromProfile || member.id === vue.justClaimed) {
+            vue.watchForListChanges(vue.members, firebaseDb.ref('/members/' + vue.electionKey).orderByChild('name'), (member, rawData) => {
+                if (member.id && (member.id === vue.myId || member.id === vue.justClaimed)) {
                     vue.justClaimed = null;
 
                     if (vue.me.id) {
+                        // I've matched my id to a member account
+
+                        if (!member.connected) {
+                            vue.claimMember(member.id);
+                        }
                         // my member info has been updated
-                        vue.me = member;
+
+                        if (member.voted) {
+                            vue.confirmedVote = true;
+                        }
                     } else if (vue.disconnecting) {
                         vue.disconnecting = false;
                     } else {
@@ -217,9 +271,11 @@ export default new Vue({
                     rawData.ref.remove();
                 }
             }, (deletedMember, rawData) => {
-                if (deletedMember.id === vue.myIdFromProfile || (vue.dbUser && deletedMember.id === vue.dbUser.displayName) || deletedMember.id === vue.justClaimed) {
+                if (deletedMember.id === vue.myId ||
+                    deletedMember.id === vue.justClaimed) {
                     // my member info has been removed
-                    vue.logout();
+                    vue.forgetMe();
+                    return;
                 }
                 if (!deletedMember.id && deletedMember.connected === false) {
                     // an orphaned member that is recreated by the functions... need to clean this up
@@ -227,21 +283,34 @@ export default new Vue({
                 }
             });
 
-            vue.watchForListChanges(vue.positions, firebaseDb.ref('positions/' + vue.electionKey).orderByChild('sortOrder'), position => {
+            vue.watchForListChanges(vue.positions, firebaseDb.ref('/positions/' + vue.electionKey).orderByChild('sortOrder'), position => {
                 vue.positions.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
             });
-            vue.watchForListChanges(vue.viewers, firebaseDb.ref('viewers/' + vue.electionKey).orderByChild('id'), viewer => {
-                // console.log('my id', vue.myIdFromProfile, ' test viewer id', viewer.id);
-                if (viewer.id === vue.myIdFromProfile) {
+            vue.watchForListChanges(vue.viewers, firebaseDb.ref('/viewers/' + vue.electionKey).orderByChild('id'), viewer => {
+                if (viewer.id && (viewer.id === vue.myId || viewer.id === vue.justClaimed)) {
                     if (vue.me.id) {
-                        // my viewer info has been updated (not likely used)
-                        vue.me = viewer;
+                        if (!viewer.connected) {
+                            vue.claimViewer(viewer.id);
+                        }
+                    } else if (vue.disconnecting) {
+                        vue.disconnecting = false;
                     } else {
                         vue.claimViewer(viewer.id);
                     }
                 }
+            }, (deletedViewer, rawData) => {
+                if (deletedViewer.id === vue.myId ||
+                    deletedViewer.id === vue.justClaimed) {
+                    // my member info has been removed
+                    vue.forgetMe();
+                    return;
+                }
+                if (!deletedViewer.id && deletedViewer.connected === false) {
+                    // an orphaned member that is recreated by the functions... need to clean this up
+                    rawData.ref.remove();
+                }
             });
-            vue.watchForListChanges(vue.rounds, firebaseDb.ref('votingRounds/' + vue.electionKey).orderByChild('id'));
+            vue.watchForListChanges(vue.rounds, firebaseDb.ref('/votingRounds/' + vue.electionKey).orderByChild('id'));
 
             electionRef.update({
                 // record when this election was last used
@@ -255,18 +324,21 @@ export default new Vue({
                 if (!incomingElection || !incomingElection.createdBy) {
                     // deleted!
                     vue.logout();
+                    vue.$emit('goto', '/');
                     return;
                 }
 
                 if (!incomingElection.votingOpen && vue.dbMe.update) { // vue.election.votingOpen &&
                     // voting in this round just closed
+                    debugger
                     vue.dbMe.update({
                         voting: false,
                         voted: false
                     });
                 }
 
-                if (incomingElection.votingOpen && !vue.election.votingOpen) {
+                if (vue.election.createdBy && incomingElection.votingOpen && !vue.election.votingOpen) {
+                    debugger;
                     vue.symbol = '';
                 }
 
@@ -277,35 +349,56 @@ export default new Vue({
                 vue.$emit('election-changed');
             });
 
-            // vue.firebaseDbMyStatus
-            //     .on('value', function(snapshot) {
-            //         const info = snapshot.val();
-            //         if (info) {
-            //             vue.symbol = info.symbol || '';
-            //             console.log('incoming symbol 1', vue.symbol || 'n/a');
-            //         } else {
-            //             // console.log('no symbol info');
-            //         }
-            //     });
-
-            // firebaseDb.ref(`voting/${this.electionKey}/votes`)
-            //     .on('value', function(snapshot) {
-            //         vue.currentVoting = snapshot.val() || {};
-            //     });
         },
-        logout: function() {
-            this.electionKey = "";
-            this.me = {};
-            this.dbUser.updateProfile({
-                photoURL: "",
-                displayName: ""
-            });
-            this.dbElectionRef = null;
-            // this.$root.$router.replace("/");
-            location.href = "../";
+        logout() {
+            this.resetLocalElectionInfo();
+
+            firebaseDb.ref(`/users/${this.firebaseRawAuthUser.uid}`)
+                .update({
+                    memberId: '',
+                    electionKey: ''
+                });
+        },
+        forgetMe: function() {
+            if (this.myId) {
+                var oldId = this.myId;
+
+                // disconnect from the member/viewer
+                this.disconnecting = true;
+
+                this.myId = '';
+
+                firebaseDb.ref(`/users/${this.firebaseRawAuthUser.uid}`)
+                    .update({
+                        memberId: ''
+                    });
+
+                switch (oldId[0]) {
+                    case 'm':
+                        // if we are being forced out because the person record is gone, don't try to update it!
+                        if (this.members.find(m => m.id === oldId)) {
+                            firebaseDb.ref(`/members/${this.electionKey}/${oldId}`)
+                                .update({
+                                    connected: false,
+                                });
+                        }
+                        break;
+                    case 'v':
+                        if (this.viewers.find(g => g.id === oldId)) {
+                            firebaseDb.ref(`/viewers/${this.gameKey}/${oldId}`)
+                                .update({
+                                    connected: false,
+                                });
+                        }
+                        break;
+                }
+
+
+                this.$emit('goto', '/e');
+            }
         },
         cancelVoting: function() {
-            firebaseDb.ref(`elections/${this.electionKey}`).update({
+            firebaseDb.ref(`/elections/${this.electionKey}`).update({
                 votingOpen: false
             });
         },
@@ -356,55 +449,107 @@ export default new Vue({
         },
         claimMember: function(memberId) {
             var vue = this;
-            // console.log('set connected', this.dbUser.uid);
-            vue.me = vue.members.find(m => m.id === memberId);
-
+            // console.log('set connected', this.firebaseRawAuthUser.uid);
+            vue.myId = memberId;
             vue.justClaimed = memberId;
 
-            firebaseDb.ref(`members/${vue.electionKey}/${memberId}`).update({
-                connected: vue.dbUser.uid,
-                connectedTime: firebase.database.ServerValue.TIMESTAMP
-            });
+            if (vue.me.id) {
 
-            vue.dbUser.updateProfile({
-                displayName: memberId
-            });
+                firebaseDb.ref(`/members/${vue.electionKey}/${memberId}`)
+                    .update({
+                        connected: vue.firebaseRawAuthUser.uid,
+                        connectedTime: moment().toISOString(),
+                        browser: this.getBrowserInfo()
+                    });
 
-            vue.firebaseDbMyStatus
-                .set({
-                    status: 'online',
-                    electionKey: vue.electionKey,
-                    memberId: memberId
-                });
+                firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                    .update({
+                        status: 'online',
+                        electionKey: vue.electionKey,
+                        memberId: memberId
+                    });
 
-            // start watching for symbols to be assigned to me
-            var path = `voterSymbols/${this.electionKey}/${memberId}`;
-            // console.log('watch', path);
-            firebaseDb.ref(path)
-                .on('value', function(snapshot) {
-                    var info = snapshot.val();
-                    if (info) {
-                        vue.symbol = info.symbol;
-                    } else {
-                        vue.symbol = '';
-                    }
-                })
+                // start watching for symbols to be assigned to me
+                var path = `/voterSymbols/${this.electionKey}/${memberId}`;
+                firebaseDb.ref(path)
+                    .on('value', function(snapshot) {
+                        var info = snapshot.val();
+                        if (info) {
+                            vue.symbol = info.symbol;
+                        } else {
+                            vue.symbol = '';
+                        }
+                    })
+            } else {
+                console.log('Did not find member', memberId);
+            }
         },
         claimViewer: function(viewerId) {
-            this.me = this.viewers.find(v => v.id === viewerId);
+            var vue = this;
+            vue.myId = viewerId;
 
-            if (this.me.id) {
-                firebaseDb.ref(`viewers/${this.electionKey}/${viewerId}`).update({
-                    connected: this.dbUser.uid,
-                    connectedTime: firebase.database.ServerValue.TIMESTAMP
+            if (vue.me.id) {
+
+                firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                    .update({
+                        status: 'online',
+                        electionKey: vue.electionKey,
+                        memberId: viewerId
+                    });
+
+                firebaseDb.ref(`/viewers/${this.electionKey}/${viewerId}`).update({
+                    connected: this.firebaseRawAuthUser.uid,
+                    connectedTime: moment().toISOString(),
+                    browser: this.getBrowserInfo()
                 });
 
-                this.dbUser.updateProfile({
-                    displayName: viewerId
-                });
             } else {
                 console.log('Did not find viewer', viewerId);
             }
+        },
+        getBrowserInfo() {
+            // document browser
+            return {
+                ver: this.getBrowserVersion(),
+                lang: window.navigator.language ? window.navigator.language : (window.navigator.systemLanguage + ';' + window.navigator.userLanguage),
+                // screen: screen.availWidth + 'x' + screen.availHeight + 'c' + screen.colorDepth,
+                window: window.innerWidth + 'x' + window.innerHeight,
+            };
+        },
+        getBrowserVersion() {
+            var ua = window.navigator.userAgent;
+
+            var op = ua.match('.*OPR\/([0-9\.]*)');
+            if (op && op.length == 2) {
+                return 'Opera ' + op[1];
+            }
+
+            var chrome = ua.match('.*Chrome\/([0-9\.]*)[$ ]');
+            if (chrome && chrome.length == 2) {
+                return 'Chrome ' + chrome[1];
+            }
+            var ff = ua.match('.*Firefox\/([0-9\.]*)');
+            if (ff && ff.length == 2) {
+                return 'FF ' + ff[1];
+            }
+
+            var ie11Plus = ua.match('.*Trident.*rv\:([0-9m\.]*).*');
+            if (ie11Plus && ie11Plus.length) {
+                return 'IE ' + ie11Plus[1];
+            }
+
+            var ieOlder = ua.match('.*MSIE \([0-9\.]*).*');
+            if (ieOlder && ieOlder.length) {
+                return 'IE ' + ieOlder[1] + 'm' + document.documentMode;
+            }
+
+            var safari = ua.match('.*Safari\/([0-9\.]*)');
+            if (safari && safari.length == 2) {
+                var host = /Mozilla\/.*\((\w*)\;/.exec(ua);
+                return 'Safari ' + safari[1] + (host ? ' ' + host[1] : '');
+            }
+
+            return 'Unk';
         },
         startMeAsViewer: function() {
             var id = this.getRandomId('v', this.viewers);
@@ -417,7 +562,7 @@ export default new Vue({
                 name: name
             };
 
-            firebaseDb.ref(`viewers/${this.electionKey}/${id}`).set(viewer);
+            firebaseDb.ref(`/viewers/${this.electionKey}/${id}`).set(viewer);
 
             this.claimViewer(id);
         },
@@ -432,54 +577,63 @@ export default new Vue({
         // },
         createElection: function(nameOfAdmin) {
             var vue = this;
-            if (!vue.dbUser) {
+            if (!vue.firebaseRawAuthUser) {
                 return;
             }
-            var electionRef = firebaseDb.ref('elections').push(); // generate new election doc
+
+            var newAdmin = vue.makeMember(nameOfAdmin, this.members);
+            vue.myId = newAdmin.id;
+
+            newAdmin.connected = moment().toISOString();
+            newAdmin.isAdmin = true;
+
+            var electionRef = firebaseDb.ref('/elections')
+                .push(); // generate new election doc
+
             electionRef.set({
                     created: new Date().toString(),
                     createdBy: nameOfAdmin
-                        // focusPosition: ''
                 }).then(function() {
                     vue.connectToElection(electionRef);
 
-                    vue.createMembers(nameOfAdmin);
+                    vue.createMembers(newAdmin);
                     vue.createPositions();
 
                     gtag('event', 'createElection');
 
-                    vue.claimMember(vue.me.id);
+                    vue.claimMember(vue.myId);
 
                     vue.$emit('election-created');
                 })
                 .catch(function(err) {
                     console.log(err);
-                    vue.$emit('election-creation-error', err);
+                    // vue.$emit('election-creation-error', err);
                 });
         },
-        createMembers: function(nameOfAdmin) {
+        createMembers: function(adminMember) {
             var vue = this;
 
             var members = [];
-
-            var me = vue.makeMember(nameOfAdmin, members);
-            me.isAdmin = true;
-            // me.connected = this.dbUser.uid;
-            // me.connectedTime = firebase.database.ServerValue.TIMESTAMP;
-            members.push(me);
-
-            vue.dbUser.updateProfile({
-                displayName: me.id
-            });
-            vue.me = me;
+            members.push(adminMember);
 
             // default to 5 members
             for (var i = 0; i < 4; i++) {
                 var member = vue.makeMember('', members);
                 members.push(member);
-                // dbMembers.doc(member.id).set(member);
             }
-            members.forEach(m => firebaseDb.ref(`members/${this.electionKey}/${m.id}`).set(m));
+
+            var memberSet = {};
+            members.forEach(m => {
+                memberSet[m.id] = m;
+            });
+
+            firebaseDb.ref(`/members/${vue.electionKey}`)
+                .set(memberSet)
+
+            firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                .update({
+                    memberId: vue.myId
+                });
         },
         createPositions: function() {
             // var vue = this;
@@ -497,7 +651,7 @@ export default new Vue({
                 positions.push(position);
             });
 
-            positions.forEach(p => firebaseDb.ref(`positions/${this.electionKey}/${p.id}`).set(p));
+            positions.forEach(p => firebaseDb.ref(`/positions/${this.electionKey}/${p.id}`).set(p));
         },
         fillData: function() {},
         makePosition: function(name, list) {

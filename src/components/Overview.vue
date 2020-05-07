@@ -131,13 +131,13 @@ export default {
       });
 
       // save the vote slots
-      firebaseDb.ref(`voting/${this.shared.electionKey}`).set({
+      firebaseDb.ref(`/voting/${this.shared.electionKey}`).set({
         positionId: positionIdToOpen,
         votes: voteDict
       });
 
       // turn on voting
-      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
+      firebaseDb.ref(`/elections/${this.shared.electionKey}`).update({
         votingOpen: true
       });
     },

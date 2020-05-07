@@ -151,7 +151,7 @@ export default {
     }
 
     &.voting {
-      background-color: #4f5aa240; // waiting for their vote
+      background-color: #e8f4e8; // waiting for their vote
     }
 
     //&.votingOnViewer {

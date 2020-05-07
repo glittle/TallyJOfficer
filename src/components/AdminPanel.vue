@@ -69,29 +69,9 @@ export default {
         return;
       }
       // TODO to upgrade to firebase db
-      firebaseDb.ref(`elections/${this.shared.electionKey}`).update({
+      firebaseDb.ref(`/elections/${this.shared.electionKey}`).update({
         deleteMe: true
       });
-
-      //   this.shared.dbElectionRef
-      //     .delete()
-      //     .then(function() {
-      //       vue.deleteStatus = "Done. Good-bye!";
-      //       vue.shared.electionKey = "";
-      //       vue.shared.me = {};
-      //       vue.election = {};
-
-      //       vue.shared.dbUser.updateProfile({
-      //         photoURL: "",
-      //         displayName: ""
-      //       });
-
-      //       vue.dbElectionRef = null;
-      //       vue.$router.replace("/");
-      //     })
-      //     .catch(function(err) {
-      //       vue.deleteStatus = "Error: " + err;
-      //     });
     }
   }
 };
