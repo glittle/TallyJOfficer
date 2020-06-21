@@ -14,7 +14,9 @@
         My Election
       </button>
     </p>
+    {{ $t('message') }}
     <img
+      v-if="$i18n.locale.startsWith('en')"
       class="team"
       src="../../public/img/team.png"
     >
@@ -84,7 +86,10 @@ export default {
     version: function () {
       return _version;
     }
-  }
+  },
+  // mounted() {
+  //   this.$root.$i18n.locale = 'fr';
+  // }
 };
 </script>
 

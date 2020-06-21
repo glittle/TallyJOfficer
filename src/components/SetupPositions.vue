@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 import { SlickList, SlickItem, HandleDirective } from "vue-slicksort";
 import firebaseDb from "../firebaseInit";
 
@@ -100,7 +100,7 @@ export default {
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     },
     list: {
       get: function () {

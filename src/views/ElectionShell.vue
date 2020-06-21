@@ -14,7 +14,7 @@
 <script>
 import Nav from "@/components/Nav.vue";
 import MemberStatus from "@/components/MemberStatus.vue";
-import _shared from "@/shared.js";
+
 
 export default {
   name: "ElectionShell",
@@ -24,7 +24,7 @@ export default {
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     }
   },
   watch: {

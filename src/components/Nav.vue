@@ -50,14 +50,14 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 import firebaseDb from "../firebaseInit";
 
 export default {
   name: "Nav",
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     },
     version: function () {
       var lines = [
@@ -115,11 +115,21 @@ export default {
   a {
     color: #fff;
     text-decoration: none;
+
     &:visited {
       color: #fff;
     }
+
+    &:hover {
+      color: #62d9a3;
+    }
+
     &.router-link-exact-active {
       color: #42b983;
+      &:hover {
+        cursor: default;
+        color: #42b983;
+      }
     }
   }
 

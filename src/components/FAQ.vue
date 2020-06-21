@@ -195,7 +195,7 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 
 export default {
   name: "FAQ",
@@ -204,7 +204,7 @@ export default {
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     },
     version: function () {
       return _version;

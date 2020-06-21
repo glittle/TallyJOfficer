@@ -12,7 +12,7 @@ module.exports = {
 
     rules: {
       'no-console': 'off',
-      'no-debugger': 'off',
+        'no-debugger': 'warn',
       'vue/require-default-prop': 'off',
       semi: 'off',
       indent: 'off',
@@ -23,7 +23,8 @@ module.exports = {
       'vue/html-closing-bracket-spacing': 'off',
       'vue/v-on-style': 'off',
       'vue/html-self-closing': 'off',
-      'vue/singleline-html-element-content-newline': 'off'
+        'vue/singleline-html-element-content-newline': 'off',
+        'vue/no-v-html': 'warn'
     },
 
     'extends': [

@@ -3,9 +3,11 @@ import firebase from 'firebase/app';
 import 'firebase/auth'
 import 'firebase/database'
 import firebaseDb from './firebaseInit'
+import i18n from './i18n'
 import * as moment from "moment/moment";
 
 export default new Vue({
+    i18n,
     data: {
         election: {},
         electionLoadAttempted: false,
@@ -122,6 +124,9 @@ export default new Vue({
                 firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
                     .on("value", snapshot => {
                         var userInfo = snapshot.val();
+
+                        vue.$i18n.locale = userInfo.lang || 'en';
+
 
                         if (vue.initialQuery) {
                             var key = vue.initialQuery.substring(1);
@@ -330,7 +335,7 @@ export default new Vue({
 
                 if (!incomingElection.votingOpen && vue.dbMe.update) { // vue.election.votingOpen &&
                     // voting in this round just closed
-                    debugger
+                    // debugger
                     vue.dbMe.update({
                         voting: false,
                         voted: false
@@ -338,7 +343,7 @@ export default new Vue({
                 }
 
                 if (vue.election.createdBy && incomingElection.votingOpen && !vue.election.votingOpen) {
-                    debugger;
+                    // debugger;
                     vue.symbol = '';
                 }
 
@@ -689,6 +694,6 @@ export default new Vue({
                 voted: false,
                 voting: false
             };
-        }
+        },
     }
 });

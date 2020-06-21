@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 import firebaseDb from "../firebaseInit";
 import SetupNames from "./SetupNames.vue";
 import SetupPositions from "./SetupPositions.vue";
@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     }
   },
   watch: {

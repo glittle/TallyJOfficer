@@ -5,7 +5,13 @@
 </template>
 
 <script>
+
 export default {
+  computed: {
+    shared: function () {
+      return this.$root.shared;
+    },
+  },
   mounted: function () {
     document.addEventListener("touchmove", function (event) {
       event.preventDefault();
@@ -74,7 +80,7 @@ button {
   //white-space: nowrap;
   text-align: center;
   vertical-align: baseline;
-  font-size: 0.9em;
+  font-size: 0.9rem;
   padding: 4px 0.8em 5px;
   border-radius: 4px;
   margin: 0.1em 0.3em;
@@ -93,7 +99,14 @@ button {
   }
   &.caution {
     background-color: #993e4a;
-    font-size: 0.8em;
+    // font-size: 0.8em;
+  }
+  &.notUsual {
+    background-color: #d2691e;
+  }
+  &.warning {
+    background-color: #cf9236;
+    // font-size: 0.8em;
   }
 
   &:hover,
@@ -109,7 +122,8 @@ button {
   }
 
   &:disabled {
-    opacity: 0.6;
+    // opacity: 0.6;
+    background-color: #89bf82;
     cursor: default;
     &:hover,
     &:focus {
@@ -127,10 +141,10 @@ button {
     align-items: center;
     background-color: transparent;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
-    padding: 0 10px 0 5px;
+    padding: 0 10px 2px 5px;
     min-width: 40px;
-    margin: 0.1em 0.5em;
-    color: #4a993e;
+    margin: 0;
+    color: #5d975e;
     i {
       margin: 4px -1px;
       font-size: 1.2em;
@@ -146,6 +160,63 @@ button {
       color: #993e4a;
       font-size: 0.9em;
     }
+    &.notUsual {
+      color: burlywood;
+      font-size: 0.9em;
+    }
   }
+}
+
+.el-popconfirm {
+  font-size: 1.2em;
+  .el-button--mini {
+    font-size: 0.9em;
+    padding: 5px 10px;
+  }
+}
+
+.el-button {
+  padding: 2px 6px 2px 4px;
+  font-size: 1rem;
+  vertical-align: middle;
+
+  [class*=" el-icon-"],
+  [class^="el-icon-"] {
+    font-size: 1.4em;
+    vertical-align: bottom;
+  }
+  [class*="el-icon-"] + span {
+    margin-left: 5px;
+    vertical-align: text-top;
+  }
+
+  &.is-circle {
+    padding: 5px;
+  }
+}
+.el-input {
+  font-size: 1em;
+}
+.el-button--success {
+  color: #fff;
+  background-color: #4a993e;
+  border-color: #4a993e;
+}
+.el-dialog__body {
+  word-break: normal;
+  padding: 0 25px 100px;
+  #body {
+    outline: none;
+  }
+}
+.el-dialog__wrapper {
+  top: 1vh;
+  bottom: 1vh;
+  left: 1vw;
+  right: 1vw;
+}
+
+.el-popover {
+  box-shadow: 0 2px 12px 1px rgba(0, 0, 0, 1);
 }
 </style>

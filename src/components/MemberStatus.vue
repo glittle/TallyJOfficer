@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 
 export default {
   name: "MemberStatus",
@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     },
     activeViewers: function () {
       return this.shared.viewers.filter(v => v.id);

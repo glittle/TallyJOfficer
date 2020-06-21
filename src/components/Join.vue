@@ -5,30 +5,30 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 import firebaseDb from "../firebaseInit";
 import Vue from "vue";
 
 
 export default {
   name: "Join",
-  data: function() {
+  data: function () {
     return {
     };
   },
   computed: {
-    shared: function() {
-      return _shared;
+    shared: function () {
+      return this.$root.shared;
     },
-    version: function() {
+    version: function () {
       return _version;
     }
   },
   watch: {},
-  mounted: function() {
+  mounted: function () {
     console.log('mount Join')
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
   },
   methods: {
   }

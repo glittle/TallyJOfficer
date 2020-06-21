@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 
 export default {
   name: "ResultPanel",
@@ -101,7 +101,7 @@ export default {
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     },
     numVoted: function () {
       return this.shared.members.filter(m => m.voted).length;

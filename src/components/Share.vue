@@ -14,6 +14,10 @@
             :href="shared.link"
             onclick="return false"
           >{{ shared.link }}</a>
+          <button
+            v-on:click="copyToClipboard(shared.link)"
+            v-text="copyText"
+          ></button>
         </p>
         <p>Be sure to keep a copy of this URL - it is the only way to get to this election!</p>
 
@@ -51,7 +55,7 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 import firebaseDb from "../firebaseInit";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 import Vue from "vue";
@@ -62,12 +66,13 @@ export default {
   name: "Share",
   data: function () {
     return {
-      qrWidth: 200
+      qrWidth: 200,
+      copyText: 'Copy'
     };
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     },
     version: function () {
       return _version;
@@ -91,6 +96,18 @@ export default {
         0.9 * Math.min(header.clientWidth, body.clientWidth, body.clientHeight);
       this.qrWidth = newSize;
     },
+    copyToClipboard: function (text) {
+      var dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+      this.copyText = 'Copied';
+      setTimeout(() => this.copyText = 'Copy', 2000);
+    }
+
+
   }
 };
 </script>

@@ -5,7 +5,8 @@
       id="positionsToFill"
       class="positionsToFill panel"
     >
-      <h1>Positions to Elect</h1>
+      <h1 v-t="{path: 'Positions to Elect'}"></h1>
+      {{ $i18n.locale }}
       <table>
         <thead>
           <tr>
@@ -64,7 +65,7 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 import ResultPanel from "./ResultPanel.vue";
 import VotingPanel from "./VotingPanel.vue";
 import firebaseDb from "../firebaseInit";
@@ -82,7 +83,7 @@ export default {
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     },
     viewedPositionId: function () {
       return (this.viewedPosition && this.viewedPosition.id) || 0;

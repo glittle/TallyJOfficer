@@ -114,7 +114,7 @@ router.afterEach((to, from) => {
     });
     setTimeout(function() {
         var eb = window.document.getElementById('electionBody');
-        if (eb) {
+        if (eb && eb.scrollTo) {
             // console.log('scrollTo 0');
             eb.scrollTo(0, 0);
         }

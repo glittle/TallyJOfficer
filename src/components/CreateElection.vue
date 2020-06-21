@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
+
 
 export default {
   name: "CreateElection",
@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     shared: function () {
-      return _shared;
+      return this.$root.shared;
     }
   },
   beforeUpdate: function () {

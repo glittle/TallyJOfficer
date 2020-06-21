@@ -1,7 +1,23 @@
 <template>
   <div class="ClaimName">
     <div class="panel">
-      <p>Welcome to our officer election! Please claim your name...</p>
+      <p>{{ $t('Welcome1') }}</p>
+      <p>{{ $t('Select your language:') }}
+        <button
+          class="lang"
+          :class="{active: $i18n.locale ==='en'}"
+          v-on:click="setLang('en')"
+        >English</button>
+        <button
+          class="lang"
+          :class="{active: $i18n.locale ==='fr'}"
+          v-on:click="setLang('fr')"
+        >français</button>
+
+      </p>
+      {{ $i18n.locale }}
+
+      <p>Please claim your name...</p>
       <table>
         <tr
           v-for="m in shared.members"
@@ -25,9 +41,7 @@
     <div class="panel">
       <p>
         Or, if this browser will be used to display results, click
-        <button
-          v-on:click="claimViewer"
-        >Viewer</button>
+        <button v-on:click="claimViewer">Viewer</button>
       </p>
       <p>To use this computer as a voter <strong>and</strong> as a viewer, use an "In Private"/"Incognito" window for one of the sessions!</p>
     </div>
@@ -50,29 +64,29 @@
 </template>
 
 <script>
-import _shared from "@/shared.js";
-// import firebaseDb from "../firebaseInit";
+
+import firebaseDb from "../firebaseInit";
 
 export default {
   name: "ClaimName",
-  data: function() {
+  data: function () {
     return {
       claimMade: false
     };
   },
   computed: {
-    shared: function() {
-      return _shared;
+    shared: function () {
+      return this.$root.shared;
     }
   },
-  updated: function() {
+  updated: function () {
     if (this.shared.me.id) {
       // can't look here if already claimed?
       this.$router.replace("/e");
     }
   },
   methods: {
-    claim: function(member) {
+    claim: function (member) {
       if (member.connected) {
         // already claimed!
         return;
@@ -82,13 +96,21 @@ export default {
 
       this.$router.replace("/e");
     },
-    logout: function() {
+    logout: function () {
       this.shared.logout();
     },
-    claimViewer: function() {
+    claimViewer: function () {
       this.shared.startMeAsViewer();
 
       this.$router.replace("/e");
+    },
+    setLang: function (lang) {
+      var vue = this;
+
+      firebaseDb.ref(`/users/${vue.shared.firebaseRawAuthUser.uid}`)
+        .update({
+          lang: lang,
+        });
     }
   }
 };
@@ -110,6 +132,13 @@ export default {
   tr.memberHolder {
     height: 3em;
     cursor: pointer;
+  }
+  button {
+    &.lang {
+    }
+    &.active {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5) inset;
+    }
   }
 }
 </style>

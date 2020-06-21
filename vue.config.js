@@ -1,6 +1,10 @@
 module.exports = {
     css: {
-      sourceMap: true
+        sourceMap: true
+    },
+
+    configureWebpack: {
+        devtool: 'source-map'
     },
 
     pwa: {
@@ -27,5 +31,15 @@ module.exports = {
     assetsDir: undefined,
     runtimeCompiler: undefined,
     productionSourceMap: undefined,
-    parallel: undefined
+    parallel: undefined,
+
+    pluginOptions: {
+        i18n: {
+            locale: 'en',
+            fallbackLocale: 'en',
+            localeDir: 'locales',
+            silentFallbackWarn: true,
+            enableInSFC: false
+        }
+    }
 }
