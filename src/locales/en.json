@@ -1,4 +1,7 @@
 {
-    "message": "hello i18n !!",
-    "Welcome1": "Welcome to our officer election!"
+    "Welcome1": "Welcome to our officer election!",
+    "SelectLanguage": "Select your language:",
+    "positions": {
+        "title": "Positions to Elect"
+    }
 }

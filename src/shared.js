@@ -695,5 +695,11 @@ export default new Vue({
                 voting: false
             };
         },
+        setLang: function(lang) {
+            firebaseDb.ref(`/users/${this.firebaseRawAuthUser.uid}`)
+                .update({
+                    lang: lang,
+                });
+        }
     }
 });

@@ -5,7 +5,7 @@
       id="positionsToFill"
       class="positionsToFill panel"
     >
-      <h1 v-t="{path: 'Positions to Elect'}"></h1>
+      <h1 v-text="$t('positions.title')"></h1>
       {{ $i18n.locale }}
       <table>
         <thead>

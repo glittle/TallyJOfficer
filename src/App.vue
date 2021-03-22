@@ -167,56 +167,56 @@ button {
   }
 }
 
-.el-popconfirm {
-  font-size: 1.2em;
-  .el-button--mini {
-    font-size: 0.9em;
-    padding: 5px 10px;
-  }
-}
+// .el-popconfirm {
+//   font-size: 1.2em;
+//   .el-button--mini {
+//     font-size: 0.9em;
+//     padding: 5px 10px;
+//   }
+// }
 
-.el-button {
-  padding: 2px 6px 2px 4px;
-  font-size: 1rem;
-  vertical-align: middle;
+// .el-button {
+//   padding: 2px 6px 2px 4px;
+//   font-size: 1rem;
+//   vertical-align: middle;
 
-  [class*=" el-icon-"],
-  [class^="el-icon-"] {
-    font-size: 1.4em;
-    vertical-align: bottom;
-  }
-  [class*="el-icon-"] + span {
-    margin-left: 5px;
-    vertical-align: text-top;
-  }
+//   [class*=" el-icon-"],
+//   [class^="el-icon-"] {
+//     font-size: 1.4em;
+//     vertical-align: bottom;
+//   }
+//   [class*="el-icon-"] + span {
+//     margin-left: 5px;
+//     vertical-align: text-top;
+//   }
 
-  &.is-circle {
-    padding: 5px;
-  }
-}
-.el-input {
-  font-size: 1em;
-}
-.el-button--success {
-  color: #fff;
-  background-color: #4a993e;
-  border-color: #4a993e;
-}
-.el-dialog__body {
-  word-break: normal;
-  padding: 0 25px 100px;
-  #body {
-    outline: none;
-  }
-}
-.el-dialog__wrapper {
-  top: 1vh;
-  bottom: 1vh;
-  left: 1vw;
-  right: 1vw;
-}
+//   &.is-circle {
+//     padding: 5px;
+//   }
+// }
+// .el-input {
+//   font-size: 1em;
+// }
+// .el-button--success {
+//   color: #fff;
+//   background-color: #4a993e;
+//   border-color: #4a993e;
+// }
+// .el-dialog__body {
+//   word-break: normal;
+//   padding: 0 25px 100px;
+//   #body {
+//     outline: none;
+//   }
+// }
+// .el-dialog__wrapper {
+//   top: 1vh;
+//   bottom: 1vh;
+//   left: 1vw;
+//   right: 1vw;
+// }
 
-.el-popover {
-  box-shadow: 0 2px 12px 1px rgba(0, 0, 0, 1);
-}
+// .el-popover {
+//   box-shadow: 0 2px 12px 1px rgba(0, 0, 0, 1);
+// }
 </style>

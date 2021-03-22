@@ -2,16 +2,16 @@
   <div class="ClaimName">
     <div class="panel">
       <p>{{ $t('Welcome1') }}</p>
-      <p>{{ $t('Select your language:') }}
+      <p>{{ $t('SelectLanguage') }}
         <button
           class="lang"
           :class="{active: $i18n.locale ==='en'}"
-          v-on:click="setLang('en')"
+          v-on:click="shared.setLang('en')"
         >English</button>
         <button
           class="lang"
           :class="{active: $i18n.locale ==='fr'}"
-          v-on:click="setLang('fr')"
+          v-on:click="shared.setLang('fr')"
         >français</button>
 
       </p>
@@ -104,14 +104,6 @@ export default {
 
       this.$router.replace("/e");
     },
-    setLang: function (lang) {
-      var vue = this;
-
-      firebaseDb.ref(`/users/${vue.shared.firebaseRawAuthUser.uid}`)
-        .update({
-          lang: lang,
-        });
-    }
   }
 };
 </script>

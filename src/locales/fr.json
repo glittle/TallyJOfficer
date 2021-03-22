@@ -1,6 +1,7 @@
 {
-    "message": "bonjour i18n !!",
-    "Positions to Elect": "FR Positions to Elect",
     "Welcome1": "Bienvenue à notre élection d'officiers!",
-    "Select your language:": "Choisissez votre langue :"
+    "SelectLanguage": "Choisissez votre langue :",
+    "positions": {
+        "title": "Postes à élire"
+    }
 }

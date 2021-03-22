@@ -9,12 +9,12 @@
     <p>When a group of individuals form a team of peers, one of the first orders of business is to elect some of their members to positions of responsibility.</p>
     <p>This website provides a way for your team to quickly and easily vote online by secret ballot to choose who will serve in those positions.</p>
     <p>To start, or return to, your team's election, click here:</p>
-    <p>
+    <p class="center">
       <button v-on:click="$router.push('/e')">
         My Election
       </button>
     </p>
-    {{ $t('message') }}
+
     <img
       v-if="$i18n.locale.startsWith('en')"
       class="team"
@@ -105,6 +105,9 @@ export default {
   button {
     font-family: "Open Sans", sans-serif;
   }
+  .center {
+    text-align: center;
+  }
   img {
     &.left {
       float: left;
@@ -119,7 +122,7 @@ export default {
     }
     &.team {
       display: block;
-      margin: 1em 0;
+      margin: 1em auto;
       height: 300px;
       border-radius: 5px;
       box-shadow: 0 0 1px 0px black;

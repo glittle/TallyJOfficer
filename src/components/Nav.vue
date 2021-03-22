@@ -38,6 +38,13 @@
       :class="{isViewer: shared.isViewer}"
       :title="shared.electionKey.substring(1,5)"
     >
+      <select
+        :value="lang"
+        v-on:change="setLang"
+      >
+        <option value="en">English</option>
+        <option value="fr">français</option>
+      </select>
       <span>{{ shared.me.name }}</span>
       <button
         v-if="shared.isMember || shared.isViewer"
@@ -54,10 +61,12 @@
 import firebaseDb from "../firebaseInit";
 
 export default {
-  name: "Nav",
   computed: {
     shared: function () {
       return this.$root.shared;
+    },
+    lang: function () {
+      return this.shared.$i18n.locale;
     },
     version: function () {
       var lines = [
@@ -71,6 +80,9 @@ export default {
     }
   },
   methods: {
+    setLang: function (lang) {
+      this.shared.setLang(lang)
+    },
   }
 };
 </script>
