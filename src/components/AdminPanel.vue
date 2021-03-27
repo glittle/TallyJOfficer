@@ -77,10 +77,13 @@ export default {
             if (!this.shared.me.isAdmin) {
                 return;
             }
-            // TODO to upgrade to firebase db
             firebaseDb.ref(`/elections/${this.shared.electionKey}`).update({
+                // will be deleted by a firebase Function
                 deleteMe: true
             });
+
+            this.shared.election = {};
+            this.shared.electionKey = "";
         }
     }
 };

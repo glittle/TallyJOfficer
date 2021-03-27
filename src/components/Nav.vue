@@ -8,7 +8,7 @@
                 <router-link to="admin">Setup</router-link>
             </span>
             <span v-if="shared.me.id">
-                <router-link to="share">Share</router-link>
+                <router-link to="share">Link</router-link>
             </span>
             <span v-if="shared.me.id">
                 <router-link to="home">Voting</router-link>
@@ -45,17 +45,16 @@
             <span>{{ shared.me.name }}</span>
             <button
                 v-if="shared.isMember || shared.isViewer"
+                class="warning"
                 v-on:click="shared.forgetMe"
             >
-                Change
+                Leave
             </button>
         </div>
     </div>
 </template>
 
 <script>
-import firebaseDb from "../firebaseInit";
-
 export default {
     computed: {
         shared: function() {
@@ -89,11 +88,13 @@ export default {
 
 <style lang="less">
 #nav {
-    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    // display: flex;
+    // flex-shrink: 0;
+    // justify-content: space-between;
     background: #000;
     color: #fff;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
     min-height: 2.5em;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16),
@@ -105,7 +106,7 @@ export default {
     > div {
         flex: 1 1 auto;
         white-space: nowrap;
-        //display: flex;
+        display: flex;
         flex-wrap: wrap;
         justify-content: center;
     }
@@ -115,7 +116,7 @@ export default {
         white-space: normal;
         padding: 2px 0 6px;
         span {
-            margin: 0 10px;
+            margin: 0 15px;
         }
     }
 
@@ -129,22 +130,19 @@ export default {
     }
 
     a {
-        color: #fff;
+        color: #999;
+        font-weight: bold;
         text-decoration: none;
 
-        &:visited {
-            color: #fff;
-        }
-
         &:hover {
-            color: #62d9a3;
+            color: #ddd;
         }
 
         &.router-link-exact-active {
-            color: #42b983;
+            color: #fff;
             &:hover {
                 cursor: default;
-                color: #42b983;
+                color: #fff;
             }
         }
     }
@@ -156,15 +154,15 @@ export default {
     }
 
     button {
-        font-size: 0.8em;
+        font-size: 0.9em;
     }
 
     .myName {
-        text-align: right;
+        justify-content: flex-end;
         padding-right: 3px;
-        color: #4a993e;
-        &.isViewer {
-            font-weight: bold;
+        align-items: center;
+        .name {
+            margin-left: 2em;
         }
     }
 }

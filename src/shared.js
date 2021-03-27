@@ -17,6 +17,7 @@ export default new Vue({
         members: [],
         positions: [],
         viewers: [],
+        myOldElections: null,
         rounds: [],
         firebaseRawAuthUser: null,
         confirmedVote: false,
@@ -27,10 +28,13 @@ export default new Vue({
         myId: '',
         justClaimed: '',
         electionKey: '',
+        membersSortTimeout: null,
+        viewersSortTimeout: null,
         enableLanguage: false  // disable all language selection options
     },
     computed: {
         me() {
+            var dummy = this.myId;
             switch (this.myId[0]) {
                 case 'm':
                     return this.members.find(m => m.id === this.myId) || {};
@@ -92,9 +96,7 @@ export default new Vue({
     watch: {},
     created: function () {
         var vue = this;
-        console.log('set 1')
         vue.$i18n.locale = 'en'; // avoid flash of random/all languages
-        console.log('set 2')
         vue.resetLocalElectionInfo();
         vue.handleAuthChanges();
         vue.initialQuery = window.location.search;
@@ -138,9 +140,7 @@ export default new Vue({
                     .on("value", snapshot => {
                         var userInfo = snapshot.val();
 
-                        console.log('set 3', userInfo.lang, vue.$i18n.locale)
                         vue.$i18n.locale = userInfo.lang || 'en';
-                        console.log('set 4', userInfo.lang, vue.$i18n.locale)
 
                         if (vue.initialQuery) {
                             var key = vue.initialQuery.substring(1);
@@ -148,6 +148,7 @@ export default new Vue({
                             vue.loadElection(key);
                         } else if (userInfo.electionKey) {
                             vue.justClaimed = userInfo.memberId;
+
                             if (userInfo.electionKey !== vue.electionKey) {
                                 vue.resetLocalElectionInfo();
                                 vue.loadElection(userInfo.electionKey)
@@ -157,31 +158,43 @@ export default new Vue({
                             vue.electionLoadAttempted = true;
                         }
 
-                        if (user.photoURL) {
-                            vue.loadElection(user.photoURL);
-                        } else {
-                            // not linked to an election already
+                        firebaseDb
+                            .ref(`/userElections/${vue.firebaseRawAuthUser.uid}`)
+                            .on("value", snapshot => {
+                                vue.myOldElections = snapshot.val();
+                            });
 
-                            // see if there is a query string that works
+                        firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`).update({
+                            status: "online"
+                        });
 
-                        }
+                        vue.$emit("loggedIn");
+
+                        // if (user.photoURL) {
+                        //     vue.loadElection(user.photoURL);
+                        // } else {
+                        //     // not linked to an election already
+
+                        //     // see if there is a query string that works
+
+                        // }
 
                         // debugger;
-                        if (vue.initialQuery) {
-                            var electionKey = vue.initialQuery.substring(1);
-                            vue.initialQuery = '';
-                            vue.loadElection(electionKey);
-                        } else if (userInfo.electionKey) {
-                            vue.justClaimed = userInfo.memberId;
+                        // if (vue.initialQuery) {
+                        //     var electionKey = vue.initialQuery.substring(1);
+                        //     vue.initialQuery = '';
+                        //     vue.loadElection(electionKey);
+                        // } else if (userInfo.electionKey) {
+                        //     vue.justClaimed = userInfo.memberId;
 
-                            if (userInfo.electionKey !== vue.electionKey) {
-                                vue.resetLocalElectionInfo();
-                                vue.loadElection(userInfo.electionKey);
-                            }
-                        } else {
-                            vue.resetLocalElectionInfo();
-                            vue.electionLoadAttempted = true;
-                        }
+                        //     if (userInfo.electionKey !== vue.electionKey) {
+                        //         vue.resetLocalElectionInfo();
+                        //         vue.loadElection(userInfo.electionKey);
+                        //     }
+                        // } else {
+                        //     vue.resetLocalElectionInfo();
+                        //     vue.electionLoadAttempted = true;
+                        // }
                     });
 
                 firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
@@ -247,6 +260,13 @@ export default new Vue({
                             vue.connectToElection(electionRef);
                         } else {
                             vue.electionLoadAttempted = true;
+
+                            // is this in the userElections list?
+                            firebaseDb
+                                .ref(
+                                    `/userElections/${vue.firebaseRawAuthUser.uid}/${electionKey}`
+                                )
+                                .remove();
                         }
                     });
             }
@@ -283,6 +303,38 @@ export default new Vue({
                     } else {
                         vue.claimMember(member.id);
                     }
+
+                    // keep them sorted locally
+                    clearTimeout(vue.membersSortTimeout);
+                    vue.membersSortTimeout = setTimeout(() => {
+                        if (vue.myId && !vue.members.length) {
+                            // clean up!
+                            // there are no people... make me a temporary admin
+                            vue.me.isAdmin = true;
+                        }
+
+                        vue.members.sort((a, b) =>
+                            (a.name.toLocaleLowerCase() || "Z") <
+                                (b.name.toLocaleLowerCase() || "Z")
+                                ? -1
+                                : 1
+                        );;
+
+                        if (vue.election && vue.election.created) {
+                            firebaseDb
+                                .ref(
+                                    `/userElections/${vue.firebaseRawAuthUser.uid}/${vue.electionKey}`
+                                )
+                                .update({
+                                    created: vue.election.created,
+                                    when: moment().toISOString(),
+                                    who: vue.members
+                                        .filter(p => p.name)
+                                        .map(p => p.name)
+                                        .join(", ")
+                                });
+                        }
+                    }, 100);
                 }
 
                 if (!member.id && member.connected === false) {
@@ -307,6 +359,7 @@ export default new Vue({
             });
             vue.watchForListChanges(vue.viewers, firebaseDb.ref('/viewers/' + vue.electionKey).orderByChild('id'), viewer => {
                 if (viewer.id && (viewer.id === vue.myId || viewer.id === vue.justClaimed)) {
+                    vue.justClaimed = null;
                     if (vue.me.id) {
                         if (!viewer.connected) {
                             vue.claimViewer(viewer.id);
@@ -331,15 +384,17 @@ export default new Vue({
             });
             vue.watchForListChanges(vue.rounds, firebaseDb.ref('/votingRounds/' + vue.electionKey).orderByChild('id'));
 
-            electionRef.update({
-                // record when this election was last used
-                lastLogin: new Date()
-            });
+            if (vue.election && vue.election.createdBy) {
+                electionRef.update({
+                    // record when this election was last used
+                    lastLogin: moment().toISOString()
+                });
+            }
 
             electionRef.on('value', function (snapshot) {
                 var incomingElection = snapshot.val() || {};
 
-                // console.log('election changed', incomingElection);
+                console.log('election changed', incomingElection);
                 if (!incomingElection || !incomingElection.createdBy) {
                     // deleted!
                     vue.logout();
@@ -361,6 +416,12 @@ export default new Vue({
                     vue.symbol = '';
                 }
 
+                firebaseDb
+                    .ref(`/userElections/${vue.firebaseRawAuthUser.uid}/${vue.electionKey}`)
+                    .update({
+                        when: moment().toISOString()
+                    });
+
                 vue.election = incomingElection;
 
                 vue.electionLoadAttempted = true;
@@ -370,13 +431,13 @@ export default new Vue({
 
         },
         logout() {
-            this.resetLocalElectionInfo();
-
             firebaseDb.ref(`/users/${this.firebaseRawAuthUser.uid}`)
                 .update({
                     memberId: '',
                     electionKey: ''
                 });
+
+            this.resetLocalElectionInfo();
         },
         forgetMe: function () {
             if (this.myId) {
@@ -471,8 +532,9 @@ export default new Vue({
             // console.log('set connected', this.firebaseRawAuthUser.uid);
             vue.myId = memberId;
             vue.justClaimed = memberId;
+            var me = vue.me;
 
-            if (vue.me.id) {
+            if (me.id) {
 
                 firebaseDb.ref(`/members/${vue.electionKey}/${memberId}`)
                     .update({
@@ -506,9 +568,11 @@ export default new Vue({
         claimViewer: function (viewerId) {
             var vue = this;
             vue.myId = viewerId;
+            vue.justClaimed = viewerId;
+            var me = vue.me;
+            // console.log('claim viewer', vue.myId, vue.me.id);
 
-            if (vue.me.id) {
-
+            if (me.id) {
                 firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
                     .update({
                         status: 'online',
@@ -521,9 +585,6 @@ export default new Vue({
                     connectedTime: moment().toISOString(),
                     browser: this.getBrowserInfo()
                 });
-
-            } else {
-                console.log('Did not find viewer', viewerId);
             }
         },
         getBrowserInfo() {
@@ -570,21 +631,21 @@ export default new Vue({
 
             return 'Unk';
         },
-        startMeAsViewer: function () {
-            var id = this.getRandomId('v', this.viewers);
-            var lastName = this.viewers.length ? this.viewers[this.viewers.length - 1].name : null;
-            // can handle 26 viewers... should not have more than 1 or 2
-            var nextNum = lastName ? +lastName.substr(1) : 0;
-            var name = 'V' + (1 + nextNum);
-            var viewer = {
-                id: id,
-                name: name
-            };
+        // startMeAsViewer: function () {
+        //     var id = this.getRandomId('v', this.viewers);
+        //     var lastName = this.viewers.length ? this.viewers[this.viewers.length - 1].name : null;
+        //     // can handle 26 viewers... should not have more than 1 or 2
+        //     var nextNum = lastName ? +lastName.substr(1) : 0;
+        //     var name = 'V' + (1 + nextNum);
+        //     var viewer = {
+        //         id: id,
+        //         name: name
+        //     };
 
-            firebaseDb.ref(`/viewers/${this.electionKey}/${id}`).set(viewer);
+        //     firebaseDb.ref(`/viewers/${this.electionKey}/${id}`).set(viewer);
 
-            this.claimViewer(id);
-        },
+        //     this.claimViewer(id);
+        // },
         // updateList: function(list, doc) {
         //     var item = doc.data();
         //     var i = list.findIndex(x => x.id === item.id);
@@ -606,11 +667,10 @@ export default new Vue({
             newAdmin.connected = moment().toISOString();
             newAdmin.isAdmin = true;
 
-            var electionRef = firebaseDb.ref('/elections')
-                .push(); // generate new election doc
+            var electionRef = firebaseDb.ref('/elections').push(); // generate new election doc
 
             electionRef.set({
-                created: new Date().toString(),
+                created: moment().toISOString(),
                 createdBy: nameOfAdmin
             }).then(function () {
                 vue.connectToElection(electionRef);
@@ -626,7 +686,7 @@ export default new Vue({
             })
                 .catch(function (err) {
                     console.log(err);
-                    // vue.$emit('election-creation-error', err);
+                    vue.$emit('election-creation-error', err);
                 });
         },
         createMembers: function (adminMember) {
@@ -657,7 +717,7 @@ export default new Vue({
         createPositions: function () {
             // var vue = this;
             var list = [
-                'Sample',
+                'Sample Test',
                 'Secretary',
                 'Chair',
                 'Treasurer',

@@ -17,28 +17,48 @@
 
             <p>Please claim your name...</p>
             <table>
-                <tr
-                    v-for="m in shared.members"
-                    :key="m.id"
-                    class="memberHolder"
-                    :class="{ claimed: m.connected }"
-                >
-                    <th>{{ m.name }}</th>
-                    <td>
-                        <button
-                            v-if="m.participating && !m.connected"
-                            :disabled="claimMade"
-                            v-on:click="claim(m)"
-                        >
-                            This is me!
-                        </button>
-                        <span v-if="m.connected">Claimed</span>
-                        <span v-if="!m.participating">Not Voting</span>
-                    </td>
-                </tr>
+                <tbody>
+                    <tr
+                        v-for="m in shared.members"
+                        :key="m.id"
+                        class="memberHolder"
+                        :class="{ claimed: m.connected }"
+                    >
+                        <th>{{ m.name }}</th>
+                        <td>
+                            <button
+                                v-if="m.participating && !m.connected"
+                                v-on:click="claim(m)"
+                            >
+                                This is me!
+                            </button>
+                            <span v-if="m.connected">Claimed</span>
+                            <span v-if="!m.participating">Not Voting</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr
+                        v-for="m in shared.viewers"
+                        :key="m.id"
+                        class="memberHolder"
+                        :class="{ claimed: m.connected }"
+                    >
+                        <th>{{ m.name }}</th>
+                        <td>
+                            <button
+                                v-if="!m.connected"
+                                v-on:click="claimViewer(m)"
+                            >
+                                Join as Viewer
+                            </button>
+                            <span v-if="m.connected">Claimed</span>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
-        <div class="panel">
+        <!-- <div class="panel">
             <p>
                 Or, if this browser will be used to display results, click
                 <button v-on:click="claimViewer">Viewer</button>
@@ -48,28 +68,24 @@
                 viewer, use an "In Private"/"Incognito" window for one of the
                 sessions!
             </p>
-        </div>
+        </div> -->
         <div v-if="!shared.me.id" class="panel">
             <p>
-                To forget about this election, click
+                To entirely leave this election, click
                 <button class="caution" v-on:click="logout">
-                    Forget Election
+                    Leave this Election
                 </button>
             </p>
-            <p>An administrator can delete this election on the Setup page.</p>
+            <p>An administrator can delete the election on the Setup page.</p>
         </div>
     </div>
 </template>
 
 <script>
-import firebaseDb from "../firebaseInit";
-
 export default {
     name: "ClaimName",
     data: function() {
-        return {
-            claimMade: false
-        };
+        return {};
     },
     computed: {
         shared: function() {
@@ -96,8 +112,13 @@ export default {
         logout: function() {
             this.shared.logout();
         },
-        claimViewer: function() {
-            this.shared.startMeAsViewer();
+        claimViewer: function(member) {
+            if (member.connected) {
+                // already claimed!
+                return;
+            }
+
+            this.shared.claimViewer(member.id);
 
             this.$router.replace("/e");
         }
@@ -113,9 +134,22 @@ export default {
 
     table {
         margin: 1em auto;
+        border-collapse: collapse;
         th {
             font-weight: normal;
             padding-right: 40px;
+        }
+    }
+
+    td,
+    th {
+        padding: 0 1em;
+    }
+
+    tfoot {
+        background-color: #e9e9e9;
+        tr:first-child {
+            border-top: 3px double grey;
         }
     }
     tr.memberHolder {
