@@ -1,4 +1,9 @@
 {
+    "languages": {
+        "en": "English",
+        "fr": "français",
+        "es": "Español"
+    },
     "Welcome1": "Welcome to our officer election!",
     "SelectLanguage": "Select your language:",
     "positions": {

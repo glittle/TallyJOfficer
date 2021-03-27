@@ -4,4 +4,11 @@ import 'firebase/database'
 import firebaseConfig from './firebaseConfig';
 firebase.initializeApp(firebaseConfig);
 
-export default firebase.database();
+var db = firebase.database();
+
+if (location.hostname === "localhost") {
+  // Point to the RTDB emulator running on localhost.
+  db.useEmulator("localhost", 9000);
+}
+
+export default db;

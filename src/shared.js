@@ -26,7 +26,8 @@ export default new Vue({
         symbol: '',
         myId: '',
         justClaimed: '',
-        electionKey: ''
+        electionKey: '',
+        enableLanguage: false  // disable all language selection options
     },
     computed: {
         me() {
@@ -38,33 +39,42 @@ export default new Vue({
             }
             return {};
         },
-        numBlankNames: function() {
+        numBlankNames: function () {
             return this.members.filter(m => !m.name).length;
         },
-        numNonBlankNames: function() {
+        numNonBlankNames: function () {
             return this.members.filter(m => m.name).length;
         },
-        numMembers: function() {
+        numMembers: function () {
             return this.members.length;
         },
-        numVotesRequired: function() {
+        numVotesRequired: function () {
             return 1 + Math.floor(this.numMembers / 2);
         },
-        isMember: function() {
+        isMember: function () {
             var id = this.me.id;
             return id && id.startsWith('m');
         },
-        isViewer: function() {
+        isViewer: function () {
             var id = this.me.id;
             return id && id.startsWith('v');
         },
-        link: function() {
+        link: function () {
             if (this.firebaseRawAuthUser && this.electionKey) {
                 return `${location.origin}/j?${this.electionKey}`;
             }
             return null;
         },
-        dbMe: function() {
+        currentLanguage() {
+            return $i18n.locale;
+        },
+        languages() {
+            return this.$t("languages");
+        },
+        languageCodes() {
+            return Object.keys(this.languages);
+        },
+        dbMe: function () {
             var id = this.me.id;
             if (!id) return {};
 
@@ -80,8 +90,11 @@ export default new Vue({
         }
     },
     watch: {},
-    created: function() {
+    created: function () {
         var vue = this;
+        console.log('set 1')
+        vue.$i18n.locale = 'en'; // avoid flash of random/all languages
+        console.log('set 2')
         vue.resetLocalElectionInfo();
         vue.handleAuthChanges();
         vue.initialQuery = window.location.search;
@@ -104,7 +117,7 @@ export default new Vue({
             // this.justClaimed = '';
             this.electionKey = ''
         },
-        symbolOffset: function(letter) {
+        symbolOffset: function (letter) {
             if (!letter) {
                 return 0;
             }
@@ -125,8 +138,9 @@ export default new Vue({
                     .on("value", snapshot => {
                         var userInfo = snapshot.val();
 
+                        console.log('set 3', userInfo.lang, vue.$i18n.locale)
                         vue.$i18n.locale = userInfo.lang || 'en';
-
+                        console.log('set 4', userInfo.lang, vue.$i18n.locale)
 
                         if (vue.initialQuery) {
                             var key = vue.initialQuery.substring(1);
@@ -185,13 +199,13 @@ export default new Vue({
             // ...
 
         },
-        handleAuthChanges: function() {
+        handleAuthChanges: function () {
             var vue = this;
-            firebase.auth().onAuthStateChanged(function(user) {
+            firebase.auth().onAuthStateChanged(function (user) {
                 vue.processAuthUser(user);
             });
 
-            firebase.auth().signInAnonymously().catch(function(error) {
+            firebase.auth().signInAnonymously().catch(function (error) {
                 // Handle Errors here.
                 var errorCode = error.code;
                 var errorMessage = error.message;
@@ -199,7 +213,7 @@ export default new Vue({
             });
 
             firebaseDb.ref('.info/connected')
-                .on('value', function(snapshot) {
+                .on('value', function (snapshot) {
                     if (!snapshot.val()) {
                         // we are not connected
                         return;
@@ -217,7 +231,7 @@ export default new Vue({
                     }
                 });
         },
-        loadElection: function(electionKey) {
+        loadElection: function (electionKey) {
             var vue = this;
             if (electionKey) {
                 var electionRef = firebaseDb.ref('/elections/' + electionKey);
@@ -237,7 +251,7 @@ export default new Vue({
                     });
             }
         },
-        connectToElection: function(electionRef) {
+        connectToElection: function (electionRef) {
             // we know that ref refers to an actual db entry
             var vue = this;
             // console.log('connected to election', electionRef.key);
@@ -322,7 +336,7 @@ export default new Vue({
                 lastLogin: new Date()
             });
 
-            electionRef.on('value', function(snapshot) {
+            electionRef.on('value', function (snapshot) {
                 var incomingElection = snapshot.val() || {};
 
                 // console.log('election changed', incomingElection);
@@ -364,7 +378,7 @@ export default new Vue({
                     electionKey: ''
                 });
         },
-        forgetMe: function() {
+        forgetMe: function () {
             if (this.myId) {
                 var oldId = this.myId;
 
@@ -402,12 +416,12 @@ export default new Vue({
                 this.$emit('goto', '/e');
             }
         },
-        cancelVoting: function() {
+        cancelVoting: function () {
             firebaseDb.ref(`/elections/${this.electionKey}`).update({
                 votingOpen: false
             });
         },
-        watchForListChanges: function(localList, listRef, onAddChange, onRemove) {
+        watchForListChanges: function (localList, listRef, onAddChange, onRemove) {
             var i;
             listRef.on('child_added', data => {
                 // we may have loaded it locally already, so may need to replace it
@@ -452,7 +466,7 @@ export default new Vue({
                 }
             });
         },
-        claimMember: function(memberId) {
+        claimMember: function (memberId) {
             var vue = this;
             // console.log('set connected', this.firebaseRawAuthUser.uid);
             vue.myId = memberId;
@@ -477,7 +491,7 @@ export default new Vue({
                 // start watching for symbols to be assigned to me
                 var path = `/voterSymbols/${this.electionKey}/${memberId}`;
                 firebaseDb.ref(path)
-                    .on('value', function(snapshot) {
+                    .on('value', function (snapshot) {
                         var info = snapshot.val();
                         if (info) {
                             vue.symbol = info.symbol;
@@ -489,7 +503,7 @@ export default new Vue({
                 console.log('Did not find member', memberId);
             }
         },
-        claimViewer: function(viewerId) {
+        claimViewer: function (viewerId) {
             var vue = this;
             vue.myId = viewerId;
 
@@ -556,7 +570,7 @@ export default new Vue({
 
             return 'Unk';
         },
-        startMeAsViewer: function() {
+        startMeAsViewer: function () {
             var id = this.getRandomId('v', this.viewers);
             var lastName = this.viewers.length ? this.viewers[this.viewers.length - 1].name : null;
             // can handle 26 viewers... should not have more than 1 or 2
@@ -580,7 +594,7 @@ export default new Vue({
         //         list.push(item);
         //     }
         // },
-        createElection: function(nameOfAdmin) {
+        createElection: function (nameOfAdmin) {
             var vue = this;
             if (!vue.firebaseRawAuthUser) {
                 return;
@@ -596,26 +610,26 @@ export default new Vue({
                 .push(); // generate new election doc
 
             electionRef.set({
-                    created: new Date().toString(),
-                    createdBy: nameOfAdmin
-                }).then(function() {
-                    vue.connectToElection(electionRef);
+                created: new Date().toString(),
+                createdBy: nameOfAdmin
+            }).then(function () {
+                vue.connectToElection(electionRef);
 
-                    vue.createMembers(newAdmin);
-                    vue.createPositions();
+                vue.createMembers(newAdmin);
+                vue.createPositions();
 
-                    gtag('event', 'createElection');
+                gtag('event', 'createElection');
 
-                    vue.claimMember(vue.myId);
+                vue.claimMember(vue.myId);
 
-                    vue.$emit('election-created');
-                })
-                .catch(function(err) {
+                vue.$emit('election-created');
+            })
+                .catch(function (err) {
                     console.log(err);
                     // vue.$emit('election-creation-error', err);
                 });
         },
-        createMembers: function(adminMember) {
+        createMembers: function (adminMember) {
             var vue = this;
 
             var members = [];
@@ -640,7 +654,7 @@ export default new Vue({
                     memberId: vue.myId
                 });
         },
-        createPositions: function() {
+        createPositions: function () {
             // var vue = this;
             var list = [
                 'Sample',
@@ -658,8 +672,8 @@ export default new Vue({
 
             positions.forEach(p => firebaseDb.ref(`/positions/${this.electionKey}/${p.id}`).set(p));
         },
-        fillData: function() {},
-        makePosition: function(name, list) {
+        fillData: function () { },
+        makePosition: function (name, list) {
             var id = this.getRandomId('p', list);
             return {
                 name: name,
@@ -670,7 +684,7 @@ export default new Vue({
                 sortOrder: 0
             }
         },
-        getRandomId: function(prefix, list, numDigits) {
+        getRandomId: function (prefix, list, numDigits) {
             var uniqueIdFound = false;
             var id;
             numDigits = numDigits || 3;
@@ -680,7 +694,7 @@ export default new Vue({
             }
             return id;
         },
-        makeMember: function(name, list) {
+        makeMember: function (name, list) {
             var id = this.getRandomId('m', list);
             return {
                 name: name || '',
@@ -695,7 +709,7 @@ export default new Vue({
                 voting: false
             };
         },
-        setLang: function(lang) {
+        setLang: function (lang) {
             firebaseDb.ref(`/users/${this.firebaseRawAuthUser.uid}`)
                 .update({
                     lang: lang,

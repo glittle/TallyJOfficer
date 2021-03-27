@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^1.0.2",
+    "firebase": "^8.3.1",
     "moment": "^2.25.3",
     "register-service-worker": "^1.7.1",
     "tslib": "^1.11.2",
@@ -27,7 +28,6 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^6.2.2",
-    "firebase": "^7.24.0",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "vue-cli-plugin-i18n": "~1.0.1",
