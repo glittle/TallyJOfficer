@@ -111,6 +111,7 @@ export default {
         },
         logout: function() {
             this.shared.logout();
+            this.$router.replace("/");
         },
         claimViewer: function(member) {
             if (member.connected) {

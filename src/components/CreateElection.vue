@@ -67,18 +67,27 @@
                             class="previousElection"
                         >
                             <td>
-                                <button v-on:click="shared.loadElection(g.key)">
+                                <button
+                                    v-on:click="shared.loadElection(g.key)"
+                                    :title="g.abbrev"
+                                >
                                     Open
                                 </button>
                             </td>
-                            <td :title="g.abbrev">
-                                <div class="age">Viewed {{ g.age }}</div>
-                                <div v-if="g.createdAge" class="age">
+                            <td>
+                                <div class="age" :title="g.ageDate">
+                                    Viewed {{ g.age }}
+                                </div>
+                                <div
+                                    v-if="g.createdAge"
+                                    :title="g.createdDate"
+                                    class="age"
+                                >
                                     Created {{ g.createdAge }}
                                 </div>
                             </td>
                             <td class="who">
-                                <div>Voters List</div>
+                                <span>Voters: </span>
                                 {{ g.who }}
                             </td>
                         </tr>
@@ -120,9 +129,13 @@ export default {
                     }
                     info.key = k;
                     if (info.created) {
+                        moment.suppressDeprecationWarnings = true;
                         info.createdAge = moment(info.created).fromNow();
+                        info.createdDate = moment(info.created).format();
+                        moment.suppressDeprecationWarnings = false;
                     }
                     info.age = moment(info.when).fromNow();
+                    info.ageDate = moment(info.when).format();
                     info.abbrev = this.shared.electionKeyAbbrev(k);
                     return info;
                 });
@@ -218,10 +231,8 @@ export default {
             white-space: nowrap;
         }
         .who {
-            div {
-                color: #666;
-                font-size: 85%;
-                margin-bottom: 3px;
+            span {
+                color: #999;
             }
         }
     }

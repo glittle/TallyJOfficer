@@ -121,6 +121,10 @@
                     </button>
                 </p>
             </div>
+            <p class="comment">
+                All voters remain on this screeen until voting for this position
+                is completed.
+            </p>
         </div>
     </div>
 </template>
@@ -358,6 +362,11 @@ export default {
                 opacity: 0.6;
             }
         }
+    }
+    .comment {
+        margin: 3em 0 0;
+        font-size: 80%;
+        color: #999;
     }
 }
 </style>

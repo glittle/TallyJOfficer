@@ -136,7 +136,9 @@
                         of less than twelve members. If you need to elect a
                         group of individuals from a larger population, you
                         should consider using the
-                        <a href="https://tallyj.com">standard TallyJ</a>.
+                        <a href="https://tallyj.com" target="_blank"
+                            >standard TallyJ</a
+                        >.
                     </blockquote>
                 </li>
                 <li>
@@ -208,7 +210,9 @@
                     <span>Where did you get those icons?</span>
                     <blockquote>
                         The symbols used on the voting pages come from the Noun
-                        Project (<a href="https://thenounproject.com"
+                        Project (<a
+                            href="https://thenounproject.com"
+                            target="_blank"
                             >thenounproject.com</a
                         >) courtesy of these talented artists: Alex Strange,
                         angelina fara, Eucalyp, gufron m, IconTreasure, il
@@ -250,6 +254,22 @@
                     <blockquote>
                         If you have another question that has not been answered
                         here, please send Glen an email!
+                    </blockquote>
+                </li>
+                <li>
+                    <span>What has changed lately?</span>
+                    <blockquote>
+                        This is currently version {{ version }}.
+                    </blockquote>
+                    <blockquote>
+                        Recent changes:
+                        <ul>
+                            <li>Numerous visual and internal improvements.</li>
+                            <li>
+                                Add "tawk" remote support - accessible from FAQ
+                                and Setup pages
+                            </li>
+                        </ul>
                     </blockquote>
                 </li>
             </ol>

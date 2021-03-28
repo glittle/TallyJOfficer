@@ -10,91 +10,91 @@ var router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [{
-            path: '/',
-            name: 'public',
-            component: Public
-        }, {
-            path: '/guidance',
-            name: 'guidance',
-            meta: {
-                tags: {
-                    description: 'Guidance regarding offices of a Bahá’í Assembly.'
-                }
-            },
-            component: () =>
-                import ( /* webpackChunkName: "guidance" */ './views/Guidance.vue')
-        }, {
-            path: '/faq',
-            name: 'faq',
-            meta: {
-                tags: {
-                    description: 'Questiions and Answers about TallyJ for Officers.'
-                }
-            },
-            component: () =>
-                import ( /* webpackChunkName: "public2" */ './components/FAQ.vue')
+        path: '/',
+        name: 'public',
+        component: Public
+    }, {
+        path: '/guidance',
+        name: 'guidance',
+        meta: {
+            tags: {
+                description: 'Guidance regarding offices of a Bahá’í Assembly.'
+            }
         },
-        {
-            path: '/e',
-            name: 'electionShell',
-            component: () =>
-                import ( /* webpackChunkName: "main" */ './views/ElectionShell.vue'),
-            children: [{
-                    path: '/j',
-                    name: 'join',
-                    component: () =>
-                        import ( /* webpackChunkName: "public3" */ './components/Join.vue')
-                }, {
-                    path: '/e/home',
-                    name: 'overview',
-                    component: () =>
-                        import ( /* webpackChunkName: "main" */ './components/Overview.vue')
-                }, {
-                    path: '/e/claim',
-                    name: 'claim',
-                    component: () =>
-                        import ( /* webpackChunkName: "main" */ './components/ClaimName.vue')
-                }, {
-                    //     path: '/e/votingPanel',
-                    //     name: 'votingPanel',
-                    //     component: () =>
-                    //         import ( /* webpackChunkName: "main2" */ './components/VotingPanel.vue')
-                    // }, {
-                    //     path: '/e/resultPanel',
-                    //     name: 'resultPanel',
-                    //     component: () =>
-                    //         import ( /* webpackChunkName: "main2" */ './components/ResultPanel.vue')
-                    // }, {
-                    //     path: '/e/setupNames',
-                    //     name: 'setupNames',
-                    //     component: () =>
-                    //         import ( /* webpackChunkName: "admin" */ './components/SetupNames.vue')
-                    // }, {
-                    //     path: '/e/setupPositions',
-                    //     name: 'setupPositions',
-                    //     component: () =>
-                    //         import ( /* webpackChunkName: "admin" */ './components/SetupPositions.vue')
-                    // }, {
-                    path: '/e/create',
-                    name: 'createElection',
-                    component: () =>
-                        import ( /* webpackChunkName: "admin" */ './components/CreateElection.vue')
-                }, {
-                    path: '/e/admin',
-                    name: 'adminPanel',
-                    component: () =>
-                        import ( /* webpackChunkName: "admin" */ './components/AdminPanel.vue')
-                }, {
-                    path: '/e/share',
-                    name: 'share',
-                    component: () =>
-                        import ( /* webpackChunkName: "main2" */ './components/Share.vue')
-                }
-                // { path: 'names', component: x },
-                // { path: 'positions', component: x },
-                // { path: '', component: x },
-            ]
+        component: () =>
+            import( /* webpackChunkName: "guidance" */ './views/Guidance.vue')
+    }, {
+        path: '/faq',
+        name: 'faq',
+        meta: {
+            tags: {
+                description: 'Questiions and Answers about TallyJ for Officers.'
+            }
         },
+        component: () =>
+            import( /* webpackChunkName: "public2" */ './components/FAQ.vue')
+    },
+    {
+        path: '/e',
+        name: 'electionShell',
+        component: () =>
+            import( /* webpackChunkName: "main" */ './views/ElectionShell.vue'),
+        children: [{
+            path: '/j',
+            name: 'join',
+            component: () =>
+                import( /* webpackChunkName: "public3" */ './components/Join.vue')
+        }, {
+            path: '/e/home',
+            name: 'overview',
+            component: () =>
+                import( /* webpackChunkName: "main" */ './components/Overview.vue')
+        }, {
+            path: '/e/claim',
+            name: 'claim',
+            component: () =>
+                import( /* webpackChunkName: "main" */ './components/ClaimName.vue')
+        }, {
+            //     path: '/e/votingPanel',
+            //     name: 'votingPanel',
+            //     component: () =>
+            //         import ( /* webpackChunkName: "main2" */ './components/VotingPanel.vue')
+            // }, {
+            //     path: '/e/resultPanel',
+            //     name: 'resultPanel',
+            //     component: () =>
+            //         import ( /* webpackChunkName: "main2" */ './components/ResultPanel.vue')
+            // }, {
+            //     path: '/e/setupNames',
+            //     name: 'setupNames',
+            //     component: () =>
+            //         import ( /* webpackChunkName: "admin" */ './components/SetupNames.vue')
+            // }, {
+            //     path: '/e/setupPositions',
+            //     name: 'setupPositions',
+            //     component: () =>
+            //         import ( /* webpackChunkName: "admin" */ './components/SetupPositions.vue')
+            // }, {
+            path: '/e/create',
+            name: 'createElection',
+            component: () =>
+                import( /* webpackChunkName: "admin" */ './components/CreateElection.vue')
+        }, {
+            path: '/e/admin',
+            name: 'adminPanel',
+            component: () =>
+                import( /* webpackChunkName: "admin" */ './components/AdminPanel.vue')
+        }, {
+            path: '/e/share',
+            name: 'share',
+            component: () =>
+                import( /* webpackChunkName: "main2" */ './components/Share.vue')
+        }
+            // { path: 'names', component: x },
+            // { path: 'positions', component: x },
+            // { path: '', component: x },
+        ]
+    },
         // {
         //     path: '/about',
         //     name: 'about',
@@ -112,7 +112,14 @@ router.afterEach((to, from) => {
     gtag('event', 'screen_view', {
         screen_name: to.name,
     });
-    setTimeout(function() {
+    if (Tawk_API && Tawk_API.showWidget) {
+        if (['adminPanel', 'faq', 'createElection'].includes(to.name)) {
+            Tawk_API.showWidget();
+        } else {
+            Tawk_API.hideWidget();
+        }
+    }
+    setTimeout(function () {
         var eb = window.document.getElementById('electionBody');
         if (eb && eb.scrollTo) {
             // console.log('scrollTo 0');

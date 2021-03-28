@@ -37,7 +37,7 @@
             </button>
         </p>
 
-        <h1>Learn about Officer Elections</h1>
+        <h1 class="learn">Learn about TallyJ for Officers</h1>
         <p>
             Please see these <a href="faq">Questions and Answers</a> about how
             this website works.
@@ -50,17 +50,21 @@
         <p>Samples of where this might be useful:</p>
         <ul class="samples">
             <li>
-                <h3>Club</h3>
-                <p>President, Vice President, Secretary, Treasurer</p>
-            </li>
-            <li>
-                <h3>Bahá'í Assembly</h3>
+                <h3>Bahá'í Spiritual Assembly</h3>
                 <p>Chairperson, Vice-Chairperson, Secretary, Treasurer</p>
                 <p>
                     The Bahá'í community has
                     <a href="guidance">guidance</a> regarding various aspects of
                     electing officers.
                 </p>
+            </li>
+            <li>
+                <h3>Council</h3>
+                <p>Chair, Vice Chair, Secretary, Treasurer</p>
+            </li>
+            <li>
+                <h3>Club</h3>
+                <p>President, Vice President, Secretary, Treasurer</p>
             </li>
             <li>
                 <h3>Board of Directors</h3>
@@ -88,10 +92,6 @@
             <li>
                 <h3>Road Trip</h3>
                 <p>Driver, Navigator</p>
-            </li>
-            <li>
-                <h3>Survivor Challenge (TV Show)</h3>
-                <p>Swimmer, Rope Puller, Puzzle Solver</p>
             </li>
         </ul>
         <!-- <h1>Spread the News!</h1>
@@ -125,6 +125,9 @@ export default {
     h2 {
         font-family: "Acme", sans-serif;
         color: #1e331d;
+    }
+    .learn {
+        margin-top: 3em;
     }
     button {
         font-family: "Open Sans", sans-serif;

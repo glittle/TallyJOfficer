@@ -106,12 +106,12 @@ export default new Vue({
             this.election = {};
             this.electionLoadAttempted = false;
             this.members = [];
-            this.positions = [];
             this.viewers = [];
+            this.positions = [];
             this.rounds = [];
             // this.firebaseRawAuthUser = null;
-            this.confirmedVote = false;
             // this.disconnecting = false;
+            this.confirmedVote = false;
             this.dbElectionRef = null;
             this.initialQuery = '';
             this.symbol = '';
@@ -231,7 +231,6 @@ export default new Vue({
                         // we are not connected
                         return;
                     }
-
                     var updates = {};
                     updates.status = 'offline';
 
@@ -394,7 +393,7 @@ export default new Vue({
             electionRef.on('value', function (snapshot) {
                 var incomingElection = snapshot.val() || {};
 
-                console.log('election changed', incomingElection);
+                // console.log('election changed', incomingElection);
                 if (!incomingElection || !incomingElection.createdBy) {
                     // deleted!
                     vue.logout();
