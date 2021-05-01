@@ -16,11 +16,7 @@
             online by secret ballot to choose who will serve in those positions.
         </p>
 
-        <img
-            v-if="$i18n.locale.startsWith('en')"
-            class="team"
-            src="../../public/img/team.png"
-        />
+        <img class="team" src="../../public/img/team.png" />
 
         <p>
             If you have been given a link for an election, paste it into the
@@ -36,6 +32,20 @@
                 Start
             </button>
         </p>
+
+        <p>
+            If this is your first time using TallyJ for Officers, you should
+            watch this introductory video:
+        </p>
+        <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/lZrXttRt-oI"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+        ></iframe>
 
         <h1 class="learn">Learn about TallyJ for Officers</h1>
         <p>
@@ -168,6 +178,9 @@ export default {
                 margin: 10px 0 -10px -20px;
             }
         }
+    }
+    iframe {
+        margin: 0 0 0 3em;
     }
 }
 </style>

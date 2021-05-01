@@ -5,6 +5,19 @@
                 Go Back
             </button>
             <h1>TallyJ for Officers</h1>
+            <div class="video">
+                Here is an introductory video about TallyJ for Officers. You
+                should also read the rest of this page to understand it more!
+                <iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/lZrXttRt-oI"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+            </div>
             <h2>Questions and Answers</h2>
             <ol>
                 <li>
@@ -267,14 +280,13 @@
                         This is currently version {{ version }}.
                     </blockquote>
                     <blockquote>
-                        Recent changes:
-                        <ul>
-                            <li>Numerous visual and internal improvements.</li>
-                            <li>
-                                Add "tawk" remote support - accessible from FAQ
-                                and Setup pages
-                            </li>
-                        </ul>
+                        Refer to this
+                        <a
+                            href="https://docs.google.com/document/d/1OLwXSMzIdzKDwXlIH-6tzDfWBjmtHY2Cqt-PN9UncEA/view"
+                            target="statusDocument"
+                            >online document</a
+                        >
+                        for a list of recent changes.
                     </blockquote>
                 </li>
             </ol>
@@ -320,6 +332,12 @@ export default {
     }
     .goBack {
         float: right;
+    }
+    .video {
+        margin: 10px 0 2em;
+        iframe {
+            margin: 10px 0 0 3em;
+        }
     }
 }
 </style>
