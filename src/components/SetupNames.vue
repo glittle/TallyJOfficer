@@ -13,8 +13,9 @@
 
             <div v-if="useQuickList" class="quickAdd">
                 <p>
-                    To quickly add members, enter or paste their names into this
-                    box, one per line, then click "Add Now".
+                    <strong>Adding Multiple</strong>
+                    Add the names of members who can vote or be voted for into
+                    this box, one per line, then click "Add Now".
                 </p>
                 <textarea ref="quickList" v-model="quickList"></textarea>
                 <button
@@ -118,8 +119,8 @@
         <div class="panel">
             <h1>Name the Viewers</h1>
             <p>
-                If you want to allow viewers to watch the election status, name
-                them here.
+                If you want to allow viewers who are not voting to watch the
+                election status, name them here.
             </p>
             <div
                 v-for="(item, i) in shared.viewers"
@@ -420,7 +421,7 @@ export default {
         font-size: 1em;
         margin: -10px auto 10px;
         text-align: center;
-        white-space: nowrap;
+        white-space: pre;
     }
     .list {
         margin: 20px 0;

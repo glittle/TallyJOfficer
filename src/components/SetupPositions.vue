@@ -46,7 +46,7 @@
             </slick-list>
 
             <button v-on:click="add">
-                Add Another
+                Add Another Position
             </button>
         </div>
 

@@ -1,5 +1,13 @@
 <template>
     <div>
+        <div class="panel">
+            <h1>Setting up</h1>
+            <p>
+                To set up your election, read each of the sections below
+                carefully, completing what is required.
+            </p>
+            <p>You are the administrator of this election.</p>
+        </div>
         <setup-names></setup-names>
         <setup-positions></setup-positions>
         <div class="panel">
@@ -77,10 +85,17 @@ export default {
             if (!this.shared.me.isAdmin) {
                 return;
             }
+
             firebaseDb.ref(`/elections/${this.shared.electionKey}`).update({
                 // will be deleted by a firebase Function
                 deleteMe: true
             });
+
+            firebaseDb
+                .ref(
+                    `/userElections/${this.shared.firebaseRawAuthUser.uid}/${this.shared.electionKey}`
+                )
+                .remove();
 
             this.shared.election = {};
             this.shared.electionKey = "";

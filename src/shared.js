@@ -478,6 +478,7 @@ export default new Vue({
         },
         cancelVoting: function () {
             firebaseDb.ref(`/elections/${this.electionKey}`).update({
+                positionIdToVoteFor: '',
                 votingOpen: false
             });
         },
@@ -504,8 +505,10 @@ export default new Vue({
                     localList.splice(i, 1, item);
                 } else {
                     // missing??
-                    console.log('missing', item.id);
-                    localList.push(item);
+                    if (item.id) {
+                        console.log('missing', item.id);
+                        localList.push(item);
+                    }
                 }
                 if (onAddChange) {
                     onAddChange(item, data);

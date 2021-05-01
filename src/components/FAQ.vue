@@ -25,24 +25,29 @@
                     </blockquote>
                     <blockquote>
                         Once all members have submitted their votes, the results
-                        are immediately displayed to everyone. Each voter can
-                        verify that their vote was correctly counted and raise
-                        concerns if they see that it was not tallied correctly.
-                        In this way, every voter can be assured that their vote
-                        was accurately included.
+                        are immediately displayed to all of the voters on their
+                        own device. Each voter can verify that their vote was
+                        correctly counted and raise concerns if they see that it
+                        was not tallied correctly. In this way, every voter can
+                        be assured that their vote was accurately included.
                     </blockquote>
                 </li>
                 <li>
                     <span>Do all members need to be together?</span>
                     <blockquote>
-                        No. Remote voting is one of the benefits of using TallyJ
-                        for Officers. Each member votes at their own computer /
-                        tablet / phone. They can be sitting in a room together,
-                        or they can be at home or at any other location where
-                        they have an internet connection.
+                        All voters need to be actively voting at the same time.
                     </blockquote>
                     <blockquote>
-                        If you are not all together, it is strongly recommended
+                        But they do not need to be physically together. Remote
+                        voting is one of the benefits of using TallyJ for
+                        Officers. Each member votes at their own computer /
+                        tablet / phone. They can be sitting in a room together,
+                        or they can each be at their own home or at any other
+                        location where they have an internet connection.
+                    </blockquote>
+                    <blockquote>
+                        If you are not all together, it is
+                        <strong>strongly recommended</strong>
                         that everyone be connected by an audio or video call of
                         some sort so that you can discuss the election together
                         as it progresses.
@@ -80,9 +85,9 @@
                         >How do other members join the election I create?</span
                     >
                     <blockquote>
-                        Your election is private to you and your team. Once the
-                        creator (administrator) of the election has created the
-                        election, a new private link is created that needs to be
+                        Whoever creates the election becomes the first
+                        administrator of the election. You will be provided with
+                        a new, private link for your election that needs to be
                         shared with the team. This can be done in whatever way
                         you typically share information, such as email,
                         WhatsApp, or a shared document. (Reading the link
@@ -107,7 +112,7 @@
                         enables remote voting, there should be few reasons that
                         all members cannot be online at the same time to vote
                         together! However, if some members are unable to
-                        participate the administrator can use the Setup page to
+                        participate, the administrator can use the Setup page to
                         indicate that they are not voting.
                     </blockquote>
                 </li>

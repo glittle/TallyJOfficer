@@ -86,12 +86,23 @@
                 "
                 class="confirmation"
             >
-                <button class="reveal" v-on:click="reveal = !reveal">
+                <button
+                    class="reveal"
+                    v-if="!alwaysShow"
+                    v-on:click="clickReveal"
+                >
                     <span
-                        v-text="reveal ? 'Hide my Vote' : 'Show me my vote'"
+                        v-text="reveal ? 'Hide my Vote' : 'Show my Vote here'"
                     ></span>
                 </button>
-
+                <label class="alwaysShow" :class="{ revealVote: reveal }">
+                    <input
+                        v-model="alwaysShow"
+                        type="checkbox"
+                        v-on:change="clickAlwaysShow"
+                    />
+                    Always Show
+                </label>
                 <div
                     v-if="selectedMember.name"
                     class="voteInfo"
@@ -139,6 +150,7 @@ export default {
         return {
             selectedMember: {},
             reveal: false,
+            alwaysShow: false,
             preferNot: false
         };
     },
@@ -208,6 +220,25 @@ export default {
             }
             return null;
         },
+        clickAlwaysShow: function() {
+            if (this.alwaysShow) {
+                this.reveal = true;
+            } else {
+                this.reveal = false;
+                this.clickReveal();
+            }
+        },
+        clickReveal: function() {
+            var vue = this;
+            this.reveal = !this.reveal;
+            if (this.reveal && !vue.alwaysShow) {
+                setTimeout(function() {
+                    if (!vue.alwaysShow) {
+                        vue.reveal = false;
+                    }
+                }, 2000);
+            }
+        },
         voteFor: function(member) {
             if (this.selectedMember.id === member.id) {
                 this.selectedMember = {};
@@ -242,7 +273,9 @@ export default {
                 voted: true
             });
 
-            this.reveal = true;
+            this.reveal = false;
+            this.clickReveal();
+
             this.shared.confirmedVote = true;
 
             var header = document.getElementById("positionsToFill");
@@ -250,10 +283,6 @@ export default {
                 ? header.clientHeight
                 : 0;
             // console.log('scrollTop');
-
-            setTimeout(function() {
-                vue.reveal = false;
-            }, 1500);
         },
         changeMyVote: function() {
             var path = `/voting/${this.shared.electionKey}/votes/${this.shared.symbol}`;
@@ -367,6 +396,16 @@ export default {
         margin: 3em 0 0;
         font-size: 80%;
         color: #999;
+    }
+    .alwaysShow {
+        display: block;
+        margin: 10px;
+        opacity: 0.5;
+        font-size: 85%;
+        &.revealVote {
+            opacity: 1;
+            transition: opacity 1.5s;
+        }
     }
 }
 </style>
