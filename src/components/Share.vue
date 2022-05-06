@@ -1,52 +1,60 @@
 <template>
-    <div class="Share">
-        <div v-if="shared.link" class="panel">
-            <h2>This Election's Secret Link</h2>
-            <div class="siteInfo">
-                <p>
-                    Copy and share this link to your election with others who
-                    will be voting or watching:
-                </p>
-                <p>
-                    <a
-                        class="forCopy"
-                        target="_self"
-                        :href="shared.link"
-                        onclick="return false"
-                        >{{ shared.link }}</a
-                    >
-                    <button
-                        v-on:click="copyToClipboard(shared.link)"
-                        v-text="copyText"
-                    ></button>
-                </p>
-                <p>
-                    Be sure to keep a copy of this URL - it is the only way to
-                    get to this election!
-                </p>
+  <div class="Share">
+    <div
+      v-if="shared.link"
+      class="panel"
+    >
+      <h2>This Election's Secret Link</h2>
+      <div class="siteInfo">
+        <p>
+          Copy and share this link to your election with others who
+          will be voting or watching:
+        </p>
+        <p>
+          <a
+            class="forCopy"
+            target="_self"
+            :href="shared.link"
+            onclick="return false"
+          >{{ shared.link }}</a>
+          <button
+            v-on:click="copyToClipboard(shared.link)"
+            v-text="copyText"
+          ></button>
+        </p>
+        <p>
+          Be sure to keep a copy of this URL - it is the only way to
+          get to this election!
+        </p>
 
-                <p>
-                    Here is the same secret link in a QR Code format to show to
-                    others (if they can use it):
-                </p>
-                <p>
-                    <qrcode
-                        :options="{ width: qrWidth }"
-                        :value="shared.link"
-                    ></qrcode>
-                </p>
-            </div>
-        </div>
-        <div v-if="shared.link" class="panel">
-            <p>
-                Go to the main <router-link to="home">Voting</router-link> page.
-            </p>
-        </div>
-        <div v-else class="panel">
-            Oops! Looks like you are not in an election. Please
-            <a href="/">start at the beginning</a>!
-        </div>
-        <!-- <div class="panel">
+        <p>
+          Here is the same secret link in a QR Code format to show to
+          others (if they can use it):
+        </p>
+        <p>
+          <qrcode
+            :options="{ width: qrWidth }"
+            :value="shared.link"
+          ></qrcode>
+        </p>
+      </div>
+    </div>
+    <div
+      v-if="shared.link"
+      class="panel"
+    >
+      <p>
+        Go to the main <router-link to="home">Voting</router-link> page.
+      </p>
+    </div>
+    <div
+      v-else
+      class="panel"
+    >
+      Oops! Looks like you are not in an election. Please
+      <a href="/">start at the beginning</a>!
+    </div>
+    <!-- <div class="panel">
       <h2 id="testHeader">Spread the news!</h2>
       <p>You can help! Please let other people know about this web application!</p>
       <p>Twitter</p>
@@ -54,7 +62,7 @@
       <p>Instagram</p>
       <p class="version">Version {{version}}</p>
     </div>-->
-    </div>
+  </div>
 </template>
 
 <script>

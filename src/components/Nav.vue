@@ -1,57 +1,68 @@
 <template>
-    <div id="nav">
-        <div class="image">
-            <img alt="TallyJ logo" :title="version" src="../assets/logo.png" />
-        </div>
-        <div v-if="$route.name !== 'createElection'" class="middle">
-            <span v-if="shared.me.isAdmin">
-                <router-link to="admin">Setup</router-link>
-            </span>
-            <span v-if="shared.me.id">
-                <router-link to="share">Link</router-link>
-            </span>
-            <span v-if="shared.me.id">
-                <router-link to="home">Voting</router-link>
-            </span>
-            <!-- <span v-if="shared.me.isAdmin">
+  <div id="nav">
+    <div class="image">
+      <img
+        alt="TallyJ logo"
+        :title="version"
+        src="../assets/logo.png"
+      />
+    </div>
+    <div
+      v-if="$route.name !== 'createElection'"
+      class="middle"
+    >
+      <span v-if="shared.me.isAdmin">
+        <router-link to="admin">Setup</router-link>
+      </span>
+      <span v-if="shared.me.id">
+        <router-link to="share">Link</router-link>
+      </span>
+      <span v-if="shared.me.id">
+        <router-link to="home">Voting</router-link>
+      </span>
+      <!-- <span v-if="shared.me.isAdmin">
         <router-link to="setupNames">Members</router-link>
       </span>
       <span v-if="shared.me.isAdmin">
         <router-link to="setupPositions">Positions</router-link>
       </span>-->
-            <span>
-                <router-link to="/guidance">Guidance</router-link>
-            </span>
-            <span>
-                <router-link to="/faq">Help</router-link>
-            </span>
-        </div>
-        <div
-            class="myName"
-            :class="{ isViewer: shared.isViewer }"
-            :title="shared.electionKey.substring(1, 5)"
-        >
-            <select
-                class="NavLang"
-                :value="lang"
-                v-on:change="setLang"
-                v-if="shared.enableLanguage"
-            >
-                <option v-for="c in shared.languageCodes" :key="c" :value="c">
-                    {{ shared.languages[c] }}
-                </option>
-            </select>
-
-            <span>{{ shared.me.name }}</span>
-            <button
-                v-if="shared.isMember || shared.isViewer"
-                class="warning"
-                v-on:click="shared.forgetMe"
-            >
-                Leave
-            </button>
-        </div>
+      <span>
+        <router-link to="/guidance">Guidance</router-link>
+      </span>
+      <span>
+        <router-link to="/faq">Help</router-link>
+      </span>
     </div>
+    <div
+      class="myName"
+      :class="{ isViewer: shared.isViewer }"
+      :title="shared.electionKey.substring(1, 5)"
+    >
+      <select
+        v-if="shared.enableLanguage"
+        class="NavLang"
+        :value="lang"
+        v-on:change="setLang"
+      >
+        <option
+          v-for="c in shared.languageCodes"
+          :key="c"
+          :value="c"
+        >
+          {{ shared.languages[c] }}
+        </option>
+      </select>
+
+      <span>{{ shared.me.name }}</span>
+      <button
+        v-if="shared.isMember || shared.isViewer"
+        class="warning"
+        v-on:click="shared.forgetMe"
+      >
+        Leave
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>

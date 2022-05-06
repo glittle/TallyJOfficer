@@ -1,94 +1,109 @@
 <template>
-    <div v-if="position.name" class="ResultPanel panel">
-        <h2>Voting rounds for {{ position.name }}</h2>
-        <table class="results">
-            <thead>
-                <tr>
-                    <td class="roundNum">
-                        #
-                    </td>
-                    <td v-for="m in shared.members" :key="m.id">
-                        {{ m.name }}
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(round, i) in oldRounds" :key="i">
-                    <td class="roundNum">
-                        {{ i + 1 }}
-                    </td>
-                    <td
-                        v-for="m in shared.members"
-                        :key="m.id"
-                        :class="['vote' + resultClass(round, m.id)]"
-                    >
-                        <div class="voteCount">
-                            {{ votesFor(round, m.id) }}
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr v-if="positionRounds.length && !shared.election.votingOpen">
-                    <td class="roundNum">
-                        {{ positionRounds.length }}
-                    </td>
-                    <td
-                        v-for="m in shared.members"
-                        :key="m.id"
-                        :class="['vote' + resultClass(lastRound, m.id)]"
-                    >
-                        <div class="voteCount">
-                            {{ votesFor(lastRound, m.id) }}
-                        </div>
-                        <div class="voteDetail">
-                            <div
-                                v-for="(v, i) in voteListFor(lastRound, m.id)"
-                                :key="i"
-                                class="symbol"
-                                :style="{
-                                    backgroundPosition: `0 -${shared.symbolOffset(
-                                        v.symbol
-                                    )}px`
-                                }"
-                                :title="v.symbol"
-                            ></div>
-                        </div>
-                    </td>
-                </tr>
-                <tr
-                    v-if="
-                        shared.election.votingOpen &&
-                            position.id === shared.election.positionIdToVoteFor
-                    "
-                >
-                    <td class="roundNum">
-                        {{ positionRounds.length + 1 }}
-                    </td>
-                    <td :colspan="shared.members.length" class="inProgress">
-                        <p>
-                            Round {{ positionRounds.length + 1 }} - Voting in
-                            Progress
-                        </p>
-                        <p>{{ numParticipating }} people voting</p>
-                        <p>
-                            {{ numVoted }} vote{{ numVoted === 1 ? "" : "s" }}
-                            submitted
-                        </p>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-        <div v-if="personElected" class="elected">
+  <div
+    v-if="position.name"
+    class="ResultPanel panel"
+  >
+    <h2>Voting rounds for {{ position.name }}</h2>
+    <table class="results">
+      <thead>
+        <tr>
+          <td class="roundNum">
+            #
+          </td>
+          <td
+            v-for="m in shared.members"
+            :key="m.id"
+          >
+            {{ m.name }}
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(round, i) in oldRounds"
+          :key="i"
+        >
+          <td class="roundNum">
+            {{ i + 1 }}
+          </td>
+          <td
+            v-for="m in shared.members"
+            :key="m.id"
+            :class="['vote' + resultClass(round, m.id)]"
+          >
+            <div class="voteCount">
+              {{ votesFor(round, m.id) }}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr v-if="positionRounds.length && !shared.election.votingOpen">
+          <td class="roundNum">
+            {{ positionRounds.length }}
+          </td>
+          <td
+            v-for="m in shared.members"
+            :key="m.id"
+            :class="['vote' + resultClass(lastRound, m.id)]"
+          >
+            <div class="voteCount">
+              {{ votesFor(lastRound, m.id) }}
+            </div>
+            <div class="voteDetail">
+              <div
+                v-for="(v, i) in voteListFor(lastRound, m.id)"
+                :key="i"
+                class="symbol"
+                :style="{
+                  backgroundPosition: `0 -${shared.symbolOffset(
+                    v.symbol
+                  )}px`
+                }"
+                :title="v.symbol"
+              ></div>
+            </div>
+          </td>
+        </tr>
+        <tr
+          v-if="
+            shared.election.votingOpen &&
+              position.id === shared.election.positionIdToVoteFor
+          "
+        >
+          <td class="roundNum">
+            {{ positionRounds.length + 1 }}
+          </td>
+          <td
+            :colspan="shared.members.length"
+            class="inProgress"
+          >
             <p>
-                {{ personElected.name }}<br />has been elected to serve as the
-                {{ position.name }}.
+              Round {{ positionRounds.length + 1 }} - Voting in
+              Progress
             </p>
-        </div>
-
-        <!-- <button class="addTemp" v-on:click="tempMakeResult">Add Fake Results</button>
-    <button v-on:click="stopAdding">Stop Adding</button>-->
+            <p>{{ numParticipating }} people voting</p>
+            <p>
+              {{ numVoted }} vote{{ numVoted === 1 ? "" : "s" }}
+              submitted
+            </p>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <div
+      v-if="personElected"
+      class="elected"
+    >
+      <p>
+        {{ personElected.name }}<br />has been elected to serve as the
+        {{ position.name }}.
+      </p>
     </div>
+
+    <!-- <button class="addTemp" v-on:click="tempMakeResult">Add Fake Results</button>
+    <button v-on:click="stopAdding">Stop Adding</button>-->
+  </div>
 </template>
 
 <script>

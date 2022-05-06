@@ -1,47 +1,47 @@
 <template>
-    <div class="MemberStatus">
-        <div class="top">
-            <div
-                v-for="m in activeMembers"
-                :key="m.id"
-                class="member"
-                :title="
-                    (m.isAdmin ? 'Administrator. ' : '') +
-                        (m.voting ? 'Active Voter' : 'Not Voting') +
-                        (m.id === shared.me.id
-                            ? 'Make my name blink on all screens'
-                            : '')
-                "
-                :class="{
-                    connected: m.connected,
-                    highlight: m.highlight,
-                    voting: m.voting,
-                    votingOnViewer: shared.isViewer && m.voting,
-                    voted: m.voted,
-                    isAdmin: m.isAdmin,
-                    isMe: m.id === shared.me.id,
-                    participating: m.participating
-                }"
-                v-on:click="clicked(m)"
-            >
-                {{ m.name }}
-            </div>
+  <div class="MemberStatus">
+    <div class="top">
+      <div
+        v-for="m in activeMembers"
+        :key="m.id"
+        class="member"
+        :title="
+          (m.isAdmin ? 'Administrator. ' : '') +
+            (m.voting ? 'Active Voter' : 'Not Voting') +
+            (m.id === shared.me.id
+              ? 'Make my name blink on all screens'
+              : '')
+        "
+        :class="{
+          connected: m.connected,
+          highlight: m.highlight,
+          voting: m.voting,
+          votingOnViewer: shared.isViewer && m.voting,
+          voted: m.voted,
+          isAdmin: m.isAdmin,
+          isMe: m.id === shared.me.id,
+          participating: m.participating
+        }"
+        v-on:click="clicked(m)"
+      >
+        {{ m.name }}
+      </div>
 
-            <div
-                v-for="v in activeViewers"
-                :key="v.id"
-                class="viewer"
-                :class="{
-                    connected: v.connected,
-                    isMe: v.id === shared.me.id,
-                    highlight: v.highlight
-                }"
-                v-on:click="clicked(v)"
-            >
-                {{ v.name }}
-            </div>
-        </div>
+      <div
+        v-for="v in activeViewers"
+        :key="v.id"
+        class="viewer"
+        :class="{
+          connected: v.connected,
+          isMe: v.id === shared.me.id,
+          highlight: v.highlight
+        }"
+        v-on:click="clicked(v)"
+      >
+        {{ v.name }}
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

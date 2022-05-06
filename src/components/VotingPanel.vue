@@ -1,143 +1,155 @@
 <template>
+  <div
+    v-if="position && (shared.election.votingOpen || shared.confirmedVote)"
+    class="VotingPanel panel"
+  >
+    <a name="voteTop"></a>
+    <h1>Voting for {{ positionName }}</h1>
+
     <div
-        v-if="position && (shared.election.votingOpen || shared.confirmedVote)"
-        class="VotingPanel panel"
+      v-if="!shared.symbol"
+      class="pending"
     >
-        <a name="voteTop"></a>
-        <h1>Voting for {{ positionName }}</h1>
-
-        <div v-if="!shared.symbol" class="pending">
-            Preparing ballots...
-        </div>
-        <div v-else>
-            <div>
-                <div
-                    v-if="
-                        shared.isMember &&
-                            shared.election.votingOpen &&
-                            shared.election.showPreferNot
-                    "
-                    class="choosePreferNot"
-                >
-                    <label>
-                        <input v-model="preferNot" type="checkbox" />
-                        I have a good reason why I should not be elected as
-                        {{ positionName }}.
-                    </label>
-                </div>
-
-                <table v-if="!shared.confirmedVote && shared.isMember">
-                    <tr
-                        v-for="m in shared.members"
-                        :key="m.id"
-                        class="memberHolder"
-                        :class="{ preferNot: m.preferNot }"
-                    >
-                        <td>
-                            <button
-                                class="vote"
-                                :class="{
-                                    selected: selectedMember.name === m.name,
-                                    selectionMade: selectedMember
-                                }"
-                                v-on:click="voteFor(m)"
-                            >
-                                {{ m.name }}
-                                <span
-                                    v-if="alreadyIn(m)"
-                                    class="alreadyIn"
-                                    v-text="alreadyIn(m)"
-                                ></span>
-                            </button>
-                            <div
-                                v-if="
-                                    m.preferNot && shared.election.showPreferNot
-                                "
-                                class="preferNot"
-                            >
-                                {{ m.name }} has suggested that they not be
-                                elected as {{ positionName }}.
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-
-                <div v-if="!shared.confirmedVote && shared.isMember">
-                    <button
-                        class="confirm"
-                        :class="{ ready: selectedMember.name }"
-                        :disabled="!selectedMember.name"
-                        v-on:click="confirm()"
-                    >
-                        Submit my vote
-                        <span v-if="selectedMember"
-                            >for {{ selectedMember.name || "___" }} to be
-                            {{ positionName }}</span
-                        >
-                        <span v-else>(pending)</span>
-                    </button>
-                </div>
-            </div>
-            <!-- <div v-else>Voting is nt open.</div> -->
-            <div
-                v-if="
-                    shared.confirmedVote ||
-                        (!shared.election.votingOpen && selectedMember.name)
-                "
-                class="confirmation"
-            >
-                <button
-                    class="reveal"
-                    v-if="!alwaysShow"
-                    v-on:click="clickReveal"
-                >
-                    <span
-                        v-text="reveal ? 'Hide my Vote' : 'Show my Vote here'"
-                    ></span>
-                </button>
-                <label class="alwaysShow" :class="{ revealVote: reveal }">
-                    <input
-                        v-model="alwaysShow"
-                        type="checkbox"
-                        v-on:change="clickAlwaysShow"
-                    />
-                    Always Show
-                </label>
-                <div
-                    v-if="selectedMember.name"
-                    class="voteInfo"
-                    :class="{ revealVote: reveal }"
-                >
-                    <p>
-                        You voted for {{ selectedMember.name }} to be
-                        {{ positionName }}.
-                    </p>
-                </div>
-                <div class="symbolInfo" :class="{ revealVote: reveal }">
-                    Your symbol in this voting round:
-                    <div
-                        class="symbol"
-                        :style="{
-                            backgroundPosition:
-                                '0 -' +
-                                shared.symbolOffset(shared.symbol) +
-                                'px'
-                        }"
-                        :title="shared.symbol"
-                    ></div>
-                </div>
-                <p v-if="shared.election.votingOpen">
-                    <button v-on:click="changeMyVote">
-                        Change my vote
-                    </button>
-                </p>
-            </div>
-            <p class="comment">
-                All voters remain on this screeen until voting for this position
-                is completed.
-            </p>
-        </div>
+      Preparing ballots...
     </div>
+    <div v-else>
+      <div>
+        <div
+          v-if="
+            shared.isMember &&
+              shared.election.votingOpen &&
+              shared.election.showPreferNot
+          "
+          class="choosePreferNot"
+        >
+          <label>
+            <input
+              v-model="preferNot"
+              type="checkbox"
+            />
+            I have a good reason why I should not be elected as
+            {{ positionName }}.
+          </label>
+        </div>
+
+        <table v-if="!shared.confirmedVote && shared.isMember">
+          <tr
+            v-for="m in shared.members"
+            :key="m.id"
+            class="memberHolder"
+            :class="{ preferNot: m.preferNot }"
+          >
+            <td>
+              <button
+                class="vote"
+                :class="{
+                  selected: selectedMember.name === m.name,
+                  selectionMade: selectedMember
+                }"
+                v-on:click="voteFor(m)"
+              >
+                {{ m.name }}
+                <span
+                  v-if="alreadyIn(m)"
+                  class="alreadyIn"
+                  v-text="alreadyIn(m)"
+                ></span>
+              </button>
+              <div
+                v-if="
+                  m.preferNot && shared.election.showPreferNot
+                "
+                class="preferNot"
+              >
+                {{ m.name }} has suggested that they not be
+                elected as {{ positionName }}.
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <div v-if="!shared.confirmedVote && shared.isMember">
+          <button
+            class="confirm"
+            :class="{ ready: selectedMember.name }"
+            :disabled="!selectedMember.name"
+            v-on:click="confirm()"
+          >
+            Submit my vote
+            <span
+              v-if="selectedMember"
+            >for {{ selectedMember.name || "___" }} to be
+              {{ positionName }}</span>
+            <span v-else>(pending)</span>
+          </button>
+        </div>
+      </div>
+      <!-- <div v-else>Voting is nt open.</div> -->
+      <div
+        v-if="
+          shared.confirmedVote ||
+            (!shared.election.votingOpen && selectedMember.name)
+        "
+        class="confirmation"
+      >
+        <button
+          v-if="!alwaysShow"
+          class="reveal"
+          v-on:click="clickReveal"
+        >
+          <span
+            v-text="reveal ? 'Hide my Vote' : 'Show my Vote here'"
+          ></span>
+        </button>
+        <label
+          class="alwaysShow"
+          :class="{ revealVote: reveal }"
+        >
+          <input
+            v-model="alwaysShow"
+            type="checkbox"
+            v-on:change="clickAlwaysShow"
+          />
+          Always Show
+        </label>
+        <div
+          v-if="selectedMember.name"
+          class="voteInfo"
+          :class="{ revealVote: reveal }"
+        >
+          <p>
+            You voted for {{ selectedMember.name }} to be
+            {{ positionName }}.
+          </p>
+        </div>
+        <div
+          class="symbolInfo"
+          :class="{ revealVote: reveal }"
+        >
+          Your symbol in this voting round:
+          <div
+            class="symbol"
+            :style="{
+              backgroundPosition:
+                '0 -' +
+                shared.symbolOffset(shared.symbol) +
+                'px'
+            }"
+            :title="shared.symbol"
+          ></div>
+        </div>
+        <p v-if="shared.election.votingOpen">
+          <button v-on:click="changeMyVote">
+            Change my vote
+          </button>
+        </p>
+      </div>
+      <p class="comment">
+        All voters remain on this screeen until voting for this position
+        is completed.
+      </p>
+    </div>
+  </div>
 </template>
 
 <script>

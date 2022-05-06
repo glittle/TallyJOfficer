@@ -1,77 +1,80 @@
 <template>
-    <div class="Overview">
-        <div
-            v-if="
-                shared.me.isAdmin ||
-                    shared.isViewer ||
-                    !shared.election.votingOpen
-            "
-            id="positionsToFill"
-            class="positionsToFill panel"
+  <div class="Overview">
+    <div
+      v-if="
+        shared.me.isAdmin ||
+          shared.isViewer ||
+          !shared.election.votingOpen
+      "
+      id="positionsToFill"
+      class="positionsToFill panel"
+    >
+      <h1 v-text="$t('positions.title')"></h1>
+      <div v-if="shared.enableLanguage">
+        {{ $i18n.locale }}
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Who is elected</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tr
+          v-for="p in shared.positions"
+          :key="p.name"
+          class="positionHolder"
+          :class="{ isActive: p.id === viewedPositionId }"
         >
-            <h1 v-text="$t('positions.title')"></h1>
-            <div v-if="shared.enableLanguage">
-                {{ $i18n.locale }}
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Position</th>
-                        <th>Who is elected</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tr
-                    v-for="p in shared.positions"
-                    :key="p.name"
-                    class="positionHolder"
-                    :class="{ isActive: p.id === viewedPositionId }"
-                >
-                    <td>{{ p.name }}</td>
-                    <td>
-                        <span v-text="nameOf(p.electedId) || '-'"></span>
-                    </td>
-                    <td class="positionBtns">
-                        <!-- <button
+          <td>{{ p.name }}</td>
+          <td>
+            <span v-text="nameOf(p.electedId) || '-'"></span>
+          </td>
+          <td class="positionBtns">
+            <!-- <button
               class="primary"
               v-if="shared.me.isAdmin"
               v-on:click="select(p)"
             >Select for Voting</button>-->
-                        <button
-                            v-if="
-                                !shared.election.votingOpen || shared.isViewer
-                            "
-                            v-on:click="view(p)"
-                        >
-                            View
-                        </button>
-                    </td>
-                </tr>
-            </table>
+            <button
+              v-if="
+                !shared.election.votingOpen || shared.isViewer
+              "
+              v-on:click="view(p)"
+            >
+              View
+            </button>
+          </td>
+        </tr>
+      </table>
 
-            <p v-if="shared.me.isAdmin" class="adminBtns">
-                <button
-                    v-if="viewedPosition && !shared.election.votingOpen"
-                    class="primary"
-                    v-on:click="openVoting"
-                >
-                    Admin: Start a round of voting for {{ viewedPosition.name }}
-                </button>
-                <button
-                    v-if="shared.election.votingOpen"
-                    class="caution"
-                    v-on:click="resetVoting"
-                >
-                    Admin: Cancel Voting
-                </button>
-            </p>
-        </div>
-
-        <!-- <button v-on:click="gotoVotePanel">Cast my Vote</button> -->
-        <voting-panel v-if="shared.isMember" />
-
-        <result-panel />
+      <p
+        v-if="shared.me.isAdmin"
+        class="adminBtns"
+      >
+        <button
+          v-if="viewedPosition && !shared.election.votingOpen"
+          class="primary"
+          v-on:click="openVoting"
+        >
+          Admin: Start a round of voting for {{ viewedPosition.name }}
+        </button>
+        <button
+          v-if="shared.election.votingOpen"
+          class="caution"
+          v-on:click="resetVoting"
+        >
+          Admin: Cancel Voting
+        </button>
+      </p>
     </div>
+
+    <!-- <button v-on:click="gotoVotePanel">Cast my Vote</button> -->
+    <voting-panel v-if="shared.isMember" />
+
+    <result-panel />
+  </div>
 </template>
 
 <script>
