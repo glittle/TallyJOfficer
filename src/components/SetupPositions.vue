@@ -1,88 +1,84 @@
 <template>
-  <div class="SetupPositions">
-    <div
-      v-if="!shared.election.votingOpen"
-      class="panel"
-    >
-      <h1>2. Define the positions to be voted for</h1>
-      <p>Add, edit and sort positions as desired by your team.</p>
-      <p>
-        A "Sample Test" position is included for your team to use to
-        practice with.
-      </p>
-      <slick-list
-        v-model="list"
-        class="list"
-        helper-class="moving"
-        lock-axis="y"
-        :use-drag-handle="true"
-        v-on:input="listSorted"
-      >
-        <slick-item
-          v-for="(item, i) in list"
-          :key="item.id"
-          class="positionItemHolder"
-          :index="i"
-        >
-          <span class="num">{{ i + 1 }}</span>
+    <div class="SetupPositions">
+        <div v-if="!shared.election.votingOpen" class="panel">
+            <h1>2. Define the positions to be voted for</h1>
+            <p>Add, edit and sort positions as desired by your team.</p>
+            <p>
+                A "Sample Test" position is included for your team to use to
+                practice with.
+            </p>
+            <slick-list
+                v-model="list"
+                class="list"
+                helper-class="moving"
+                lock-axis="y"
+                :use-drag-handle="true"
+                v-on:input="listSorted"
+            >
+                <slick-item
+                    v-for="(item, i) in list"
+                    :key="item.id"
+                    class="positionItemHolder"
+                    :index="i"
+                >
+                    <span class="num">{{ i + 1 }}</span>
 
-          <input
-            v-model="item.name"
-            type="text"
-            v-on:change="updated"
-          />
+                    <input
+                        v-model="item.name"
+                        type="text"
+                        v-on:change="updated"
+                    />
 
-          <button
-            v-handle
-            class="moveMe icon"
-          >
-            <i class="material-icons">arrow_upward</i>
-            <i class="material-icons">arrow_downward</i>
-            <span>Move</span>
-          </button>
+                    <button v-handle class="moveMe icon">
+                        <i class="material-icons">arrow_upward</i>
+                        <i class="material-icons">arrow_downward</i>
+                        <span>Move</span>
+                    </button>
 
-          <button
-            class="icon remove caution"
-            title="Remove from this election"
-            v-on:click="remove(i)"
-          >
-            <i class="material-icons">delete</i>
-          </button>
-        </slick-item>
-      </slick-list>
+                    <button
+                        class="icon remove caution"
+                        title="Remove from this election"
+                        v-on:click="remove(i)"
+                    >
+                        <i class="material-icons">delete</i>
+                    </button>
+                </slick-item>
+            </slick-list>
 
-      <button v-on:click="add">
-        Add Another Position
-      </button>
+            <button v-on:click="add">
+                Add Another Position
+            </button>
+        </div>
+
+        <div class="panel">
+            <h3>"I have a good reason..."</h3>
+            <p>
+                As quoted on the Guidance page, "<em
+                    >before the election of officers, if any member had a good
+                    reason in his own opinion why he should not be elected to
+                    one of the offices of the Assembly, he was free to suggest
+                    that he should not be so elected.</em
+                >"
+            </p>
+            <p>
+                If the following box is checked, TallyJ for Officers will show a
+                check box during voting for each position to allow members to
+                indicate whether this applies to them. If you have already
+                discussed whether anyone has reasons to not be elected to one of
+                the offices, you may want to leave this turned off.
+            </p>
+            <div>
+                <label>
+                    <input
+                        v-model="shared.election.showPreferNot"
+                        type="checkbox"
+                        v-on:change="changedPreferNot"
+                    />
+                    Show the "I have a good reason..." checkbox when voting.
+                </label>
+            </div>
+        </div>
     </div>
-
-    <div class="panel">
-      <h3>"I have a good reason..."</h3>
-      <p>
-        As quoted on the Guidance page, the "<em>Guardian pointed out that before the election of officers,
-          if any member had a good reason in his own opinion why he
-          should not be elected to one of the offices of the Assembly,
-          he was free to suggest that he should not be so elected.</em>"
-      </p>
-      <p>
-        If the following box is checked, TallyJ for Officers will show a
-        check box during voting for each position to allow members to
-        indicate whether this applies to them. If you have already
-        discussed whether anyone has reasons to not be elected to one of
-        the offices, you may want to leave this turned off.
-      </p>
-      <div>
-        <label>
-          <input
-            v-model="shared.election.showPreferNot"
-            type="checkbox"
-            v-on:change="changedPreferNot"
-          />
-          Show the "I have a good reason..." checkbox when voting.
-        </label>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
