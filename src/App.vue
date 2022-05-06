@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+    <div id="app">
+        <router-view />
+    </div>
 </template>
 
 <script>
@@ -96,6 +96,14 @@ button {
         background-color: #fff;
         box-shadow: inset 0 0 2px 1px #4a993e;
         color: #333;
+
+        &:hover,
+        &:active,
+        &:focus,
+        &:visited {
+            text-decoration: none;
+            color: #111;
+        }
     }
     &.caution {
         background-color: #993e4a;

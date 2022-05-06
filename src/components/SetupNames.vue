@@ -1,187 +1,178 @@
 <template>
-  <div class="SetupNames">
-    <div
-      v-if="shared.election.votingOpen"
-      class="panel"
-    >
-      <p class="isVoting">Voting is in progress.</p>
-      <p>
-        Modifying team members and positions cannot be done while a
-        position is being voted on.
-      </p>
-    </div>
-    <div
-      v-if="!shared.election.votingOpen"
-      class="panel"
-    >
-      <h1>1. Members</h1>
-      <p>Use short names!</p>
-
-      <div
-        v-if="useQuickList"
-        class="quickAdd"
-      >
-        <p>
-          <strong>Adding Multiple</strong>
-          Add the names of members who can vote or be voted for into
-          this box, one per line, then click "Add Now".
-        </p>
-        <textarea
-          ref="quickList"
-          v-model="quickList"
-        ></textarea>
-        <button
-          :disabled="quickListNames.length === 0"
-          v-on:click="processQuickList"
-        >
-          Add
-          <span
-            v-if="quickListNames.length > 1"
-            v-text="quickListNames.length + ' names'"
-          ></span>
-          Now
-        </button>
-        <br />
-        <button
-          class="other"
-          v-on:click="
-            (useQuickList = false),
-            (editing = true),
-            (quickList = '')
-          "
-        >
-          Cancel Adding Multiple
-        </button>
-      </div>
-      <div v-if="editing">
-        <transition-group
-          name="list"
-          tag="div"
-          class="list"
-        >
-          <div
-            v-for="(item, i) in shared.members"
-            :key="item.id"
-            class="itemHolder"
-            :class="{ claimed: item.connected }"
-          >
-            <div>
-              <span class="num">{{ i + 1 }}</span>
-
-              <input
-                v-model="item.name"
-                type="text"
-                :class="{ missing: !item.name }"
-                v-on:change="updated"
-              />
-
-              <label>
-                <input
-                  v-model="item.participating"
-                  type="checkbox"
-                  v-on:change="updated"
-                />
-                Voting
-              </label>
-
-              <label>
-                <input
-                  v-model="item.isAdmin"
-                  type="checkbox"
-                  v-on:change="updated"
-                />
-                Admin
-              </label>
-              <div
-                v-if="
-                  duplicatedNames[
-                    item.name.toLocaleLowerCase()
-                  ]
-                "
-                class="isDup"
-              >
-                <span>Duplicate!</span>
-              </div>
-            </div>
-            <div class="part2">
-              <button
-                class="icon remove caution"
-                title="Remove from this election"
-                v-on:click="remove(i)"
-              >
-                <i class="material-icons">delete</i>
-              </button>
-            </div>
-          </div>
-        </transition-group>
-        <p
-          v-if="warning"
-          class="warning"
-        >{{ warning }}</p>
-        <button v-on:click="add">
-          Add One
-        </button>
-        <button
-          v-if="!useQuickList"
-          v-on:click="openQuickList"
-        >
-          Add Multiple
-        </button>
-        <p>
-          If a member is not voting today, uncheck their "Voting"
-          mark.
-        </p>
-        <p>
-          Anyone marked as "Admin" is able to open and close voting
-          and set up the names of members and positions. You must have
-          at least one person marked as an admin.
-        </p>
-      </div>
-    </div>
-    <div class="panel">
-      <h1>Name the Viewers</h1>
-      <p>
-        If you want to allow viewers who are not voting to watch the
-        election status, name them here.
-      </p>
-      <div
-        v-for="(item, i) in shared.viewers"
-        :key="item.id"
-        class="viewer"
-        :index="i"
-      >
-        <div>
-          <span data-title="Name (required)">
-            <input
-              v-model="item.name"
-              type="text"
-              :class="{ missing: !item.name }"
-              v-on:change="updatedViewer"
-            />
-          </span>
+    <div class="SetupNames">
+        <div v-if="shared.election.votingOpen" class="panel">
+            <p class="isVoting">Voting is in progress.</p>
+            <p>
+                Modifying team members and positions cannot be done while a
+                position is being voted on.
+            </p>
         </div>
-        <div class="part2">
-          <button
-            :disabled="!item.connected || item.id === shared.me.id"
-            class="forgetBtn"
-            v-on:click="forgetViewer(item)"
-            v-text="item.connected ? 'Has Left' : 'Not Here'"
-          ></button>
+        <div v-if="!shared.election.votingOpen" class="panel">
+            <h1>1. Members</h1>
+            <p>Use short names!</p>
 
-          <button
-            class="icon remove caution"
-            title="Remove from this election"
-            v-on:click="removeViewer(i)"
-          >
-            <i class="material-icons">delete</i>
-          </button>
+            <div v-if="useQuickList" class="quickAdd">
+                <p>
+                    <strong>Adding Multiple</strong>
+                    Add the names of members who can vote or be voted for into
+                    this box, one per line, then click "Add Now".
+                </p>
+                <div class="quickAlreadyIn">
+                    <div v-for="m in currentNames" :key="m.id">
+                        {{ m.name }}
+                    </div>
+                </div>
+                <textarea
+                    ref="quickList"
+                    v-model="quickList"
+                    placeholder="Others"
+                ></textarea>
+                <button
+                    :disabled="quickListNames.length === 0"
+                    v-on:click="processQuickList"
+                >
+                    Add
+                    <span
+                        v-if="quickListNames.length > 0"
+                        v-text="
+                            quickListNames.length +
+                                ' Name' +
+                                (quickListNames.length > 1 ? 's' : '')
+                        "
+                    ></span>
+                    Now
+                </button>
+                <br />
+                <button
+                    class="other"
+                    v-on:click="
+                        (useQuickList = false),
+                            (editing = true),
+                            (quickList = '')
+                    "
+                >
+                    Cancel Adding Multiple
+                </button>
+            </div>
+            <div v-if="editing">
+                <transition-group name="list" tag="div" class="list">
+                    <div
+                        v-for="(item, i) in shared.members"
+                        :key="item.id"
+                        class="itemHolder"
+                        :class="{ claimed: item.connected }"
+                    >
+                        <div>
+                            <span class="num">{{ i + 1 }}</span>
+
+                            <input
+                                v-model="item.name"
+                                type="text"
+                                :class="{ missing: !item.name }"
+                                v-on:change="updated"
+                            />
+
+                            <label>
+                                <input
+                                    v-model="item.participating"
+                                    type="checkbox"
+                                    v-on:change="updated"
+                                />
+                                Voting
+                            </label>
+
+                            <label>
+                                <input
+                                    v-model="item.isAdmin"
+                                    type="checkbox"
+                                    v-on:change="updated"
+                                />
+                                Admin
+                            </label>
+                            <div
+                                v-if="
+                                    duplicatedNames[
+                                        item.name.toLocaleLowerCase()
+                                    ]
+                                "
+                                class="isDup"
+                            >
+                                <span>Duplicate!</span>
+                            </div>
+                        </div>
+                        <div class="part2">
+                            <button
+                                class="icon remove caution"
+                                title="Remove from this election"
+                                v-on:click="remove(i)"
+                            >
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </div>
+                    </div>
+                </transition-group>
+                <p v-if="warning" class="warning">{{ warning }}</p>
+                <button v-on:click="add">
+                    Add One
+                </button>
+                <button v-if="!useQuickList" v-on:click="openQuickList">
+                    Add Multiple
+                </button>
+                <p>
+                    If a member is not voting today, uncheck their "Voting"
+                    mark.
+                </p>
+                <p>
+                    Anyone marked as "Admin" is able to open and close voting
+                    and set up the names of members and positions. You must have
+                    at least one person marked as an admin.
+                </p>
+            </div>
         </div>
-      </div>
-      <button v-on:click="addViewer">
-        Add {{ shared.viewers.length ? "another" : "a" }} Viewer
-      </button>
+        <div class="panel">
+            <h1>Name the Viewers</h1>
+            <p>
+                If you want to allow viewers who are not voting to watch the
+                election status, name them here.
+            </p>
+            <div
+                v-for="(item, i) in shared.viewers"
+                :key="item.id"
+                class="viewer"
+                :index="i"
+            >
+                <div>
+                    <span data-title="Name (required)">
+                        <input
+                            v-model="item.name"
+                            type="text"
+                            :class="{ missing: !item.name }"
+                            v-on:change="updatedViewer"
+                        />
+                    </span>
+                </div>
+                <div class="part2">
+                    <button
+                        :disabled="!item.connected || item.id === shared.me.id"
+                        class="forgetBtn"
+                        v-on:click="forgetViewer(item)"
+                        v-text="item.connected ? 'Has Left' : 'Not Here'"
+                    ></button>
+
+                    <button
+                        class="icon remove caution"
+                        title="Remove from this election"
+                        v-on:click="removeViewer(i)"
+                    >
+                        <i class="material-icons">delete</i>
+                    </button>
+                </div>
+            </div>
+            <button v-on:click="addViewer">
+                Add {{ shared.viewers.length ? "another" : "a" }} Viewer
+            </button>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -205,6 +196,9 @@ export default {
         },
         quickListNames: function() {
             return this.quickList.split(/\n/g).filter(s => s);
+        },
+        currentNames: function() {
+            return this.shared.members.filter(m => m.name);
         }
     },
     watch: {
@@ -436,14 +430,26 @@ export default {
 <style lang="less">
 .SetupNames {
     textarea {
-        width: 70px;
+        width: 80px;
         height: 11em;
         display: block;
         font-family: inherit;
         font-size: 1em;
-        margin: -10px auto 10px;
+        margin: 0px auto 10px;
         text-align: center;
         white-space: pre;
+    }
+    .quickAlreadyIn {
+        width: 80px;
+        padding: 0 2px;
+        margin: -10px auto 0;
+        overflow-x: auto;
+        border-radius: 1px;
+        background-color: #f5f5f5;
+        border: 1px solid #333;
+        div {
+            white-space: nowrap;
+        }
     }
     .list {
         margin: 20px 0;
