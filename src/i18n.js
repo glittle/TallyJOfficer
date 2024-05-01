@@ -3,6 +3,10 @@ import VueI18n from 'vue-i18n'
 
 Vue.use(VueI18n)
 
+/**
+ * Loads locale messages from the specified directory.
+ * @throws {Error} If there is an issue loading the locale messages.
+ */
 function loadLocaleMessages() {
     const locales = require.context('./locales', true, /[A-Za-z0-9-_,\s]+\.json$/i)
     const messages = {}
