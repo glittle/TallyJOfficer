@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import firebase from 'firebase/app';
-import 'firebase/auth'
-import 'firebase/database'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/database';
 import firebaseDb from './firebaseInit'
 import i18n from './i18n'
 import * as moment from "moment/moment";
@@ -140,6 +140,22 @@ export default new Vue({
                     .on("value", snapshot => {
                         var userInfo = snapshot.val();
 
+                        // Initialize user document if it doesn't exist
+                        if (!userInfo) {
+                            firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                                .set({
+                                    status: 'online',
+                                    lang: 'en'
+                                })
+                                .then(() => {
+                                    // Setup disconnect handler after initialization
+                                    firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                                        .onDisconnect()
+                                        .update({ status: 'offline' });
+                                });
+                            return;
+                        }
+
                         vue.$i18n.locale = userInfo.lang || 'en';
 
                         if (vue.initialQuery) {
@@ -164,9 +180,17 @@ export default new Vue({
                                 vue.myOldElections = snapshot.val();
                             });
 
-                        firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`).update({
-                            status: "online"
-                        });
+                        // Set user status to online and setup disconnect handler
+                        firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                            .update({
+                                status: 'online',
+                            })
+                            .then(() => {
+                                // Setup disconnect handler after successful status update
+                                firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                                    .onDisconnect()
+                                    .update({ status: 'offline' });
+                            });
 
                         vue.$emit("loggedIn");
 
@@ -197,11 +221,6 @@ export default new Vue({
                         // }
                     });
 
-                firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
-                    .update({
-                        status: 'online',
-                    });
-
 
 
             } else {
@@ -224,30 +243,20 @@ export default new Vue({
                 var errorMessage = error.message;
                 console.log('login error', errorCode, errorMessage)
             });
-
-            firebaseDb.ref('.info/connected')
-                .on('value', function (snapshot) {
-                    if (!snapshot.val()) {
-                        // we are not connected
-                        return;
-                    }
-                    var updates = {};
-                    updates.status = 'offline';
-
-                    // gtag('event', 'login')
-
-                    if (vue.firebaseRawAuthUser) {
-                        firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
-                            .onDisconnect()
-                            .update(updates);
-                    }
-                });
         },
         loadElection: function (electionKey) {
             var vue = this;
             if (electionKey) {
                 var electionRef = firebaseDb.ref('/elections/' + electionKey);
-                electionRef.once('value')
+                
+                // Set electionKey in user document first to satisfy security rules
+                firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                    .update({
+                        electionKey: electionKey,
+                    })
+                    .then(() => {
+                        return electionRef.once('value');
+                    })
                     .then(snapshot => {
                         if (snapshot.exists()) {
                             var election = snapshot.val();
@@ -267,6 +276,10 @@ export default new Vue({
                                 )
                                 .remove();
                         }
+                    })
+                    .catch(error => {
+                        console.error('Error loading election:', error);
+                        vue.electionLoadAttempted = true;
                     });
             }
         },
@@ -670,22 +683,35 @@ export default new Vue({
             newAdmin.isAdmin = true;
 
             var electionRef = firebaseDb.ref('/elections').push(); // generate new election doc
+            var electionKey = electionRef.key;
 
-            electionRef.set({
-                created: moment().toISOString(),
-                createdBy: nameOfAdmin
-            }).then(function () {
-                vue.connectToElection(electionRef);
+            // Set electionKey in user document first to satisfy security rules
+            firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                .update({
+                    electionKey: electionKey,
+                })
+                .then(() => {
+                    // Now we can create the election data
+                    return electionRef.set({
+                        created: moment().toISOString(),
+                        createdBy: nameOfAdmin
+                    });
+                })
+                .then(function () {
+                    vue.connectToElection(electionRef);
 
-                vue.createMembers(newAdmin);
-                vue.createPositions();
+                    // Create members first, then claim after members are written
+                    return vue.createMembers(newAdmin);
+                })
+                .then(function () {
+                    vue.createPositions();
 
-                gtag('event', 'createElection');
+                    gtag('event', 'createElection');
 
-                vue.claimMember(vue.myId);
+                    vue.claimMember(vue.myId);
 
-                vue.$emit('election-created');
-            })
+                    vue.$emit('election-created');
+                })
                 .catch(function (err) {
                     console.log(err);
                     vue.$emit('election-creation-error', err);
@@ -708,12 +734,14 @@ export default new Vue({
                 memberSet[m.id] = m;
             });
 
-            firebaseDb.ref(`/members/${vue.electionKey}`)
+            // Return promise to ensure members are written before claiming
+            return firebaseDb.ref(`/members/${vue.electionKey}`)
                 .set(memberSet)
-
-            firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
-                .update({
-                    memberId: vue.myId
+                .then(() => {
+                    return firebaseDb.ref(`/users/${vue.firebaseRawAuthUser.uid}`)
+                        .update({
+                            memberId: vue.myId
+                        });
                 });
         },
         createPositions: function () {

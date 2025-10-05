@@ -1,10 +1,17 @@
 module.exports = {
+    transpileDependencies: [],
+    
     css: {
         sourceMap: true
     },
 
     configureWebpack: {
         devtool: 'source-map'
+    },
+    
+    chainWebpack: config => {
+        // Remove the progress plugin to avoid webpack 5 compatibility issues
+        config.plugins.delete('progress')
     },
 
     pwa: {
@@ -24,14 +31,6 @@ module.exports = {
         themeColor: '#ffffff',
         assetsVersion: '2'
     },
-
-    lintOnSave: undefined,
-    publicPath: undefined,
-    outputDir: undefined,
-    assetsDir: undefined,
-    runtimeCompiler: undefined,
-    productionSourceMap: undefined,
-    parallel: undefined,
 
     pluginOptions: {
         i18n: {

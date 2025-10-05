@@ -154,7 +154,6 @@
 
 <script>
 import firebaseDb from "../firebaseInit";
-import { debug } from "util";
 
 export default {
     name: "VotingPanel",
