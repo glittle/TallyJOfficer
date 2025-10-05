@@ -5,18 +5,22 @@
 </template>
 
 <script>
+import { inject } from 'vue'
+
 export default {
-    computed: {
-        shared: function() {
-            return this.$root.shared;
+    name: 'App',
+    setup() {
+        const shared = inject('shared')
+        return {
+            shared
         }
     },
-    mounted: function() {
-        document.addEventListener("touchmove", function(event) {
-            event.preventDefault();
-        });
+    mounted() {
+        document.addEventListener('touchmove', function(event) {
+            event.preventDefault()
+        })
     }
-};
+}
 </script>
 
 <style lang="less">

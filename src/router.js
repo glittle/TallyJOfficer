@@ -1,16 +1,12 @@
 /* eslint-disable space-in-parens */
 /* eslint-disable func-call-spacing */
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Public from './views/Public.vue'
 
-Vue.use(Router)
+const title = 'TallyJ for Officers'
 
-const title = 'TallyJ for Officers';
-
-var router = new Router({
-    mode: 'history',
-    base: process.env.BASE_URL,
+const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes: [{
         path: '/',
         name: 'public',
@@ -131,53 +127,49 @@ var router = new Router({
 
 router.afterEach((to, from) => {
     // console.log('route to', to)
-    gtag('event', 'screen_view', {
-        screen_name: to.name,
-    });
-
-    if (Tawk_API && Tawk_API.showWidget) {
-        if (['adminPanel', 'faq', 'share', 'createElection'].includes(to.name)) {
-            Tawk_API.showWidget();
-        } else {
-            Tawk_API.hideWidget();
-        }
-    } else {
-        // must be on home page
-        // setTimeout(function () {
-        //     if (Tawk_API && Tawk_API.showWidget) {
-        //         Tawk_API.hideWidget();
-        //     }
-        // }, 1000);
+    if (window.gtag) {
+        window.gtag('event', 'screen_view', {
+            screen_name: to.name,
+        })
     }
+
+    if (window.Tawk_API && window.Tawk_API.showWidget) {
+        if (['adminPanel', 'faq', 'share', 'createElection'].includes(to.name)) {
+            window.Tawk_API.showWidget()
+        } else {
+            window.Tawk_API.hideWidget()
+        }
+    }
+    
     setTimeout(function () {
-        var eb = window.document.getElementById('electionBody');
+        const eb = window.document.getElementById('electionBody')
         if (eb && eb.scrollTo) {
             // console.log('scrollTo 0');
-            eb.scrollTo(0, 0);
+            eb.scrollTo(0, 0)
         }
-    }, 0);
+    }, 0)
 
-    var meta = to.meta;
+    const meta = to.meta
     if (meta.title) {
-        window.document.title = [title, meta.title].join(' - ');
+        window.document.title = [title, meta.title].join(' - ')
     } else {
-        window.document.title = title;
+        window.document.title = title
     }
 })
 
 router.beforeEach((to, from, next) => {
-    var metaTags = to.meta.tags;
+    const metaTags = to.meta.tags
     if (metaTags) {
-        var allMeta = Array.from(document.getElementsByTagName('meta'));
+        const allMeta = Array.from(document.getElementsByTagName('meta'))
         Object.keys(metaTags).forEach(key => {
-            var tag = document.createElement('meta');
-            tag.setAttribute('name', key);
-            tag.setAttribute('content', metaTags[key]);
-            var existing = allMeta.find(m => m.name === key);
-            document.head.insertBefore(tag, existing);
+            const tag = document.createElement('meta')
+            tag.setAttribute('name', key)
+            tag.setAttribute('content', metaTags[key])
+            const existing = allMeta.find(m => m.name === key)
+            document.head.insertBefore(tag, existing)
         })
     }
-    next();
+    next()
 })
 
-export default router;
+export default router

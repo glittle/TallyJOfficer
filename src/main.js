@@ -1,19 +1,23 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import router from './router'
-import './registerServiceWorker'
 import i18n from './i18n'
 import App from './App.vue'
-import _shared from "@/shared.js";
+import { shared } from '@/shared.js'
 
-Vue.config.productionTip = false
+// Register service worker for PWA
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  navigator.serviceWorker.register('/sw.js')
+}
 
-new Vue({
-    router,
-    i18n,
-    computed: {
-        shared() {
-            return _shared;
-        }
-    },
-    render: h => h(App),
-}).$mount('#app')
+const app = createApp(App)
+
+// Provide shared state globally
+app.provide('shared', shared)
+
+// Make shared available as a global property (for compatibility)
+app.config.globalProperties.$shared = shared
+
+app.use(router)
+app.use(i18n)
+
+app.mount('#app')

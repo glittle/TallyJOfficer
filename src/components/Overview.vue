@@ -78,101 +78,106 @@
 </template>
 
 <script>
-import ResultPanel from "./ResultPanel.vue";
-import VotingPanel from "./VotingPanel.vue";
-import firebaseDb from "../firebaseInit";
+import { inject, ref, computed, watch, onMounted } from 'vue'
+import ResultPanel from './ResultPanel.vue'
+import VotingPanel from './VotingPanel.vue'
+import firebaseDb from '../firebaseInit'
 
 export default {
-    name: "Overview",
+    name: 'Overview',
     components: {
         ResultPanel,
         VotingPanel
     },
-    data: function() {
-        return {
-            viewedPosition: null
-        };
-    },
-    computed: {
-        shared: function() {
-            return this.$root.shared;
-        },
-        viewedPositionId: function() {
-            return (this.viewedPosition && this.viewedPosition.id) || 0;
+    setup() {
+        const shared = inject('shared')
+        const viewedPosition = ref(null)
+
+        const viewedPositionId = computed(() => {
+            return (viewedPosition.value && viewedPosition.value.id) || 0
+        })
+
+        const syncToPosition = () => {
+            viewedPosition.value = shared.positions.find(
+                p => p.id === shared.election.positionIdToVoteFor
+            )
         }
-    },
-    watch: {
-        "shared.election.positionIdToVoteFor": function(a, b) {
-            this.syncToPosition();
-        }
-    },
-    mounted: function() {
-        //  console.log('mounted overview');
-        this.syncToPosition();
-    },
-    methods: {
-        syncToPosition: function() {
-            var vue = this;
-            vue.viewedPosition = vue.shared.positions.find(
-                p => p.id === vue.shared.election.positionIdToVoteFor
-            );
-        },
-        openVoting: function() {
+
+        watch(() => shared.election.positionIdToVoteFor, () => {
+            syncToPosition()
+        })
+
+        onMounted(() => {
+            syncToPosition()
+        })
+
+        const openVoting = () => {
             // change for everyone
-            var positionIdToOpen = this.viewedPosition.id;
+            const positionIdToOpen = viewedPosition.value.id
 
             firebaseDb
-                .ref(`/elections/${this.shared.electionKey}`)
-                .update({ positionIdToVoteFor: "" });
+                .ref(`/elections/${shared.electionKey}`)
+                .update({ positionIdToVoteFor: '' })
 
             // do twice, in case we've made a local change
             firebaseDb
-                .ref(`/elections/${this.shared.electionKey}`)
-                .update({ positionIdToVoteFor: positionIdToOpen });
+                .ref(`/elections/${shared.electionKey}`)
+                .update({ positionIdToVoteFor: positionIdToOpen })
 
             // create as many slots for votes as we need, skip by a random number to be less predicable
-            var participants = this.shared.members.filter(m => m.participating);
-            var numParticipants = participants.length;
-            var randomSpread = 26 / numParticipants;
+            const participants = shared.members.filter(m => m.participating)
+            const numParticipants = participants.length
+            const randomSpread = 26 / numParticipants
 
             // prepare a list of vote slots, one for each member who is participating (doesn't matter which member for each)
-            var nextLetter = 64;
-            var voteDict = {};
+            let nextLetter = 64
+            const voteDict = {}
             participants.forEach((m, i) => {
-                nextLetter += 1 + Math.random() * randomSpread;
-                voteDict[String.fromCharCode(nextLetter)] = "";
-            });
+                nextLetter += 1 + Math.random() * randomSpread
+                voteDict[String.fromCharCode(nextLetter)] = ''
+            })
 
             // save the vote slots
-            firebaseDb.ref(`/voting/${this.shared.electionKey}`).set({
+            firebaseDb.ref(`/voting/${shared.electionKey}`).set({
                 positionId: positionIdToOpen,
                 votes: voteDict
-            });
+            })
 
             // turn on voting
-            firebaseDb.ref(`/elections/${this.shared.electionKey}`).update({
+            firebaseDb.ref(`/elections/${shared.electionKey}`).update({
                 votingOpen: true
-            });
-        },
-        resetVoting: function() {
+            })
+        }
+
+        const resetVoting = () => {
             // turn off voting
-            this.shared.cancelVoting();
-        },
-        view: function(position) {
-            this.viewedPosition = position;
-            this.shared.election.positionIdToVoteFor = position.id;
-        },
-        gotoVotePanel: function() {
-            this.$router.replace("/e/votingPanel");
-        },
-        nameOf: function(id) {
-            if (!id) return "";
-            var member = this.shared.members.find(m => m.id === id);
-            if (!member) return "";
-            return member.name;
+            shared.cancelVoting()
+        }
+
+        const view = (position) => {
+            viewedPosition.value = position
+            shared.election.positionIdToVoteFor = position.id
+        }
+
+        const nameOf = (id) => {
+            if (!id) return ''
+            const member = shared.members.find(m => m.id === id)
+            if (!member) return ''
+            return member.name
+        }
+
+        return {
+            shared,
+            viewedPosition,
+            viewedPositionId,
+            syncToPosition,
+            openVoting,
+            resetVoting,
+            view,
+            nameOf
         }
     }
-};
+}
 </script>
 
 <style lang="less">
