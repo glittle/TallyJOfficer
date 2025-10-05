@@ -3,8 +3,7 @@
     v-if="position && (shared.election.votingOpen || shared.confirmedVote)"
     class="VotingPanel panel"
   >
-    <a name="voteTop"></a>
-    <h1>Voting for {{ positionName }}</h1>
+    <h1 id="voteTop">Voting for {{ positionName }}</h1>
 
     <div
       v-if="!shared.symbol"

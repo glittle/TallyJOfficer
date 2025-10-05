@@ -168,8 +168,7 @@
         1984)</cite>
     </div>
 
-    <a name="chair">&nbsp;</a>
-    <h1>The Chairman &amp; Vice-Chairman</h1>
+    <h1 id="chair">The Chairman &amp; Vice-Chairman</h1>
 
     <div class="quote">
       <p>
@@ -222,8 +221,7 @@
         Assembly)</cite>
     </div>
 
-    <a name="secretary">&nbsp;</a>
-    <h1>The Secretary &amp; Assistant Secretaries</h1>
+    <h1 id="secretary">The Secretary &amp; Assistant Secretaries</h1>
 
     <div class="quote">
       <p>
@@ -457,9 +455,8 @@
         National Spiritual Assembly of the Gilbert and Ellice Islands,
         November 20, 1973)</cite>
     </div>
-    <a name="treasurer">&nbsp;</a>
 
-    <h1>The Treasurer</h1>
+    <h1 id="treasurer">The Treasurer</h1>
 
     <div class="quote">
       <p>
@@ -617,8 +614,7 @@
         Compilation of Extracts..., op. cit. No. 858)</cite>
     </div>
 
-    <a name="other">&nbsp;</a>
-    <h1>Other Matters</h1>
+    <h1 id="other">Other Matters</h1>
 
     <div class="quote">
       <p>
